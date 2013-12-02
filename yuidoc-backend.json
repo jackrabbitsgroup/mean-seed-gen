@@ -1,0 +1,11 @@
+{
+    "name": "mean-seed-gen",
+    "description": "generator-mean-seed generated app",
+    "version": "0.0.0",
+    "url": "https://github.com/jackrabbitsgroup/mean-seed-gen",
+    "options": {
+        "paths": ".",
+        "outdir": "yuidocs/backend",
+        "exclude": "node_modules,public,src"
+    }
+}
