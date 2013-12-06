@@ -15,6 +15,8 @@
 	2. `sudo npm install -g grunt-cli yo bower generator-mean-seed karma yuidocjs forever less`
 2. `yo mean-seed` (from the NEW directory you want to create the app in)
 	1. `npm install && bower install` (if not already run successfully by Yeoman or any time `package.json` or `bower.json` change)
+		1. If any bower issues (sometimes 1 or more packages will timeout), just re-run `bower update && bower install`
+		2. If any npm issues, run `npm cache clean` (and optionally delete the troublesome package folders from the `node_modules` folder) then re-run `npm install`
 	2. `./node_modules/protractor/bin/install_selenium_standalone` (if not already run successfully by Yeoman)
 	3. `grunt q` to build assets (if not already run successfully by Yeoman and any time a `*.less` (or `*.scss`) or `*.html` file changes)
 3. start server and view app
