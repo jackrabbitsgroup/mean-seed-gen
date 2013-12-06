@@ -1,2 +1,2 @@
-mean-seed-gen
-0.0.0
+generator-mean-seed
+1.0.7-1
