@@ -35,9 +35,11 @@ var AuthTests = require(pathParts.modules+'/controllers/auth/auth.test.js');
 var UserTests = require(pathParts.modules+'/controllers/user/user.test.js');
 var FollowTests = require(pathParts.modules+'/controllers/follow/follow.test.js');
 
-//run the server in the TEST environment (this also is required for coverage to work / run on all the files)
+/*
+//run the server in the TEST environment (this also is required for coverage to work / run on all the files)		//UPDATE: now running this with grunt instead
 process.argv.push('config=test');		//add test command line argument
 var run =require(pathParts.modules+'/../../run.js');
+*/
 
 var db =false;
 
