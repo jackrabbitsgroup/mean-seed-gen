@@ -36,9 +36,12 @@
 		"grunt-istanbul-coverage":"~0.0.2",
 		"grunt-buildfiles": "~0.3.3",
 		"grunt-angular-templates": "~0.3.12",
-		"grunt-shell":"~0.4.0",
+		"grunt-shell-spawn":"~0.3.0",
 		"grunt-parallel":"~0.3.1",
-		"grunt-font-awesome-vars":"~1.0.1"
+		"grunt-font-awesome-vars":"~1.0.1",
+		"grunt-http":"~1.0.1",
+		"grunt-contrib-watch":"~0.5.3",
+		"grunt-focus": "~0.1.1"
 	},
 	"devDependencies": {},
 	"scripts": {
