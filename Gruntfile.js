@@ -859,27 +859,37 @@ module.exports = function(grunt) {
 		register/define grunt tasks
 		@toc 6.
 		*/
-		var tasks;
-		tasks =['http:nodeShutdown'];
+		var tasks =[];
+		var tasksSelenium =[];
+		
+		// tasks =[];
+		tasks =['http:nodeShutdown'];		//need to run node server from jasmine test to get coverage.. BUT do this just in case (won't hurt / just in case node test server was running from dev/watch task)
 		//only do selenium if NOT using sauce labs
 		if(!cfgJson.sauceLabs.user || !cfgJson.sauceLabs.key) {
 			tasks.push('http:seleniumShutdown');
+			tasksSelenium.push('http:seleniumShutdown');
 		}
 		grunt.registerTask('test-cleanup', tasks);
 		
 		// grunt.registerTask('test-server', ['parallel:testServer']);
 		
-		tasks =['shell:nodeServer'];
+		tasks =[];
+		// tasks =['shell:nodeServer'];		//need to run node server from jasmine test to get coverage..
 		//only do selenium if NOT using sauce labs
 		if(!cfgJson.sauceLabs.user || !cfgJson.sauceLabs.key) {
 			tasks.push('shell:seleniumStartup');
+			tasksSelenium.push('shell:seleniumStartup');
 		}
 		grunt.registerTask('test-setup', tasks);
 		
-		grunt.registerTask('test-backend', ['jasmine_node']);
+		grunt.registerTask('selenium-server', tasksSelenium);
 		
-		//shorthand for 'shell:protractor'
-		grunt.registerTask('e2e', ['shell:protractor']);
+		grunt.registerTask('node-test-server', ['http:nodeShutdown', 'shell:nodeServer']);
+		
+		grunt.registerTask('test-backend', ['http:nodeShutdown', 'jasmine_node']);
+		
+		//shorthand for 'shell:protractor' PLUS e2e tests need node server running (this assumes selenium server is already running)
+		grunt.registerTask('e2e', ['node-test-server', 'shell:protractor']);
 		
 		grunt.registerTask('test-frontend', ['karma:unit', 'coverage', 'e2e']);
 
