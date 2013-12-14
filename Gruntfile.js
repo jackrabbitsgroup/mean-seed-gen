@@ -646,11 +646,11 @@ module.exports = function(grunt) {
 				}
 			},
 			focus: {
-				// build: {
-					// include: ['buildfiles', 'html',
-						// 
-						// 'jsHintFrontend', 'jsHintBackend']
-				// },
+				build: {
+					include: ['buildfiles', 'html',
+						'less',
+						'jsHintFrontend', 'jsHintBackend']
+				},
 				// test: {
 					// include: ['karmaUnitJs', 'karmaUnitTest']
 				// }
