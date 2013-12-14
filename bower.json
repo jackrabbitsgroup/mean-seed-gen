@@ -16,12 +16,12 @@
 		"jackrabbitsgroup"
 	],
 	"dependencies": {
-		"angular":"1.2.4",
-		"angular-animate":"1.2.4",
-		"angular-sanitize":"1.2.4",
-		"angular-touch":"1.2.4",
-		"angular-route":"1.2.4",
-		"angular-cookies":"1.2.4",
+		"angular":"1.2.5",
+		"angular-animate":"1.2.5",
+		"angular-sanitize":"1.2.5",
+		"angular-touch":"1.2.5",
+		"angular-route":"1.2.5",
+		"angular-cookies":"1.2.5",
 		"lesshat":"latest",
 		"font-awesome":"latest",
 		"less-flexbox":"latest",
