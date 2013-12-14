@@ -34,5 +34,8 @@
 		"angular-google-auth":"latest",
 		"angular-forminput":"latest"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"resolutions": {
+		"angular": "1.2.5"
+	}
 }
