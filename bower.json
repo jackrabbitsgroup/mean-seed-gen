@@ -16,7 +16,7 @@
 		"jackrabbitsgroup"
 	],
 	"dependencies": {
-		"angular":"~1.2.5",
+		"angular":"~1.2.4",
 		"angular-animate":"~1.2.4",
 		"angular-sanitize":"~1.2.4",
 		"angular-touch":"~1.2.4",
