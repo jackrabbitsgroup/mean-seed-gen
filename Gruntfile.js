@@ -902,7 +902,9 @@ module.exports = function(grunt) {
 		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running)
 		grunt.registerTask('e2e', ['shell:protractor']);
 		
-		grunt.registerTask('test-frontend', ['karma:unit', 'coverage', 'e2e']);
+		grunt.registerTask('karma-cov', ['karma:unit', 'coverage']);
+		
+		grunt.registerTask('test-frontend', ['karma-cov', 'e2e']);
 
 		grunt.registerTask('test', 'run all tests', function() {
 			// grunt.task.run(['test-backend', 'test-frontend']);
