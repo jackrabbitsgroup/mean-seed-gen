@@ -28,7 +28,7 @@
 cd /path/to/project
 npm install && bower install
 ```
-	1. NOTE: Sometimes some bower packages timeout; just re-run `bower update && bower install` until it works (typically should work first or second time)
+	1. NOTE: Sometimes some bower packages timeout; just re-run `bower update && bower install` until it works (typically should work first or second time). You can also try `bower cache clean` and or `bower uninstall [package name]`.
 	2. NOTE: If npm errors (can use `npm list` to see if all dependencies were installed correctly), run `npm cache clean` (and optionally delete the troublesome package folders from the `node_modules` folder) then re-run `npm install`
 	3. NOTE: If you get an EACCESS error on `npm install`, try it with `sudo` in front..
 	4. NOTE: If you are on Windows and get a bson error (or any errors, for that matter), try it with Cygwin. Sometimes it doesn't work on Git Bash, but it will on Cygwin due to permissions issues. See http://stackoverflow.com/questions/14100027/cant-install-js-bson for more information.
