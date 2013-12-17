@@ -12,31 +12,39 @@
 
 NOTE: use "grunt --type=prod" to run production version
 NOTE: use "grunt --config=test" to run with a 'config-test.json' file instead of the default 'config.json' file. You can change 'test' to whatever suffix you want. This allows creating multiple configurations and then running different ones as needed.
+NOTE: Karma test runner & coverage: right now with `reporters: ['coverage'],` set, get no karma test output (on failure) to the console.. but without that line it can't create the `coverage-angular` folder and coverage errors..
+	- So, we currently need TWO different karma configuration files.. one with coverage and one without..
+NOTE: Node test coverage: the coverage only runs on 'process.exit' so with 'forceExit' set to false (which we need to be able to run other tasks after the node backend tests are run), we need to manually call process.exit (with the grunt-exit task) at the end - otherwise the coverage report won't show on the console AND it won't fail the task if below the required code coverage!!!
 
 Usage:
 The core call(s) to always do before commiting any changes:
 `grunt` - builds, lints, concats, minifies files, runs tests, etc.
 	- NOTE: since this runs the frontend Karma server tests, this will NOT auto-complete; use Ctrl+C to exit the task once it runs and you see the 'SUCCESS' message for all tests passing
 
-Other calls (relatively in order of importantance / most used)
-`grunt dev` for watching and auto-running build and tests
-`grunt dev-test` for watching and auto-running TESTS only
-`grunt dev-build` for watching and auto-running BUILD (i.e. `grunt q`) only
-`grunt q` for quick compiles (doesn't run tests or build yui docs)
-`grunt noMin` a quick compile that also builds main.js and main.css (instead of main-min versions) - good for debugging/development.
-`grunt test-frontend` - runs Karma frontend tests
-`grunt test` - runs ALL tests
-`grunt yui` - generate YUIDoc auto documentation
-`grunt test-backend` to just test backend
-`grunt lint-backend` to just lint backend
+Other calls (relatively in order of importantance / most used). Scroll to the bottom to see a full list of all tasks.
+- dev
+	`grunt dev` for watching and auto-running build and tests
+	`grunt dev-test` for watching and auto-running TESTS only
+	`grunt dev-build` for watching and auto-running BUILD (i.e. `grunt q`) only
+- test
+	`grunt karma-cov` to run/build karma/angular coverage report (since grunt dev watch task does NOT do this due to a bug/issue with karma where running the coverage does NOT show test info on the console, which makes it annoying to debug)
+	`grunt e2e` to run protractor/selenium e2e frontend tests
+	`grunt test-frontend` - run all frontend tests (unit & e2e)
+	`grunt node-cov` to run just backend node tests AND do coverage (show report and fail if below threshold) - only this task will actually show coverage and fail on the CONSOLE but the coverage report will always be written
+	`grunt test-backend` to just test backend - NOTE: there's really no reason to use this; just use `node-cov` instead.
+	`grunt test` - runs ALL tests
+- build / lint
+	`grunt q` for quick compiles (doesn't run tests or build yui docs)
+	`grunt q-watch` for even quicker compiles/builds
+	`grunt noMin` a quick compile that also builds main.js and main.css (instead of main-min versions) - good for debugging/development.
+	`grunt lint-backend` to just lint backend
+- docs
+	`grunt yui` - generate YUIDoc auto documentation
 
 Lint, concat, & minify (uglify) process (since ONLY want to lint & minify files that haven't already been minified BUT want concat ALL files (including already minified ones) into ONE final file)
 1. lint all non-minified (i.e. custom built as opposed to 3rd party) files
 2. minify these custom built files (this also concats them into one)
 3. concat all the (now minified) files - the custom built one AND all existing (3rd party) minified ones
-
-NOTE: Karma test runner & coverage: right now with `reporters: ['coverage'],` set, get no karma test output (on failure) to the console.. but without that line it can't create the `coverage-angular` folder and coverage errors..
-	- So, we currently need TWO different karma configuration files.. one with coverage and one without..
 
 */
 
@@ -114,6 +122,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-http');
 	grunt.loadNpmTasks('grunt-focus');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-exit');
 	
 
 	/**
@@ -861,6 +870,10 @@ module.exports = function(grunt) {
 					variablesLessPath: publicPathRelativeRoot+'bower_components/font-awesome/less/variables.less',
 					fontPath: '../bower_components/font-awesome/fonts'		//NOTE: this must be relative to FINAL, compiled .css file - NOT the variables.less/.scss file! For example, this would be the correct path if the compiled css file is main.css which is in 'src/build' and the font awesome font is in 'src/bower_components/font-awesome/fonts' - since to get from main.css to the fonts directory, you first go back a directory then go into bower_components > font-awesome > fonts.
 				}
+			},
+			exit: {
+				normal: {
+				}
 			}
 		});
 		
@@ -899,6 +912,9 @@ module.exports = function(grunt) {
 		
 		grunt.registerTask('test-backend', ['http:nodeShutdown', 'jasmine_node']);
 		
+		//need to exit otherwise coverage report doesn't display on the console..
+		grunt.registerTask('node-cov', ['test-backend', 'exit']);
+		
 		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running)
 		grunt.registerTask('e2e', ['shell:protractor']);
 		
@@ -908,7 +924,7 @@ module.exports = function(grunt) {
 
 		grunt.registerTask('test', 'run all tests', function() {
 			// grunt.task.run(['test-backend', 'test-frontend']);
-			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup']);
+			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup', 'exit']);		//need to exit on this task to ensure backend coverage shows up and fails if below (otherwise it won't!!) - NOTE: this means that if this task is called (i.e. with 'default' task), it must be LAST since it will force exit after it's done!
 		});
 
 		grunt.registerTask('yui', ['yuidoc']);
