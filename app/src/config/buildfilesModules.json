@@ -278,6 +278,9 @@
 								],
 								"less": [
 									"login.less"
+								],
+								"testUnit": [
+									"login.spec.js"
 								]
 							}
 						},

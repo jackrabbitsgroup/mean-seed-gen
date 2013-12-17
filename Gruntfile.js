@@ -301,8 +301,8 @@ module.exports = function(grunt) {
 						prefix: publicPathRelativeDot,
 						moduleGroup: 'allNoBuildCss',
 						outputFiles: {
-							js: ['watch.karmaUnitJs.files', 'watch.karmaUnit.files'],
-							testUnit: ['watch.karmaUnitTest.files', 'watch.karmaUnit.files']
+							js: ['watch.karmaUnitJs.files', 'watch.karmaUnit.files', 'watch.karmaCovUnit.files'],
+							testUnit: ['watch.karmaUnitTest.files', 'watch.karmaUnit.files', 'watch.karmaCovUnit.files']
 						}
 					},
 					//index.html file paths (have the static path prefix for use in <link rel="stylesheet" > and <script> tags)
@@ -669,6 +669,9 @@ module.exports = function(grunt) {
 				test: {
 					include: ['karmaUnit']
 				},
+				testKarmaCov: {
+					include: ['karmaCovUnit']
+				},
 				all: {
 					include: ['build', 'karmaUnit']
 				}
@@ -690,6 +693,10 @@ module.exports = function(grunt) {
 				karmaUnit: {
 					files: [],		//will be filled by grunt-buildfiles
 					tasks: ['karma:watch:run']
+				},
+				karmaCovUnit: {
+					files: [],		//will be filled by grunt-buildfiles
+					tasks: ['karma-cov']
 				},
 				
 				//run buildfiles pretty much any time a file changes (since this generates file lists for other tasks - will this work / update them since grunt is already running??)
@@ -918,7 +925,7 @@ module.exports = function(grunt) {
 		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running)
 		grunt.registerTask('e2e', ['shell:protractor']);
 		
-		grunt.registerTask('karma-cov', ['karma:unit', 'coverage']);
+		grunt.registerTask('karma-cov', ['clean', 'karma:unit', 'coverage']);
 		
 		grunt.registerTask('test-frontend', ['karma-cov', 'e2e']);
 
@@ -1016,6 +1023,9 @@ module.exports = function(grunt) {
 		//test only
 		// grunt.registerTask('dev-test', ['q-watch', 'test-cleanup', 'test-setup', 'karma:watch:start', 'watch:karmaUnitJs', 'watch:karmaUnitTest']);		//doesn't work - watch isn't a multi-task..
 		grunt.registerTask('dev-test', ['q-watch', 'test-cleanup', 'test-setup', 'karma:watch:start', 'focus:test']);
+		
+		// grunt.registerTask('dev-karma-cov', ['q-watch', 'karma:watchCov:start', 'focus:testKarmaCov']);		//does not work.. get 'app/src/coverage-angular' does not exist..
+		grunt.registerTask('dev-karma-cov', ['q-watch', 'focus:testKarmaCov']);
 		
 		//build only
 		// grunt.registerTask('dev-build', ['q-watch', 'watch:buildfiles', 'watch:html', 'watch:less', 'watch:jsHintFrontend', 'watch:jsHintBackend']);		//doesn't work - watch isn't a multi-task..		//@todo - if do change this, make sure to add scss version!!
