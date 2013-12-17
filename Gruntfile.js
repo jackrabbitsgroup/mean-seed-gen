@@ -25,6 +25,7 @@ Other calls (relatively in order of importantance / most used). Scroll to the bo
 - dev
 	`grunt dev` for watching and auto-running build and tests
 	`grunt dev-test` for watching and auto-running TESTS only
+	`grunt dev-karma-cov` for watching and auto-running karma unit test COVERAGE (since dev-test does NOT run coverage due to issue..). To see / generate coverage, run this AND 'dev-test' OR 'dev' (in 2 separate command windows)
 	`grunt dev-build` for watching and auto-running BUILD (i.e. `grunt q`) only
 - test
 	`grunt karma-cov` to run/build karma/angular coverage report (since grunt dev watch task does NOT do this due to a bug/issue with karma where running the coverage does NOT show test info on the console, which makes it annoying to debug)
