@@ -292,6 +292,9 @@
 								],
 								"less": [
 									"signup.less"
+								],
+								"testUnit": [
+									"signup.spec.js"
 								]
 							}
 						},

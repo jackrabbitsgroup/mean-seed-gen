@@ -17,7 +17,7 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 
 	var inst = {
 	
-		timeoutTrig: false,		//object global timeout trigger so can cancel/clear it before all new calls
+		timeoutTrigs: {},		//object global timeout trigger so can cancel/clear it before all new calls. ONE per call so calls don't clear each other if have many running simultaneously
 		
 		/**
 		@toc 1.
@@ -55,6 +55,8 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 			};
 			params =angular.extend(defaults, params);
 			
+			var instId =Math.random().toString(36).substring(7);
+			
 			if(params.noLoadingScreen ===undefined || !params.noLoadingScreen) {
 				$rootScope.$broadcast('evtLoadingStart', {});
 			}
@@ -66,7 +68,7 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 			
 				$http(httpOpts)
 				.success(function(response) {
-					$timeout.cancel(self.timeoutTrig);
+					$timeout.cancel(self.timeoutTrigs[instId]);
 					// response =MobileWrapper.httpParse(response, {});		//handle any mobile native wrapper quirks for malformed responses..
 					
 					// response.error is only pressent when an error has occurred
@@ -84,7 +86,7 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					$rootScope.$broadcast('evtLoadingDone', {});
 				})
 				.error(function(response, status) {
-					$timeout.cancel(self.timeoutTrig);
+					$timeout.cancel(self.timeoutTrigs[instId]);
 					var msg ='Error ';
 					
 					if(status ===0 || !status || !response) {
@@ -113,11 +115,11 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 				;
 				
 				//have to do this right before setting it again (previously it was earlier in the function but this is async now so may not cancel properly due to timing unless it's here
-				if(self.timeoutTrig) {
-					$timeout.cancel(self.timeoutTrig);
+				if(self.timeoutTrigs[instId]) {
+					$timeout.cancel(self.timeoutTrigs[instId]);
 				}
 				//start timeout going to cancel call if it takes too long
-				self.timeoutTrig =$timeout(function() {
+				self.timeoutTrigs[instId] =$timeout(function() {
 					$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:'Call is taking too long so was canceled; please check your internet connection and try again later'});
 					deferred.reject({msg:'call timeout - taking too long'});
 					$rootScope.$broadcast('evtLoadingDone', {});
