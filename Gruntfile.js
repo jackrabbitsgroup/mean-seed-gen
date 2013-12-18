@@ -932,8 +932,10 @@ module.exports = function(grunt) {
 
 		grunt.registerTask('test', 'run all tests', function() {
 			// grunt.task.run(['test-backend', 'test-frontend']);
-			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup', 'exit']);		//need to exit on this task to ensure backend coverage shows up and fails if below (otherwise it won't!!) - NOTE: this means that if this task is called (i.e. with 'default' task), it must be LAST since it will force exit after it's done!
+			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup']);
 		});
+		
+		grunt.registerTask('test-cov', ['test', 'exit']);		//need to exit on this task to ensure backend coverage shows up and fails if below (otherwise it won't!!) - NOTE: this means that if this task is called (i.e. with 'default' task), it must be LAST since it will force exit after it's done!
 
 		grunt.registerTask('yui', ['yuidoc']);
 
