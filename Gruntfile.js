@@ -34,6 +34,7 @@ Other calls (relatively in order of importantance / most used). Scroll to the bo
 	`grunt node-cov` to run just backend node tests AND do coverage (show report and fail if below threshold) - only this task will actually show coverage and fail on the CONSOLE but the coverage report will always be written
 	`grunt test-backend` to just test backend - NOTE: there's really no reason to use this; just use `node-cov` instead.
 	`grunt test` - runs ALL tests
+	`grunt test-cov` - runs ALL tests AND guarantees (node) test coverage validation/console output BUT won't always (ever?) complete grunt so won't get "done, without errors" and Continuous Integration won't complete so only use this in development
 - build / lint
 	`grunt q` for quick compiles (doesn't run tests or build yui docs)
 	`grunt q-watch` for even quicker compiles/builds
@@ -935,6 +936,7 @@ module.exports = function(grunt) {
 			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup']);
 		});
 		
+		//don't get "done, without errors" grunt completion with 'exit' task and this causes CI to not complete.. Also linux sometimes?? outputs the coverage even without 'exit'?
 		grunt.registerTask('test-cov', ['test', 'exit']);		//need to exit on this task to ensure backend coverage shows up and fails if below (otherwise it won't!!) - NOTE: this means that if this task is called (i.e. with 'default' task), it must be LAST since it will force exit after it's done!
 
 		grunt.registerTask('yui', ['yuidoc']);
