@@ -14,6 +14,13 @@ partial / html:
 <div app-signup signup='signup'></div>
 
 controller / js:
+	// @method $scope.signup
+	// @param {Object} params
+		// @param {Object} vals The form input values to signup with
+	// @param {Function} callback
+	$scope.signup =function(params, callback) {
+		//do stuff here
+	};
 
 //end: EXAMPLE usage
 */
@@ -107,6 +114,9 @@ angular.module('app').directive('appSignup', ['appConfig', function (appConfig) 
 								$scope.signup()(params, function() {
 								});
 							}
+						}
+						else {
+							$scope.$emit('evtAppalertAlert', {type:'error', msg:'Please properly enter all values!'});
 						}
 					}
 				}
