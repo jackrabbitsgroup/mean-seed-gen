@@ -306,6 +306,23 @@
 								],
 								"less": [
 									"social-auth-btn.less"
+								],
+								"testUnit": [
+									"socialAuthBtn.spec.js"
+								]
+							}
+						},
+						{
+							"name": "layout",
+							"files": {
+								"js": [
+									"layout.js"
+								],
+								"less": [
+									"layout.less"
+								],
+								"testUnit": [
+									"layout.spec.js"
 								]
 							}
 						}
@@ -319,6 +336,9 @@
 							"files": {
 								"js": [
 									"LayoutCtrl.js"
+								],
+								"testUnit": [
+									"LayoutCtrl.spec.js"
 								]
 							}
 						},
@@ -350,6 +370,9 @@
 								],
 								"less": [
 									"footer.less"
+								],
+								"testUnit": [
+									"FooterCtrl.spec.js"
 								]
 							}
 						},
@@ -361,6 +384,9 @@
 								],
 								"html": [
 									"home.html"
+								],
+								"testUnit": [
+									"HomeCtrl.spec.js"
 								]
 							}
 						},
@@ -375,6 +401,9 @@
 								],
 								"less": [
 									"login.less"
+								],
+								"testUnit": [
+									"LoginCtrl.spec.js"
 								]
 							}
 						},
@@ -389,6 +418,9 @@
 								],
 								"less": [
 									"signup.less"
+								],
+								"testUnit": [
+									"SignupCtrl.spec.js"
 								]
 							}
 						},
@@ -431,6 +463,9 @@
 								],
 								"html": [
 									"user-delete.html"
+								],
+								"testUnit": [
+									"UserDeleteCtrl.spec.js"
 								]
 							}
 						},
@@ -442,6 +477,9 @@
 								],
 								"html": [
 									"test.html"
+								],
+								"testUnit": [
+									"TestCtrl.spec.js"
 								]
 							}
 						},
@@ -456,6 +494,9 @@
 								],
 								"less": [
 									"design.less"
+								],
+								"testUnit": [
+									"DesignCtrl.spec.js"
 								]
 							}
 						}

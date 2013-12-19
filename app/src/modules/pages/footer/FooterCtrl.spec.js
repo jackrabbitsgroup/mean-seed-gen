@@ -1,6 +1,6 @@
 'use strict';
 
-describe('HeaderCtrl', function(){
+describe('FooterCtrl', function(){
 	var $ctrl, $scope ={}, appNav;
 	var createController;
 	
@@ -10,7 +10,7 @@ describe('HeaderCtrl', function(){
 		$scope = _$rootScope_.$new();
 		appNav =_appNav_;
 		createController =function() {
-			return $ctrl = _$controller_('HeaderCtrl', {$scope: $scope});
+			return $ctrl = _$controller_('FooterCtrl', {$scope: $scope});
 		};
 	}));
 	
@@ -19,25 +19,25 @@ describe('HeaderCtrl', function(){
 		createController();
 	});
 	
-	it('should listen for appNavHeaderUpdate event', function() {
+	it('should listen for appNavFooterUpdate event', function() {
 		createController();
 		var nav ={
-			header: undefined
+			footer: undefined
 		};
-		$scope.$emit('appNavHeaderUpdate', {nav: nav});
+		$scope.$emit('appNavFooterUpdate', {nav: nav});
 		expect($scope.classes.cont).toBe('');
 	});
 	
 	it('should set classes.cont to hidden appropriately', function() {
 		createController();
 		var nav ={
-			header: {
+			footer: {
 				classes: {
 					cont: 'hidden'
 				}
 			}
 		};
-		$scope.$emit('appNavHeaderUpdate', {nav: nav});
-		expect($scope.classes.cont).toBe(nav.header.classes.cont);
+		$scope.$emit('appNavFooterUpdate', {nav: nav});
+		expect($scope.classes.cont).toBe(nav.footer.classes.cont);
 	});
 });
