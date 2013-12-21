@@ -22,7 +22,7 @@ angular.module('myApp').controller('LogoutCtrl', ['$scope', '$location', '$cooki
 			//logout anyway..
 			$rootScope.$broadcast('loginEvt', {'loggedIn':false});
 		});
-	};
+	}
 	
 	/**
 	Clear all (user) data - in javascript memory and localStorage. As more frontend / memory data is added, make sure to clear/destroy them here!
