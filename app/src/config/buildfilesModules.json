@@ -142,6 +142,9 @@
 					"files": {
 						"js": [
 							"app.js"
+						],
+						"testUnit": [
+							"app.spec.js"
 						]
 					}
 				}
