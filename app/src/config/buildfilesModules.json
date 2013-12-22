@@ -164,6 +164,9 @@
 									"files": {
 										"js": [
 											"UserModel.js"
+										],
+										"testUnit": [
+											"UserModel.spec.js"
 										]
 									}
 								}
@@ -174,6 +177,9 @@
 							"files": {
 								"js": [
 									"config.js"
+								],
+								"testUnit": [
+									"config.spec.js"
 								]
 							}
 						},
@@ -204,6 +210,9 @@
 							"files": {
 								"js": [
 									"storage.js"
+								],
+								"testUnit": [
+									"storage.spec.js"
 								]
 							}
 						},
@@ -216,6 +225,9 @@
 								],
 								"less": [
 									"nav.less"
+								],
+								"testUnit": [
+									"nav.spec.js"
 								]
 							},
 							"dirs": [

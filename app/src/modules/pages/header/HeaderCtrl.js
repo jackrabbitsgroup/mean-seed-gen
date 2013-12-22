@@ -25,9 +25,9 @@ angular.module('myApp').controller('HeaderCtrl', ['$scope', 'appNav', function($
 				$scope.classes.cont ='';		//reset to default
 			}
 		}
-		else {
-			console.log('HeaderCtrl: nav undefined');
-		}
+		// else {
+			// console.log('HeaderCtrl: nav undefined');
+		// }
 	}
 	
 	/**

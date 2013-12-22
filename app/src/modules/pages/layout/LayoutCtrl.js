@@ -143,9 +143,9 @@ angular.module('myApp').controller('LayoutCtrl', ['$scope', 'appConfig', '$locat
 				}
 				$location.url(appConfig.dirPaths.appPathLocation+page+ppAdd);
 			}
-			else {
-				console.log('LayoutCtrl: no redirect needed');
-			}
+			// else {
+				// console.log('LayoutCtrl: no redirect needed');
+			// }
 		}
 		else {
 			$scope.classes.loggedIn ='logged-out';
@@ -153,9 +153,9 @@ angular.module('myApp').controller('LayoutCtrl', ['$scope', 'appConfig', '$locat
 			if(params.noRedirect ===undefined || !params.noRedirect || (locPathMatch ==appPath1Match+'login' || locPathMatch ==appPath1Match+'password-reset' || locPathMatch ==appPath1Match+'signup') ) {
 				$location.url(appConfig.dirPaths.appPathLocation+"home");
 			}
-			else {
-				console.log('LayoutCtrl: no redirect needed');
-			}
+			// else {
+				// console.log('LayoutCtrl: no redirect needed');
+			// }
 		}
 	});
 
