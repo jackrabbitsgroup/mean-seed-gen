@@ -484,6 +484,7 @@ module.exports = function(grunt) {
 						FB:			false,
 						moment:		false,
 						Lawnchair: false,
+						io: false,
 						//@todo - fix this?
 						globalPhoneGap: false,
 						forge: false,

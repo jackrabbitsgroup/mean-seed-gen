@@ -42,6 +42,8 @@ RECOMMENDED approach!
 	1. clone the github repo (we'll just have to do this manually once) - `git clone [repo URL] [/path/to/cloned/repo]` - make sure to use the HTTPS git url - otherwise will get a 'Permission denied (publickey).' error!
 		1. set permissions on this folder (especially if you cloned with `sudo`)
 		2. go into the repo - `cd /path/to/cloned/repo`
+		3. if it prompts you for a username and/or password during git pull or other commands, the CI won't work so set your username and password by doing: `git config remote.origin.url https://{USERNAME}:{PASSWORD}@github.com/{GITHUB USERNAME}/{REPONAME}.git` (basically just prepend [username]:[password] to your existing remote url).
+			1. http://superuser.com/questions/199507/how-do-i-ensure-git-doesnt-ask-me-for-my-github-username-and-password
 	2. copy and set the `config_environment.json` to use this environment with: `cp app/config_environment.json config_environment.json` and then edit the file to set the `environment` key to your new environment (the SAME name you used when creating the new `config-[new-server-environment].json` file earlier - these MUST match!)
 	3. add the concrete runner to the git config so concrete will run: `git config --add concrete.runner "npm install && bower update && bower install && grunt --type=prod"`
 	4. configure git hooks for worked and failed

@@ -94,7 +94,7 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 		}
 	});
 	*/
-	$routeProvider.when(appPathRoute+'home', {redirectTo: appPathRoute+'test'});
+	$routeProvider.when(appPathRoute+'home', {redirectTo: appPathRoute+'dev-test/test'});
 	
 	$routeProvider.when(appPathRoute+'login', {templateUrl: pagesPath+'login/login.html',
 		resolve: {
@@ -133,8 +133,9 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 		}
 	});
 	
+	//dev-test
 	// $routeProvider.when(appPathRoute+'test', {templateUrl: pagesPath+'test/test.html'});
-	$routeProvider.when(appPathRoute+'test', {templateUrl: pagesPath+'test/test.html',
+	$routeProvider.when(appPathRoute+'dev-test/test', {templateUrl: pagesPath+'dev-test/test/test.html',
 		resolve: {
 			auth: function(appAuth) {
 				return appAuth.checkSess({noLoginRequired:true});
@@ -142,7 +143,14 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 		}
 	});
 	
-	$routeProvider.when(appPathRoute+'design', {templateUrl: pagesPath+'design/design.html',
+	$routeProvider.when(appPathRoute+'dev-test/design', {templateUrl: pagesPath+'dev-test/design/design.html',
+		resolve: {
+			auth: function(appAuth) {
+				return appAuth.checkSess({noLoginRequired:true});
+			}
+		}
+	});
+	$routeProvider.when(appPathRoute+'dev-test/socketio', {templateUrl: pagesPath+'dev-test/socketio/socketio.html',
 		resolve: {
 			auth: function(appAuth) {
 				return appAuth.checkSess({noLoginRequired:true});
