@@ -13,7 +13,8 @@ describe('appSocket', function(){
 	// afterEach(function() {
 	// });
 
-	it('should work', function() {
+	it('should work but not init twice', function() {
+		appSocket.init({});
 	});
 });
 
