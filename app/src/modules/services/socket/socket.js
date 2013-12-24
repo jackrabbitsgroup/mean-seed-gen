@@ -25,6 +25,7 @@ var inst ={
 	*/
 	init: function(params) {
 		if(!this.inited) {
+			this.inited=true;	//set for next time
 			this.sockets ={
 				test: socketFactory({
 					ioSocket: io.connect(appConfig.dirPaths.serverPath+'test')
