@@ -39,6 +39,7 @@ angular.module('myApp', [
 'ngRoute', 'ngSanitize', 'ngTouch', 'ngAnimate', 'ngCookies',		//additional angular modules
 'hmTouchEvents',		//hammer swipe / touch
 'ui.bootstrap',
+'btford.socket-io',
 'jrg',
 'app'		//local / app specific directives and services (anything that can be used across apps should be added to an external (bower) directive or service library)
 ]).

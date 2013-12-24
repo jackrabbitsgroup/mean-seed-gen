@@ -78,7 +78,8 @@
 					"comment": "directory paths are part of file lists/names",
 					"files": {
 						"js": [
-							"angular-hammer/angular-hammer.js"
+							"angular-hammer/angular-hammer.js",
+							"angular-socket-io/socket.js"
 						]
 					}
 				}
@@ -263,6 +264,17 @@
 								],
 								"testUnit": [
 									"socialAuth.spec.js"
+								]
+							}
+						},
+						{
+							"name": "socket",
+							"files": {
+								"js": [
+									"socket.js"
+								],
+								"testUnit": [
+									"socket.spec.js"
 								]
 							}
 						}
