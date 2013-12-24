@@ -54,12 +54,10 @@ for(var ii=0; ii<filePaths.length; ii++) {
 		<div id='{{ids.footer}}' ng-include='staticPath+"modules/pages/footer/footer.html"'></div>
 	</div>
 
-<!--
 <%
 var cfgJson = grunt.config('cfgJson');
     print('\t<script type="text/javascript" src="http://'+cfgJson.server.domain+':'+cfgJson.server.socketPort+'/socket.io/socket.io.js"></script>\n');
 %>
--->
 
 <%
 var filePaths = grunt.config('filePathsJs');

@@ -485,35 +485,57 @@
 							}
 						},
 						{
-							"name": "test",
-							"files": {
-								"js": [
-									"TestCtrl.js"
-								],
-								"html": [
-									"test.html"
-								],
-								"testUnit": [
-									"TestCtrl.spec.js"
-								]
-							}
-						},
-						{
-							"name": "design",
-							"files": {
-								"js": [
-									"DesignCtrl.js"
-								],
-								"html": [
-									"design.html"
-								],
-								"less": [
-									"design.less"
-								],
-								"testUnit": [
-									"DesignCtrl.spec.js"
-								]
-							}
+							"name": "dev-test",
+							"dirs": [
+								{
+									"name": "test",
+									"files": {
+										"js": [
+											"TestCtrl.js"
+										],
+										"html": [
+											"test.html"
+										],
+										"testUnit": [
+											"TestCtrl.spec.js"
+										]
+									}
+								},
+								{
+									"name": "design",
+									"files": {
+										"js": [
+											"DesignCtrl.js"
+										],
+										"html": [
+											"design.html"
+										],
+										"less": [
+											"design.less"
+										],
+										"testUnit": [
+											"DesignCtrl.spec.js"
+										]
+									}
+								},
+								{
+									"name": "socketio",
+									"files": {
+										"html": [
+											"socketio.html"
+										],
+										"js": [
+											"SocketioCtrl.js"
+										],
+										"testUnit": [
+											"SocketioCtrl.spec.js"
+										],
+										"less": [
+											"socketio.less"
+										]
+									}
+								}
+							]
 						}
 					]
 				}
