@@ -73,7 +73,7 @@ angular.module('app').directive('appLogin', ['appConfig', function (appConfig) {
 		},
 		
 		controller: function($scope, $element, $attrs) {
-			$scope.appTitle =appConfig.info.appTitle;
+			$scope.appTitle =appConfig.cfgJson.app.title;
 			$scope.appPathLink =appConfig.dirPaths.appPathLink;
 			
 			$scope.formVals = {};

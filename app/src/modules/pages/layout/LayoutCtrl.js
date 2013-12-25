@@ -74,7 +74,7 @@ angular.module('myApp').controller('LayoutCtrl', ['$scope', 'appConfig', '$locat
 	@property $scope.appTitle
 	@type String
 	*/
-	$scope.appTitle =appConfig.info.appTitle;
+	$scope.appTitle =appConfig.cfgJson.app.title;
 
 	$scope.ids ={'header':'header', 'content':'content', 'footer':'footer'};
 	/**
