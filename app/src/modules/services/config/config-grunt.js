@@ -72,7 +72,7 @@ var cfgJson = grunt.config('cfgJson');
 			//1.
 			/*
 			@param
-				mainKey =string of main key that matches a variable above, i.e.: 'state', 'date' (default)
+				mainKey =string of main key that matches a variable above, i.e.: 'state', 'data' (default)
 			*/
 			load: function(key, params) {
 				var defaults ={'mainKey':'data'};
@@ -86,7 +86,7 @@ var cfgJson = grunt.config('cfgJson');
 			//2.
 			/*
 			@param
-				mainKey =string of main key that matches a variable above, i.e.: 'state', 'date' (default)
+				mainKey =string of main key that matches a variable above, i.e.: 'state', 'data' (default)
 			*/
 			save: function(key, value, params) {
 				var defaults ={'mainKey':'data'};
@@ -106,18 +106,18 @@ var cfgJson = grunt.config('cfgJson');
 		//get timezone offset
 		var getOffsetFromMinutes =function(minutesTotal, params) {
 			var ret ={'z':'', 'minutes':minutesTotal};
-			var posNegSwitch =false;		//not sure if should be "420" or "-420" so this toggles it..
 			
+			// var posNegSwitch =false;		//not sure if should be "420" or "-420" so this toggles it..
 			var posNeg ='+';
-			if(posNegSwitch) {
-				posNeg ='-';
-				ret.minutes =ret.minutes *-1;
-			}
+			// if(posNegSwitch) {
+				// posNeg ='-';
+				// ret.minutes =ret.minutes *-1;
+			// }
 			if(minutesTotal <0) {
 				posNeg ='-';
-				if(posNegSwitch) {
-					posNeg ='+';
-				}
+				// if(posNegSwitch) {
+					// posNeg ='+';
+				// }
 				minutesTotal =minutesTotal *-1;		//force positive
 			}
 			var hours = Math.floor(minutesTotal /60).toString();
