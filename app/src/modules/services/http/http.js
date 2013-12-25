@@ -246,10 +246,9 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					// }
 					deferred.resolve(httpOpts);
 				
+				}, function(err) {
+					deferred.resolve(httpOpts);
 				}
-				// , function(err) {
-					// deferred.resolve(httpOpts);
-				// }
 				);
 			}
 			
