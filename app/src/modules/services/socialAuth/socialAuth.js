@@ -111,7 +111,7 @@ var inst ={
 		}
 		else {		//have to authenticate
 			//initialize facebook auth with app id
-			jrgFacebookAuth.init({'fbAppId':appConfig.cfgJson.facebook.fbAppId, 'fbPerms':appConfig.cfgJson.facebook.scope});
+			jrgFacebookAuth.init({'fbAppId':appConfig.cfgJson.facebook.appId, 'fbPerms':appConfig.cfgJson.facebook.scope});
 			
 			//$timeout(function() {
 				//handle actual facebook login

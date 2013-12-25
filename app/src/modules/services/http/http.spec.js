@@ -6,15 +6,16 @@
 'use strict';
 
 describe('appHttp', function(){
-	var $rootScope ={}, $httpBackend, appHttp, $timeout, appConfig, $cookieStore;
+	var $rootScope ={}, $httpBackend, appHttp, $timeout, appConfig, $cookieStore, appStorage;
 
 	beforeEach(module('myApp'));
 	
-	beforeEach(inject(function(_$rootScope_, _appHttp_, _$httpBackend_, _$timeout_, _appConfig_, _$cookieStore_) {
+	beforeEach(inject(function(_$rootScope_, _appHttp_, _$httpBackend_, _$timeout_, _appConfig_, _$cookieStore_, _appStorage_) {
 		$cookieStore =_$cookieStore_;
 		appConfig =_appConfig_;
 		$timeout =_$timeout_;
 		$httpBackend =_$httpBackend_;
+		appStorage =_appStorage_;
 		appHttp =_appHttp_;
 		$rootScope = _$rootScope_;
 	}));
@@ -56,6 +57,18 @@ describe('appHttp', function(){
 		expect(user).toBe(true);
 		//expect(user).not.toBeDefined();
 		//expect(evt).toBe(true);
+	});
+	
+	it('should work without any logged in user (neither cookies nor local storage)', function() {
+		$cookieStore.remove('sess_id');
+		$cookieStore.remove('user_id');
+		appStorage.delete1('user');
+		
+		$httpBackend.expectPOST('/api/dummy').respond({result:true});
+		var promise1 =appHttp.go({}, {url:'dummy', data:{}}, {});
+		
+		$httpBackend.flush();
+		$rootScope.$digest();
 	});
 	
 	it('should send authorization if have them in cookies', function() {
@@ -107,7 +120,8 @@ describe('appHttp', function(){
 	
 	it('should handle GET requests', function() {
 		var promise1;
-		var getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%22authority_keys%22:%7B%22user_id%22:%22id%22%7D%7D%7D';		//hardcoded!!
+		// var getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%22authority_keys%22:%7B%22user_id%22:%22id%22%7D%7D%7D';		//hardcoded!!
+		var getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%7D%7D';		//hardcoded!!
 		$httpBackend.expectGET(getString).respond({result: true});
 		// $httpBackend.when('GET', '/api/dummy').respond({result: true});
 		promise1 =appHttp.go({}, {method:'GET', url:'dummy', params:{}}, {});
