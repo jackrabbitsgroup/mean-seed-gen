@@ -83,7 +83,9 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 						}
 						deferred.resolve(response);
 					}
-					$rootScope.$broadcast('evtLoadingDone', {});
+					if(params.noLoadingScreen ===undefined || !params.noLoadingScreen) {
+						$rootScope.$broadcast('evtLoadingDone', {});
+					}
 				})
 				.error(function(response, status) {
 					$timeout.cancel(self.timeoutTrigs[instId]);
@@ -110,19 +112,23 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					}
 					$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:msg});
 					deferred.reject(response);
-					$rootScope.$broadcast('evtLoadingDone', {});
+					if(params.noLoadingScreen ===undefined || !params.noLoadingScreen) {
+						$rootScope.$broadcast('evtLoadingDone', {});
+					}
 				})
 				;
 				
-				//have to do this right before setting it again (previously it was earlier in the function but this is async now so may not cancel properly due to timing unless it's here
-				if(self.timeoutTrigs[instId]) {
-					$timeout.cancel(self.timeoutTrigs[instId]);
-				}
+				//have to do this right before setting it again (previously it was earlier in the function but this is async now so may not cancel properly due to timing unless it's here		//UPDATE: now using unique trigs so this should never be set yet
+				// if(self.timeoutTrigs[instId]) {
+					// $timeout.cancel(self.timeoutTrigs[instId]);
+				// }
 				//start timeout going to cancel call if it takes too long
 				self.timeoutTrigs[instId] =$timeout(function() {
 					$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:'Call is taking too long so was canceled; please check your internet connection and try again later'});
 					deferred.reject({msg:'call timeout - taking too long'});
-					$rootScope.$broadcast('evtLoadingDone', {});
+					if(params.noLoadingScreen ===undefined || !params.noLoadingScreen) {
+						$rootScope.$broadcast('evtLoadingDone', {});
+					}
 				}, params.maxMilliseconds);
 			});
 			
@@ -172,10 +178,11 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					jsonrpc: '2.0',
 					id: 1,
 					method: rpcOpts.method,
-					params: httpOpts.data || httpOpts.params || {}
+					// params: httpOpts.data || httpOpts.params || {}
+					params: httpOpts.data	//GET requests will overwrite this
 				};
 				// GET requests require that RPC input be placed under rpc namespace
-				if( httpOpts.method === 'GET' ) {
+				if( httpOpts.method.toUpperCase() === 'GET' ) {
 					httpOpts.params = {
 						rpc: httpOpts.data
 					};
@@ -213,12 +220,13 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					'user_id':cookieUser,
 					'sess_id':cookieSess
 				};
-				if(httpOpts.params !==undefined) {
+				//will always be defined by now since set defaults above
+				// if(httpOpts.params !==undefined) {
 					httpOpts.params.authority_keys =authObj;
-				}
-				if(httpOpts.data !==undefined) {
+				// }
+				// if(httpOpts.data !==undefined) {
 					httpOpts.data.authority_keys =authObj;
-				}
+				// }
 				deferred.resolve(httpOpts);
 			}
 			else {
@@ -229,17 +237,20 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 						'user_id':user._id,
 						'sess_id':user.sess_id
 					};
-					if(httpOpts.params !==undefined) {
+					//will always be defined by now since set defaults above
+					// if(httpOpts.params !==undefined) {
 						httpOpts.params.authority_keys =authObj;
-					}
-					if(httpOpts.data !==undefined) {
+					// }
+					// if(httpOpts.data !==undefined) {
 						httpOpts.data.authority_keys =authObj;
-					}
+					// }
 					deferred.resolve(httpOpts);
 				
-				}, function(err) {
-					deferred.resolve(httpOpts);
-				});
+				}
+				// , function(err) {
+					// deferred.resolve(httpOpts);
+				// }
+				);
 			}
 			
 			return deferred.promise;
