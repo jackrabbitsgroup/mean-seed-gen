@@ -14,9 +14,9 @@
 	"platform":"",
 	"server": {
 		"domain": "localhost",
-		"port": 3005,
+		"port": 3000,
 		"httpsPort": 443,
-		"socketPort": 3006,
+		"socketPort": 3001,
 		"serverPath": "/",
 		"appPath": "/",
 		"staticFilePath": "/src/",
@@ -30,7 +30,7 @@
 		"fullURI": "",
 		"host": "localhost",
 		"port": 27017,
-		"database": "test_temp",
+		"database": "mean-seed-gen",
 		"username": false,
 		"password": false
 	},
@@ -70,28 +70,20 @@
 		"emails_failed":[
 		]
 	},
-	"less":{
-		"dirPathRootPrefix": ""
-	},
 	"email":{
-		"domain": "localhost",
-		"addresses": {
-			"noReply": "noreply"
-		},
 		"from": "admin@mean-seed-gen.com",
-		"from_name": "Admin TEST",
+		"from_name": "Admin",
 		"mandrillApiKey": "8X-1bNRWtA4rbneppkqahw",
 		"mandrillApiKeyComment":"Make sure to CHANGE this!"
 	},
 	"sms":{
 	},
 	"facebook":{
-		"scope": "email,user_birthday",
 		"appId": "195380783916970",
 		"appIdComment":"Make sure to CHANGE this!"
 	},
-	"twitter": {
-		"handle": ""
+	"less":{
+		"dirPathRootPrefix": ""
 	},
 	"google":{
 		"clientId": "486630891328.apps.googleusercontent.com",

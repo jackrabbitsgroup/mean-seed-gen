@@ -43,19 +43,7 @@ var cfgJson = grunt.config('cfgJson');
 		'all': <% print(cfgJson.cors.frontendUseCors); %>
 	}
 	};
-	this.emailDomain ="emailDomainHere.com";
 	this.info ={
-	'emailContact':'talk@',		//emailDomtain will be appended in init
-	'emailNoReply':'noreply@',		//emailDomtain will be appended in init
-	'appName':'AppNameHere',
-	'appTitle':'<% print(cfgJson.app.title); %>',
-	//'androidMarketLink':'http://play.google.com/store/apps/details?id=com.phonegap.x',
-	'websiteLink':'http://domainHere.com/',
-	'fbAppId':'<% print(cfgJson.facebook.appId); %>',
-	//'fbPerms':"email,user_birthday,offline_access,publish_stream",
-	'fbPerms':"email,user_birthday",
-	'twitterHandle':'handleHere',
-	'googleClientId':'<% print(cfgJson.google.clientId); %>',
 	'timezone':{
 		'name':'',
 		'offset':'',
@@ -76,7 +64,6 @@ var cfgJson = grunt.config('cfgJson');
 			//serverInfo: this.serverInfo,
 			//server: this.server,
 			dirPaths: this.dirPaths,
-			emailDomain: this.emailDomain,
 			info: this.info,
 			data: this.data,
 			state: this.state,
@@ -115,9 +102,6 @@ var cfgJson = grunt.config('cfgJson');
 		this.dirPaths.images =this.dirPaths.staticPath+this.dirPaths.images;
 		this.dirPaths.uploads =this.dirPaths.appPath+this.dirPaths.uploads;
 		this.dirPaths.homeDirectory =this.dirPaths.serverUrl;
-
-		this.info.emailContact +=this.emailDomain;
-		this.info.emailNoReply +=this.emailDomain;
 		
 		//get timezone offset
 		var getOffsetFromMinutes =function(minutesTotal, params) {
