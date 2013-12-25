@@ -1,22 +1,19 @@
 'use strict';
 
 describe('appAuth', function(){
-	var ctrl, scope ={}, $httpBackend, appHttp, appAuth, appStorage, appConfig, $cookieStore, UserModel;
+	var $rootScope ={}, $httpBackend, appAuth, $cookieStore, UserModel, appHttp, appConfig, appStorage;
 
-	beforeEach(module('ngCookies'));
-	beforeEach(module('jrg'));
-    beforeEach(module('app'));
+	beforeEach(module('myApp'));
 	
-	beforeEach(inject(function($rootScope, $controller, $injector, _appHttp_, _appAuth_, _appStorage_, _appConfig_, _$cookieStore_, _UserModel_) {
+	beforeEach(inject(function(_$rootScope_, _$httpBackend_, _appAuth_, _$cookieStore_, _UserModel_, _appHttp_, _appConfig_, _appStorage_) {
 		appHttp =_appHttp_;
 		appAuth =_appAuth_;
 		appStorage =_appStorage_;
 		appConfig =_appConfig_;
 		$cookieStore =_$cookieStore_;
 		UserModel =_UserModel_;
-		$httpBackend = $injector.get('$httpBackend');
-		
-		scope = $rootScope.$new();
+		$httpBackend = _$httpBackend_;
+		$rootScope = _$rootScope_;
 	}));
 
 	afterEach(function() {
@@ -41,8 +38,8 @@ describe('appAuth', function(){
 			});
 			
 			//get deferred to resolve
-			scope.$apply();
-			scope.$digest();
+			// $rootScope.$apply();
+			$rootScope.$digest();
 		});
 	});
 
@@ -62,8 +59,8 @@ describe('appAuth', function(){
 		});
 		
 		//get deferred to resolve
-		scope.$apply();
-		scope.$digest();
+		// $rootScope.$apply();
+		$rootScope.$digest();
 	});
 
 	/*
@@ -102,9 +99,9 @@ describe('appAuth', function(){
 			});
 
 			// $httpBackend.flush();
-			scope.$apply();
-			scope.$digest();
-			$httpBackend.flush();		//ORDER MATTERS - can NOT do this above the scope.$digest/$apply!
+			// $rootScope.$apply();
+			$rootScope.$digest();
+			$httpBackend.flush();		//ORDER MATTERS - can NOT do this above the $rootScope.$digest/$apply!
 		}, function(err) {
 			console.log('promiseStorage err');
 		});
