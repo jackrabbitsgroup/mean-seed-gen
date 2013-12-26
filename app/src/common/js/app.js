@@ -86,42 +86,33 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	Generic / common routes
 	@toc 2.
 	*/
-	/*
-	$routeProvider.when(appPathRoute+'home', {templateUrl: pagesPath+'home/home.html',
-		resolve: {
-			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
-			}
-		}
-	});
-	*/
 	$routeProvider.when(appPathRoute+'home', {redirectTo: appPathRoute+'dev-test/test'});
 	
 	$routeProvider.when(appPathRoute+'login', {templateUrl: pagesPath+'login/login.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
 	$routeProvider.when(appPathRoute+'signup', {templateUrl: pagesPath+'signup/signup.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
 	$routeProvider.when(appPathRoute+'logout', {templateUrl: pagesPath+'logout/logout.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
 	$routeProvider.when(appPathRoute+'user-delete', {templateUrl: pagesPath+'userDelete/user-delete.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
@@ -129,7 +120,7 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	$routeProvider.when(appPathRoute+'password-reset', {templateUrl: pagesPath+'passwordReset/password-reset.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({'noLoginRequired':true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
@@ -139,7 +130,7 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	$routeProvider.when(appPathRoute+'dev-test/test', {templateUrl: pagesPath+'dev-test/test/test.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({noLoginRequired:true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
@@ -147,14 +138,14 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	$routeProvider.when(appPathRoute+'dev-test/design', {templateUrl: pagesPath+'dev-test/design/design.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({noLoginRequired:true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
 	$routeProvider.when(appPathRoute+'dev-test/socketio', {templateUrl: pagesPath+'dev-test/socketio/socketio.html',
 		resolve: {
 			auth: function(appAuth) {
-				return appAuth.checkSess({noLoginRequired:true});
+				return appAuth.checkSess({});
 			}
 		}
 	});
