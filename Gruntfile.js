@@ -9,6 +9,7 @@
 4. setup variables
 5. grunt.initConfig
 6. register grunt tasks
+	6.1. outputCoverage
 
 NOTE: use "grunt --type=prod" to run production version
 NOTE: use "grunt --config=test" to run with a 'config-test.json' file instead of the default 'config.json' file. You can change 'test' to whatever suffix you want. This allows creating multiple configurations and then running different ones as needed.
@@ -893,6 +894,33 @@ module.exports = function(grunt) {
 		register/define grunt tasks
 		@toc 6.
 		*/
+		
+		/**
+		@toc 6.1.
+		@method outputCoverage
+		*/
+		grunt.registerTask('outputCoverage', 'display coverage thresholds', function() {
+		// var outputCoverageThresholds =function(params) {
+			var xx;
+			var backend =cfgJson.test_coverage.jasmine_node;
+			var frontend =cfgJson.test_coverage.angular_karma;
+			var msg ='TEST COVERAGE Thresholds:\n';
+			msg+='Backend (Node API/Integration Tests):\n';
+			for(xx in backend) {
+				if(xx !=='failTask') {
+					msg+=xx+': '+backend[xx]+' ';
+				}
+			}
+			msg+='\n';
+			msg+='Frontend (Angular Karma Unit Tests):\n';
+			for(xx in frontend) {
+				msg+=xx+': '+frontend[xx]+' ';
+			}
+			msg+='\n';
+			grunt.log.subhead(msg);
+		});
+		
+		
 		var tasks =[];
 		var tasksSelenium =[];
 		
@@ -971,11 +999,16 @@ module.exports = function(grunt) {
 			}
 
 			if(validVersion) {
-				var tasks =['build', 'test'];
+				var tasks =['outputCoverage', 'build', 'test'];
 				//see if we want to run forever or not
 				if(cfgJson.forever !==undefined && cfgJson.forever) {
 					// tasks =['build', 'foreverMulti', 'wait:afterForever', 'test'];		//need to wait after restart server to give a chance to initialize before the tests are attempted (otherwise will just error and fail because the server isn't up/restarted yet)
 					tasks =['build', 'foreverMulti', 'test'];		//do NOT need to wait anymore now that moved test server to be started by test task itself!
+				}
+				tasks.push('outputCoverage');
+				//locally ENSURE coverage is enforced (either locally or Windows is NOT running final node coverage)
+				if(cfgJson.server.domain =='localhost') {
+					tasks.push('exit');
 				}
 				grunt.task.run(tasks);
 			} else {
@@ -1041,6 +1074,7 @@ module.exports = function(grunt) {
 		grunt.registerTask('dev', ['test-cleanup', 'test-setup', 'q-watch', 'karma:watch:start', 'focus:all']);
 	
 	}
+	
 	init({});		//initialize here for defaults (init may be called again later within a task)
 
 };
