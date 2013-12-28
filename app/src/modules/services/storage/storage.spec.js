@@ -25,7 +25,27 @@ describe('appStorage', function(){
 	});
 	
 	it('should delete all keys if no key specified', function() {
-		appStorage.delete1();
+		var user ={
+			_id: 'user_id1',
+			email: 'test1@gmail.com',
+			sess_id: 'sess_id1'
+		};
+		appStorage.save('user', user, {});
+		appStorage.read('user', {})
+		.then(function(retUser) {
+			expect(retUser._id).toBe(user._id);
+		});
+		$rootScope.$digest();
+		
+		appStorage.delete1().
+		then(function(ret) {
+			appStorage.read('user', {})
+			.then(function(retUser) {
+				expect(1).toBe(0);		//shouldn't get in here
+			}, function(retErr) {
+				expect(1).toBe(1);		//just want to ensure we get in here
+			});
+		});
 		$rootScope.$digest();
 		appStorage.delete1(undefined, {});
 		$rootScope.$digest();

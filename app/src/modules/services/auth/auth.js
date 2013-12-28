@@ -27,6 +27,7 @@ var inst ={
 		urlInfo: {
 			page: false,
 			queryParams: false,
+			queryParamsObj: false,
 			curNavPage: false		//holds the 'page' name used by the nav service (this uniquely identifies the page/view WITHOUT any query params)
 		}
 	},
@@ -130,6 +131,30 @@ var inst ={
 	@param {Object} ppNew
 		@param {Boolean} loggedIn True if the user is logged in
 	@return {Boolean} True if allowed to view this page
+	@example
+		checkAuth({}, {status:'member'}, {loggedIn:false});
+		
+		checkAuth(
+			{
+				auth: {
+					loggedIn: {
+						exceptionUrlParamsRegex: {
+							p1: '.*'		//will match anything so as long as 'p1' URL param is present, will be allowed, even if not logged in
+						}
+					},		//require user to be logged in to view this page
+					//require user to be a member (user.status =='member') to view this page and if NOT, redirect user to 'auth-member' page
+					member: {
+						redirect: 'auth-member'
+					}
+				}
+			},
+			{
+				status: 'guest'
+			},
+			{
+				loggedIn:true
+			}
+		);
 	*/
 	checkAuth: function(params, user, ppNew) {
 		var ret ={valid: true, redirectPage:''};
@@ -152,7 +177,7 @@ var inst ={
 					// $location.url(appConfig.dirPaths.appPathLocation+params.auth.loggedIn.redirect);
 				}
 			}
-			if(ret.valid && params.auth.member !==undefined && user.status =='guest') {
+			if(ret.valid && params.auth.member !==undefined && (!user || user ===undefined || user.status ===undefined || user.status =='guest')) {
 				//since a guest (thus NOT a member), not authorized to view this page
 				ret.valid =false;
 				//search through the exception url params - if a match, ALLOW this page
@@ -215,6 +240,8 @@ var inst ={
 	Called to handle the deferred.resolve OR deferred.reject as well as first checking authorizations and doing the redirect - basically this abstracts all the common copy/paste code from the various conditions
 	@toc 1.6.
 	@method preDone
+	@param {Object} deferred
+	@param {Boolean} goTrig
 	@param {Object} params
 		@param {Object} [auth] Object of objects; each key is an authorization required for this page and has a 'redirect' key inside it that tells which page to send the user to if they do NOT meet this authorization and thus aren't allowed to view this page
 			@param {Object} [loggedIn] Add this key to require the user to be logged in to view this page. NOTE: the default redirect page is 'login' so this value does NOT need to be set if you want to just use the default.
@@ -222,18 +249,25 @@ var inst ={
 	@param {Object} ppNew
 		@param {Boolean} loggedIn True if the user is logged in / to login the user
 		@param {Boolean} checkRedirectUrl True to go to redirect url IF it exists
+	@return {Object} (via Promise)
+		@param {Boolean} goTrig
+		@param {Boolean} valid True if authorized to see the original page
+		@param {String} redirectPage The page to go to (if NOT authorized), i.e. 'login'
 	*/
 	preDone: function(deferred, goTrig, params, ppNew) {
 		var thisObj =this;
 		var user =UserModel.load();
 		var retAuth =thisObj.checkAuth(params, user, {loggedIn:ppNew.loggedIn});
+		//add goTrig to be returned by promise too
+		retAuth.goTrig =goTrig;
+		
 		if(!retAuth.valid) {
 			if(thisObj.samePage(retAuth.redirectPage, {})) {
 				thisObj.done({});
-				deferred.resolve({'goTrig':goTrig});
+				deferred.resolve(retAuth);
 			}
 			else {
-				deferred.reject({'goTrig':goTrig});
+				deferred.reject(retAuth);
 			}
 			$location.url(appConfig.dirPaths.appPathLocation+retAuth.redirectPage);
 		}
@@ -241,9 +275,10 @@ var inst ={
 			if(ppNew.loggedIn ===false) {
 				//login not required for this page
 				thisObj.done({});
-				deferred.resolve({'goTrig':goTrig});
+				deferred.resolve(retAuth);
 			}
-			else if(ppNew.loggedIn ===true) {
+			else {
+			// else if(ppNew.loggedIn ===true) {
 				$rootScope.$broadcast('loginEvt', {'loggedIn':true, 'noRedirect':true, 'user_id':user._id, 'sess_id':user.sess_id});
 				if(ppNew.checkRedirectUrl !==undefined && ppNew.checkRedirectUrl && thisObj.data.redirectUrl) {
 					$location.url(appConfig.dirPaths.appPathLocation+thisObj.data.redirectUrl);
@@ -252,15 +287,15 @@ var inst ={
 					$cookieStore.remove('redirectUrl');
 					if(thisObj.samePage(redirectUrlSave, {})) {
 						thisObj.done({});
-						deferred.resolve({'goTrig':goTrig});
+						deferred.resolve(retAuth);
 					}
 					else {
-						deferred.reject({'goTrig':goTrig});		//reject since changing pages so will come back here from new page; don't want to load the current page
+						deferred.reject(retAuth);		//reject since changing pages so will come back here from new page; don't want to load the current page
 					}
 				}
 				else {
 					thisObj.done({});
-					deferred.resolve({'goTrig':goTrig});
+					deferred.resolve(retAuth);
 				}
 			}
 		}
@@ -276,6 +311,20 @@ var inst ={
 			@param {Object} [loggedIn] Add this key to require the user to be logged in to view this page. NOTE: the default redirect page is 'login' so this value does NOT need to be set if you want to just use the default.
 			@param {Object} [member] Add this key to require the user to be a member (i.e. not a 'guest' status)
 	@return promise (may be blank, just so can defer loading page from routeProvider if need be to first check for auth)
+	@example
+		//no auth required (ANYONE can view this page)
+		appAuth.checkSess({});
+		
+		//login AND member required
+		appAuth.checkSess({
+			auth: {
+				loggedIn: {},		//require user to be logged in to view this page
+				//require user to be a member (user.status =='member') to view this page and if NOT, redirect user to 'auth-member' page
+				member: {
+					redirect: 'auth-member'
+				}
+			}
+		});
 	*/
 	checkSess: function(params) {
 		var thisObj =this;
@@ -293,7 +342,6 @@ var inst ={
 		//can put encrypted login handling here (i.e. pull user login info from GET params and log in user accordingly)
 		
 		if(appConfig.state.loggedIn ===false) {
-			// console.log('checking auth');
 			goTrig =false;
 			//check (local)storage
 			var promiseStorage =appStorage.read('user', {});
@@ -318,27 +366,30 @@ var inst ={
 				}
 				else {
 					goTrig =true;
-					if(appConfig.state.loggedIn ===false) {
+					//has to NOT be logged in to get here (see check above)
+					// if(appConfig.state.loggedIn ===false) {
 						thisObj.preDone(deferred, goTrig, params, {loggedIn: false});
-					}
-					else {
-						thisObj.preDone(deferred, goTrig, params, {loggedIn: true});
-					}
+					// }
+					// else {
+						// thisObj.preDone(deferred, goTrig, params, {loggedIn: true});
+					// }
 				}
 			});
 		}
 		if(goTrig) {		//no AJAXing, just handle redirect (to login OR home/main) here
-			if(appConfig.state.loggedIn ===false) {
-				thisObj.preDone(deferred, goTrig, params, {loggedIn: false});
-			}
-			else {
+			//no way to get here with loggedIn false AND goTrig true?
+			// if(appConfig.state.loggedIn ===false) {
+				// thisObj.preDone(deferred, goTrig, params, {loggedIn: false});
+			// }
+			// else {
 				thisObj.preDone(deferred, goTrig, params, {loggedIn: true});
-			}
+			// }
 		}
 		
 		return deferred.promise;
 	}
 
 };
+inst.init({});
 return inst;
 }]);
