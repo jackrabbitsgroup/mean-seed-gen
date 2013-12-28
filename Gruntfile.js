@@ -1007,7 +1007,8 @@ module.exports = function(grunt) {
 				}
 				tasks.push('outputCoverage');
 				//locally ENSURE coverage is enforced (either locally or Windows is NOT running final node coverage)
-				if(cfgJson.server.domain =='localhost') {
+				// if(cfgJson.server.domain =='localhost') {
+				if(1) {		//actually it's even a problem on linux servers??
 					tasks.push('exit');
 				}
 				grunt.task.run(tasks);
