@@ -36,6 +36,7 @@ var pathPart =pathParts.controllers;
 var AuthApi = require(pathPart+'auth/auth.api.js');
 var UserApi = require(pathPart+'user/user.api.js');
 var FollowApi = require(pathPart+'follow/follow.api.js');
+var TwitterApi = require(pathPart+'twitter/twitter.api.js');
 //site-specific - require other api files here
 
 
@@ -60,6 +61,9 @@ module.exports = function(cfg, server, db){
 		db: db
 	});
 	var followApi = new FollowApi({
+		db: db
+	});
+	var twitterApi = new TwitterApi({
 		db: db
 	});
 	//site-specific - load other api's here
@@ -97,6 +101,12 @@ module.exports = function(cfg, server, db){
 		follow: {
 			modules: {
 				follow: followApi
+			},
+			middleware: []
+		},
+		twitter: {
+			modules: {
+				twitter: twitterApi
 			},
 			middleware: []
 		}
