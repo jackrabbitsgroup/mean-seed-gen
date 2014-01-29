@@ -34,6 +34,7 @@ var MongoDBMod =require(pathParts.services+'mongodb/mongodb.js');
 var AuthTests = require(pathParts.modules+'/controllers/auth/auth.test.js');
 var UserTests = require(pathParts.modules+'/controllers/user/user.test.js');
 var FollowTests = require(pathParts.modules+'/controllers/follow/follow.test.js');
+var TwitterTests = require(pathParts.modules+'/controllers/twitter/twitter.test.js');
 
 //run the server in the TEST environment (this also is required for coverage to work / run on all the files)		//UPDATE: now running this with grunt instead		//UPDATE 2: running with grunt breaks coverage (i.e. it does not run on all files) - apparently MUST run this file here for coverage to work properly..
 process.argv.push('config=test');		//add test command line argument
@@ -134,6 +135,7 @@ describe('all tests', function() {
 			AuthTests =new AuthTests({db: db, api:api});
 			UserTests =new UserTests({db: db, api:api});
 			FollowTests =new FollowTests({db: db, api:api});
+			TwitterTests =new TwitterTests({db: db, api:api});
 		};
 
 		/**
@@ -158,6 +160,7 @@ describe('all tests', function() {
 					var promiseAuth =AuthTests.run({})
 					.then(UserTests.run({}))
 					.then(FollowTests.run({}))
+					.then(TwitterTests.run({}))
 					.then(function(retFin) {
 						console.log('all tests done!');
 					}, function(err) {
