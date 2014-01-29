@@ -1,48 +1,39 @@
 'use strict';
 
 describe('TwitterAuthCallbackCtrl', function(){
-	var $ctrl, $scope ={}, $httpBackend;
+	var $ctrl, $scope ={}, $httpBackend, $routeParams, $controller;
 	
 	beforeEach(module('myApp'));
 	
-	beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_) {
+	beforeEach(inject(function(_$rootScope_, _$controller_, _$httpBackend_, _$routeParams_) {
 		$httpBackend =_$httpBackend_;
+		$routeParams =_$routeParams_;
 		$scope = _$rootScope_.$new();
-		$ctrl = _$controller_('TwitterAuthCallbackCtrl', {$scope: $scope});
+		
+		// $ctrl = _$controller_('TwitterAuthCallbackCtrl', {$scope: $scope});		//can't call here since need to set $routeParams FIRST in some tests
+		$controller =_$controller_;
 	}));
 	
-	/*
-	it('should have working login function', function() {
-		var callbackCalled =false;
+	it('should not make backend api twitter accessToken request without proper $routeParams', function() {
+		$ctrl = $controller('TwitterAuthCallbackCtrl', {$scope: $scope});
+	});
+	
+	it('should make backend api twitter accessToken request if $routeParams are set properly', function() {
+		$routeParams.oauth_token ='oauthToken';
+		$routeParams.oauth_verifier ='oauthVerifier';
+		
 		var user ={
-			_id: '2l3kdla',
-			sess_id: '82823ka',
-			first_name: 'First',
-			last_name: 'Last'
+			_id: 'userId',
+			sess_id: 'sessId'
 		};
-		$httpBackend.expectPOST('/api/auth/login').respond({result: {user: user}});
-		var vals ={
-			email: 'some@email.com',
-			password: 'password'
-		};
-		$scope.login({vals: vals}, function(params) {
-			callbackCalled =true;
-		});
+		$httpBackend.expectPOST('/api/twitter/accessToken').respond({result: {user: user } });
 		
-		$scope.$on('loginEvt', function(evt, params) {
-			expect(params.loggedIn).toBe(true);
-			expect(params.user_id).toBe(user._id);
-			expect(params.sess_id).toBe(user.sess_id);
-		});
+		$ctrl = $controller('TwitterAuthCallbackCtrl', {$scope: $scope});
 		
-		expect(callbackCalled).toBe(false);
 		$httpBackend.flush();
-		$scope.$digest();
-		expect(callbackCalled).toBe(true);
 		
 		$httpBackend.verifyNoOutstandingExpectation();
 		$httpBackend.verifyNoOutstandingRequest();
 	});
-	*/
 	
 });
