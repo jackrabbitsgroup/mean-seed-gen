@@ -136,7 +136,7 @@ Gets an access token and then uses that info to call auth.socialLogin to signup/
 Twitter.prototype.accessToken = function(db, data, params)
 {
 	var deferred = Q.defer();
-	var ret ={code:0, msg:'Twitter.accessToken '};
+	var ret ={code:0, err:false, msg:'Twitter.accessToken '};
 	
 	data.request_token =twitterData.requestToken;
 	data.request_token_secret =twitterData.requestTokenSecret;
@@ -146,7 +146,8 @@ Twitter.prototype.accessToken = function(db, data, params)
 	twitter.getAccessToken(data.request_token, data.request_token_secret, data.oauth_verifier, function(error, accessToken, accessTokenSecret, results) {
 		if (error) {
 			ret.code =1;
-			ret.msg +="Error getting OAuth access token : " + error;
+			ret.msg +="Error getting OAuth access token";
+			ret.err =error;
 			deferred.reject(ret);
 		} else {
 		
