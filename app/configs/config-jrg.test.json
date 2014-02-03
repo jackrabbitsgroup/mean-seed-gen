@@ -87,18 +87,18 @@
 	},
 	"facebook":{
 		"scope": "email,user_birthday",
-		"appId": "195380783916970",
+		"appId": "591547120922622",
 		"appIdComment":"Make sure to CHANGE this!"
 	},
 	"twitter": {
-		"consumerKey": "UXIdAIpFP0YSkZpo09Eejg",
-		"consumerSecret": "eNVTzCAFmLLEUmGXSyLVWfAuMoBXvnylefa5AFvqyc",
+		"consumerKey": "KPlvObWJeC075kdZPRPmA",
+		"consumerSecret": "L6YGH4MYbAmI97rFwhXgJnVzSTiqGC6Seo9GlLiQA",
 		"consumerComment":"Make sure to CHANGE the key and secret!",
-		"callback_url": "http://127.0.0.1:3000/twitter-auth-callback",
+		"callback_url": "http://198.199.118.44:3000/twitter-auth-callback",
 		"handle": ""
 	},
 	"google":{
-		"clientId": "486630891328.apps.googleusercontent.com",
+		"clientId": "749916652138-6ka6r0rkrhr457cv7qattg2jb6haoq0c.apps.googleusercontent.com",
 		"clientIdComment":"Make sure to CHANGE this!",
 		"clientSecret": ""
 	},
