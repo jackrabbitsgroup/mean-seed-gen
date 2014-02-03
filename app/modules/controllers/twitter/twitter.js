@@ -148,6 +148,7 @@ Twitter.prototype.accessToken = function(db, data, params)
 			ret.code =1;
 			ret.msg +="Error getting OAuth access token";
 			ret.err =error;
+			ret.debug =data;
 			deferred.reject(ret);
 		} else {
 		
