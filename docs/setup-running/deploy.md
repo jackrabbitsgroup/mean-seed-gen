@@ -47,8 +47,8 @@ APP_DOMAIN someurl.com				//this can also be an ip address, i.e. xxx.xxx.xxx.xx
 	1. `git config --global user.name "GIT_NAME"`
 	2. `git config --global user.email "GIT_EMAIL"`
 	3. `git config --global --add color.ui true`
-3. [on new server] install Concrete CI. The regular one/main repo is good but doesn't seem to have auto Git web hooks built in so I used this fork instead: https://github.com/edy/concrete
-	1. `git clone https://github.com/edy/concrete.git CONCRETE_PATH`
+3. [on new server] install Concrete CI. The regular one/main repo is good but doesn't seem to have auto Git web hooks built in so I used this fork instead: https://github.com/jackrabbitsgroup/concrete
+	1. `git clone https://github.com/jackrabbitsgroup/concrete.git CONCRETE_PATH`
 	2. set permissions for the new `concrete` folder
 		1. `sudo chown -R root:PERMISSIONS_GROUP CONCRETE_PATH`
 		2. `sudo chmod -R g+w CONCRETE_PATH`
@@ -68,7 +68,7 @@ APP_DOMAIN someurl.com				//this can also be an ip address, i.e. xxx.xxx.xxx.xx
 		1. create (if not already present) `.git/hooks/build-failed` and add `node ci.js build=failed` to it, i.e. using `echo 'node ci.js build=failed' > APP_PATH/.git/hooks/build-failed`
 		2. create (if not already present) `.git/hooks/build-worked` and add `node ci.js build=worked` to it, i.e. using `echo 'node ci.js build=worked' > APP_PATH/.git/hooks/build-worked`
 		3. set permissions so the hooks can be run - `sudo chmod -R +x APP_PATH/.git/hooks`
-5. [on new server] run concrete server with forever: `forever start CONCRETE_PATH/bin/concrete -p CONCRETE_PORT .`
+5. [on new server] run concrete server with forever: `cd APP_PATH && forever start CONCRETE_PATH/bin/concrete -p CONCRETE_PORT .`
 	1. Open a browser to `http://APP_DOMAIN:CONCRETE_PORT` to see your continuous integration server!
 6. On github.com add a webhook to the concrete server so it will run on each git push!
 	1. In your repo on github.com, click on `Settings` then `Service Hooks` then `WebHook URLs` and add a URL: `http://APP_DOMAIN:CONCRETE_PORT/webhook`

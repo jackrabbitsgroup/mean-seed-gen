@@ -30,11 +30,13 @@ var pathParts =dependency.buildPaths(__dirname, {});
 var MongoDBMod =require(pathParts.services+'mongodb/mongodb.js');
 
 //include/require all individual tests
-//site-specific
 var AuthTests = require(pathParts.modules+'/controllers/auth/auth.test.js');
 var UserTests = require(pathParts.modules+'/controllers/user/user.test.js');
 var FollowTests = require(pathParts.modules+'/controllers/follow/follow.test.js');
 var TwitterTests = require(pathParts.modules+'/controllers/twitter/twitter.test.js');
+//site-specific
+//yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
+//end: yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 
 //run the server in the TEST environment (this also is required for coverage to work / run on all the files)		//UPDATE: now running this with grunt instead		//UPDATE 2: running with grunt breaks coverage (i.e. it does not run on all files) - apparently MUST run this file here for coverage to work properly..
 process.argv.push('config=test');		//add test command line argument
@@ -131,11 +133,13 @@ describe('all tests', function() {
 		*/
 		var initModules =function(params) {
 			//now that have db, set it in modules
-			//site-specific
 			AuthTests =new AuthTests({db: db, api:api});
 			UserTests =new UserTests({db: db, api:api});
 			FollowTests =new FollowTests({db: db, api:api});
 			TwitterTests =new TwitterTests({db: db, api:api});
+			//site-specific
+			//yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
+			//end: yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 		};
 
 		/**
@@ -156,11 +160,13 @@ describe('all tests', function() {
 						// console.log('err: '+err);
 					// });
 					
-					//site-specific
 					var promiseAuth =AuthTests.run({})
 					.then(UserTests.run({}))
 					.then(FollowTests.run({}))
 					.then(TwitterTests.run({}))
+					//site-specific
+					//yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
+					//end: yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 					.then(function(retFin) {
 						console.log('all tests done!');
 					}, function(err) {
