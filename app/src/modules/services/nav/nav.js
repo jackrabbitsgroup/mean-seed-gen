@@ -150,41 +150,43 @@ var inst ={
 	@method afterNavUpdated
 	*/
 	afterNavUpdated: function(params) {
-		//update nav button classes pending if there's an icon, html, or both
-		var ii;
-		//header
-		if(this.curNav.header.buttons !==undefined) {
-			//left buttons
-			if(this.curNav.header.buttons.left !==undefined) {
-				for(ii =0; ii<this.curNav.header.buttons.left.length; ii++) {
-					if(this.curNav.header.buttons.left[ii].classes ===undefined) {
-						this.curNav.header.buttons.left[ii].classes ={};
+		if(this.curNav !==undefined) {
+			//update nav button classes pending if there's an icon, html, or both
+			var ii;
+			//header
+			if(this.curNav.header !==undefined && this.curNav.header.buttons !==undefined) {
+				//left buttons
+				if(this.curNav.header.buttons.left !==undefined) {
+					for(ii =0; ii<this.curNav.header.buttons.left.length; ii++) {
+						if(this.curNav.header.buttons.left[ii].classes ===undefined) {
+							this.curNav.header.buttons.left[ii].classes ={};
+						}
+						if(this.curNav.header.buttons.left[ii].icon !==undefined && this.curNav.header.buttons.left[ii].iconHtml ===undefined) {		//icon only
+							this.curNav.header.buttons.left[ii].classes.button ='icon-only';
+						}
 					}
-					if(this.curNav.header.buttons.left[ii].icon !==undefined && this.curNav.header.buttons.left[ii].iconHtml ===undefined) {		//icon only
-						this.curNav.header.buttons.left[ii].classes.button ='icon-only';
+				}
+				//right buttons
+				if(this.curNav.header.buttons.right !==undefined) {
+					for(ii =0; ii<this.curNav.header.buttons.right.length; ii++) {
+						if(this.curNav.header.buttons.right[ii].classes ===undefined) {
+							this.curNav.header.buttons.right[ii].classes ={};
+						}
+						if(this.curNav.header.buttons.right[ii].icon !==undefined && this.curNav.header.buttons.right[ii].iconHtml ===undefined) {		//icon only
+							this.curNav.header.buttons.right[ii].classes.button ='icon-only';
+						}
 					}
 				}
 			}
-			//right buttons
-			if(this.curNav.header.buttons.right !==undefined) {
-				for(ii =0; ii<this.curNav.header.buttons.right.length; ii++) {
-					if(this.curNav.header.buttons.right[ii].classes ===undefined) {
-						this.curNav.header.buttons.right[ii].classes ={};
+			//footer
+			if(this.curNav.footer !==undefined && this.curNav.footer.buttons !==undefined) {
+				for(ii =0; ii<this.curNav.footer.buttons.length; ii++) {
+					if(this.curNav.footer.buttons[ii].classes ===undefined) {
+						this.curNav.footer.buttons[ii].classes ={};
 					}
-					if(this.curNav.header.buttons.right[ii].icon !==undefined && this.curNav.header.buttons.right[ii].iconHtml ===undefined) {		//icon only
-						this.curNav.header.buttons.right[ii].classes.button ='icon-only';
+					if(this.curNav.footer.buttons[ii].icon !==undefined && this.curNav.footer.buttons[ii].iconHtml ===undefined) {		//icon only
+						this.curNav.footer.buttons[ii].classes.button ='icon-only';
 					}
-				}
-			}
-		}
-		//footer
-		if(this.curNav.footer.buttons !==undefined) {
-			for(ii =0; ii<this.curNav.footer.buttons.length; ii++) {
-				if(this.curNav.footer.buttons[ii].classes ===undefined) {
-					this.curNav.footer.buttons[ii].classes ={};
-				}
-				if(this.curNav.footer.buttons[ii].icon !==undefined && this.curNav.footer.buttons[ii].iconHtml ===undefined) {		//icon only
-					this.curNav.footer.buttons[ii].classes.button ='icon-only';
 				}
 			}
 		}

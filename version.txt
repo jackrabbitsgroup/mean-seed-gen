@@ -1,2 +1,2 @@
 generator-mean-seed
-1.0.9-11
+1.0.9-12
