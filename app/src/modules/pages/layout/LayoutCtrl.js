@@ -134,12 +134,15 @@ angular.module('myApp').controller('LayoutCtrl', ['$scope', 'appConfig', '$locat
 					$cookieStore.remove('redirectUrl');
 				}
 				//ensure page refreshes by adding param to end
-				var ppAdd ='refresh=1';
-				if(page.indexOf('?') >-1) {
-					ppAdd ='&'+ppAdd;
-				}
-				else {
-					ppAdd ='?'+ppAdd;
+				var ppAdd ='';
+				if(page.indexOf('refresh=1') <0) {
+					ppAdd ='refresh=1';
+					if(page.indexOf('?') >-1) {
+						ppAdd ='&'+ppAdd;
+					}
+					else {
+						ppAdd ='?'+ppAdd;
+					}
 				}
 				$location.url(appConfig.dirPaths.appPathLocation+page+ppAdd);
 			}

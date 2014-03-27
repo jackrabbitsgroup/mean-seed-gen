@@ -5,12 +5,28 @@
 
 'use strict';
 
-angular.module('myApp').controller('HeaderCtrl', ['$scope', 'appNav', function($scope, appNav) {
+angular.module('myApp').controller('HeaderCtrl', ['$scope', 'appNav', 'appConfig', function($scope, appNav, appConfig) {
 	$scope.nav ={};
 	
 	$scope.classes ={
 		cont: ''
 	};
+	
+	var nav;
+	
+	/**
+	@method init
+	*/
+	function init(params) {
+		nav =appNav.getNav({});
+		if(nav !==undefined && nav) {		//avoid errors (on init??)
+			//have to get login status on first time
+			var ppSend ={};
+			ppSend.loggedIn =appConfig.state.loggedIn;
+			nav =navLoginUpdate(nav, ppSend);
+			setNav(nav.header, {});
+		}
+	}
 	
 	/**
 	@method setNav
@@ -38,8 +54,45 @@ angular.module('myApp').controller('HeaderCtrl', ['$scope', 'appNav', function($
 		setNav(params.nav.header, {});
 	});
 	
+	/**
+	Handles post login (or reverse for logout) - need to update nav header (toggle between login / logout)
+	@toc 2.
+	@method $scope.$on('loginEvt',..
+	@param {Object} params
+		@param {Boolean} [loggedIn] true if logged in
+	*/
+	$scope.$on('loginEvt', function(evt, params) {
+		nav =appNav.getNav({});		//re-get
+		nav =navLoginUpdate(nav, params);
+		appNav.setNav(nav, {});
+	});
+	
+	/**
+	@toc 2.5.
+	@method navLoginUpdate
+	@param {Object} nav
+	@param {Object} params
+		@param {Boolean} loggedIn true if logged in
+	*/
+	function navLoginUpdate(nav, params) {
+		if(params.loggedIn) {		//show logout button
+			nav.header.buttons.right[0] ={
+				icon: 'fa fa-sign-out',
+				iconHtml: 'Logout',
+				href: $scope.appPathLink+'logout'
+			};
+		}
+		else {			//logged out - show login button
+			nav.header.buttons.right[0] ={
+				icon: 'fa fa-sign-in',
+				iconHtml: 'Login',
+				href: $scope.appPathLink+'login'
+			};
+		}
+		return nav;
+	}
+	
 	//init (since first load the $scope.$on may not be called)
-	var nav =appNav.getNav({});
-	setNav(nav.header, {});
+	init({});
 	
 }]);
