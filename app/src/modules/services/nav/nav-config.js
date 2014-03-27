@@ -142,12 +142,13 @@ var inst ={
 						icon: 'fa fa-sign-in',
 						iconHtml: 'Login',
 						href: this.paths.appPathLink+'login'
-					},
-					{
-						icon: 'fa fa-sign-out',
-						iconHtml: 'Logout',
-						href: this.paths.appPathLink+'logout'
 					}
+					//now toggling this in HeaderCtrl based on logged in status
+					// {
+						// icon: 'fa fa-sign-out',
+						// iconHtml: 'Logout',
+						// href: this.paths.appPathLink+'logout'
+					// }
 				]
 			}
 		};
