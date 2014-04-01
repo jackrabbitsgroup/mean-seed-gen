@@ -10,8 +10,8 @@
 					<i class='nav-header-icon-button-icon {{button.icon}}'></i>
 					<div class='nav-header-icon-button-text' ng-bind-html='button.iconHtml'></div>
 				</div>
-				<a ng-if='button.html' ng-show='button.href' class='nav-header-button' ng-href = '{{button.href}}' ng-bind-html='button.html'></a>
-				<div ng-if='button.html' ng-hide='button.href' class='nav-header-button' ng-click = 'button.click()' ng-bind-html='button.html'></div>
+				<a ng-if='button.html' ng-show='button.href' class='nav-header-button {{button.classes.button}}' ng-href = '{{button.href}}' ng-bind-html='button.html'></a>
+				<div ng-if='button.html' ng-hide='button.href' class='nav-header-button {{button.classes.button}}' ng-click = 'button.click()' ng-bind-html='button.html'></div>
 			</div>
 		</div>
 	</div>
@@ -30,8 +30,8 @@
 					<i class='nav-header-icon-button-icon {{button.icon}}'></i>
 					<div class='nav-header-icon-button-text' ng-bind-html='button.iconHtml'></div>
 				</div>
-				<a ng-if='button.html' ng-show='button.href' class='nav-header-button' ng-href = '{{button.href}}' ng-bind-html='button.html'></a>
-				<div ng-if='button.html' ng-hide='button.href' class='nav-header-button' ng-click = 'button.click()' ng-bind-html='button.html'></div>
+				<a ng-if='button.html' ng-show='button.href' class='nav-header-button {{button.classes.button}}' ng-href = '{{button.href}}' ng-bind-html='button.html'></a>
+				<div ng-if='button.html' ng-hide='button.href' class='nav-header-button {{button.classes.button}}' ng-click = 'button.click()' ng-bind-html='button.html'></div>
 			</div>
 		</div>
 	</div>
