@@ -943,7 +943,14 @@ Auth.prototype.socialLogin = function(db, data, params)
 					UserMod.read(db, {_id: ret.user._id}, {})
 					.then(function(retUser) {
 						ret.user =retUser.result;
-						deferred.resolve(ret);
+						//also need to update session
+						var promiseSession =updateSession(db, ret.user, {});
+						promiseSession.then(function(ret1) {
+							ret.user =ret1.user;
+							deferred.resolve(ret);
+						}, function(err) {
+							deferred.reject(err);
+						});
 					}, function(retErr) {
 						deferred.reject(retErr);
 					});

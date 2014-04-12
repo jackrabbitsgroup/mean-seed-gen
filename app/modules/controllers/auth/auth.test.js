@@ -219,6 +219,7 @@ function go(params) {
 				expect(data.result.user).toBeDefined();
 				expect(data.result.user.first_name).toBe(params.first_name);
 				expect(data.result.user.email).toBe(params.email.toLowerCase());
+				testUser._id =data.result.user._id;		//save for later
 				checkLogin({'user':data.result.user});		//go to next function/test in sequence
 				// done();
 				// deferred.resolve({});
@@ -391,21 +392,31 @@ function go(params) {
 		{
 			var data =res.data.result;
 			expect(data.already_exists).toEqual(false);
+			expect(data.user._id).toBeDefined();
+			testUser1._id =data.user._id;		//save for later
 			expect(data.user.social.test_type).toBeDefined();
 			expect(data.user.social.test_type).toEqual(params.socialData);
 			expect(data.user.sess_id).toBeDefined();
+			expect(data.user.sess_id.length).toBeGreaterThan(1);
 			
 			//should be able to login the same user again - it's important this also works
-			api.expectRequest({method:'Auth.socialLogin'}, {data:params }, {}, {})
-			.then(function(res)
-			{
-				var data =res.data.result;
-				expect(data.already_exists).toEqual(true);
-				expect(data.user.social.test_type).toBeDefined();
-				expect(data.user.social.test_type).toEqual(params.socialData);
-				expect(data.user.sess_id).toBeDefined();
+			//logout FIRST - this should clear sess_id and is what normally should happen before re-login
+			api.expectRequest({method:'Auth.logout'}, {data:{'user_id':testUser1._id}}, {}, {})
+			.then(function(res) {
+				var data =res.data;
 				
-				deferred.resolve();
+				api.expectRequest({method:'Auth.socialLogin'}, {data:params }, {}, {})
+				.then(function(res)
+				{
+					var data =res.data.result;
+					expect(data.already_exists).toEqual(true);
+					expect(data.user.social.test_type).toBeDefined();
+					expect(data.user.social.test_type).toEqual(params.socialData);
+					expect(data.user.sess_id).toBeDefined();
+					expect(data.user.sess_id.length).toBeGreaterThan(1);
+					
+					deferred.resolve();
+				});
 			});
 		});
 	};
