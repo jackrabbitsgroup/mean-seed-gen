@@ -938,8 +938,15 @@ Auth.prototype.socialLogin = function(db, data, params)
 				{
 					ret.code = 0;
 					ret.msg +='User updated';
-					ret.user.social[data.type] = data.socialData;
-					deferred.resolve(ret);
+					//in case of update, need to re-read user to get all info (esp. sess_id)
+					// ret.user.social[data.type] = data.socialData;
+					UserMod.read(db, {_id: ret.user._id}, {})
+					.then(function(retUser) {
+						ret.user =retUser.result;
+						deferred.resolve(ret);
+					}, function(retErr) {
+						deferred.reject(retErr);
+					});
 				}
 			});
 		},
