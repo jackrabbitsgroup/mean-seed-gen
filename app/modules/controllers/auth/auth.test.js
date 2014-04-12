@@ -371,6 +371,11 @@ function go(params) {
 		});
 	};
 	
+	/**
+	@toc 13.
+	@method socialLogin
+	@param {Object} opts
+	*/
 	var socialLogin =function()
 	{
 		var params =
@@ -388,7 +393,20 @@ function go(params) {
 			expect(data.already_exists).toEqual(false);
 			expect(data.user.social.test_type).toBeDefined();
 			expect(data.user.social.test_type).toEqual(params.socialData);
-			deferred.resolve();
+			expect(data.user.sess_id).toBeDefined();
+			
+			//should be able to login the same user again - it's important this also works
+			api.expectRequest({method:'Auth.socialLogin'}, {data:params }, {}, {})
+			.then(function(res)
+			{
+				var data =res.data.result;
+				expect(data.already_exists).toEqual(true);
+				expect(data.user.social.test_type).toBeDefined();
+				expect(data.user.social.test_type).toEqual(params.socialData);
+				expect(data.user.sess_id).toBeDefined();
+				
+				deferred.resolve();
+			});
 		});
 	};
 	
