@@ -196,7 +196,7 @@ function formTemplateHtml(template, templateParams, params) {
 		};
 		templateHtml ="Your password reset key is "+vars.reset_key+
 		"<br />"+
-		"Go to http://"+vars.config.publicServerUrl+vars.config.resetUrlPath+"?"+vars.config.emailKey+"="+vars.email+"&"+vars.config.resetKey+"="+vars.reset_key+" to reset your password."+
+		"Go to "+cfg.server.scheme+"://"+vars.config.publicServerUrl+vars.config.resetUrlPath+"?"+vars.config.emailKey+"="+vars.email+"&"+vars.config.resetKey+"="+vars.reset_key+" to reset your password."+
 		"<br />"+
 		"Alternatively, you can just enter the password key inside the app!<br />";
 		templateHtml +=formSignature({});
