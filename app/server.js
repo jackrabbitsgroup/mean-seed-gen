@@ -142,9 +142,9 @@ Server.prototype.configure = function(cfg, db){
 
     if( cfg.ssl.enabled ){
         server = https.createServer({
-            key:    fs.readFileSync(cfg.ssl.key),
-            cert:   fs.readFileSync(cfg.ssl.cert)
-        });
+            key:    fs.readFileSync(__dirname+cfg.ssl.key),
+            cert:   fs.readFileSync(__dirname+cfg.ssl.cert)
+        }, app);
     } else {
         server = http.createServer(app);
     }

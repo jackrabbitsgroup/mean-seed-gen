@@ -24,3 +24,6 @@ HTTPS / SSL:
 	- apiTestHelpers.js
 	- emailMandrill.js
 	- index-*-grunt.html
+	- others? & need to update port as well?
+		- protractor.conf-grunt
+		- others?
