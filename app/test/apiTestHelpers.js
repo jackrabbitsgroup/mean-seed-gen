@@ -201,7 +201,7 @@ var inst ={
 	@method formHost
 	*/
 	formHost: function(params) {
-		var host1 ="http://"+cfg.server.domain;
+		var host1 =cfg.server.scheme+"://"+cfg.server.domain;
 		if(cfg.server.port) {
 			host1+=":"+cfg.server.port;
 		}

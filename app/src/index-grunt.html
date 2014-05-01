@@ -61,7 +61,7 @@ for(var ii=0; ii<filePaths.length; ii++) {
 
 <%
 var cfgJson = grunt.config('cfgJson');
-    print('\t<script type="text/javascript" src="http://'+cfgJson.server.domain+':'+cfgJson.server.socketPort+'/socket.io/socket.io.js"></script>\n');
+    print('\t<script type="text/javascript" src="cfgJson.server.scheme+'://'+cfgJson.server.domain+':'+cfgJson.server.socketPort+'/socket.io/socket.io.js"></script>\n');
 %>
 
 <%
