@@ -40,6 +40,8 @@ var pathParts =dependency.buildPaths(__dirname, {});
 var io;
 var RealtimeMod =require(pathParts.services+'realtime/realtime.js');
 
+var self;
+
 // CORS support middleware factory
 var allowCors = function(domains){
     if(lodash.isString(domains)){
@@ -98,6 +100,7 @@ Express Server class
 @param cfg {Object} JSON configuration file
 **/
 function Server(cfg){
+	self =this;
 	var deferred = Q.defer();
 	var thisObj =this;
     this.env = cfg.env;
@@ -230,7 +233,7 @@ Default listen callback function after server starts listening. Used when nothin
 @parm env {String} runtime environment (e.g. 'development', 'production')
 **/
 Server.prototype.defaultListenCallback = function(port, env){
-	var loc1 =this.cfg.server.scheme+'://'+this.cfg.server.domain+':'+port.toString()+'/';
+	var loc1 =self.cfg.server.scheme+'://'+self.cfg.server.domain+':'+port.toString()+'/';
     console.log('Express server listening at '+loc1+' in '+env+' mode');
 };
 
