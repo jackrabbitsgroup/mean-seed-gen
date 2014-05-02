@@ -28,7 +28,7 @@ HTTPS / SSL:
 		- http://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
 		
 		
-- places that DID have 'http' scheme
+- places that do (or DID) have 'http' scheme
 	- ci.js
 	- Gruntfile.js
 	- app

@@ -8,3 +8,4 @@
 3. modify `config.json` as follows:
 	1. `server.scheme` to `https`
 	2. update `ssl` object to be enabled and point to your certificates
+	3. NOTE: do NOT use https/ssl for the TEST configs (e.g. `config.test.json`) that run tests / the test server
