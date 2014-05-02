@@ -47,6 +47,7 @@ APP_PORT 3000
 	2. open a browser to `http://APP_DOMAIN:APP_PORT/` to view the site/app
 6. run tests (and confirm they all pass!)
 	1. `grunt`
+7. optional additional steps: see [extra-setup.md](extra-setup.md)
 
 
 

@@ -55,7 +55,8 @@ public methods
 
 var cfg =global.cfgJson;
 
-var io =require('socket.io').listen(cfg.server.socketPort);		// for npm, otherwise use require('./path/to/socket.io')
+// var io =require('socket.io').listen(cfg.server.socketPort);		// for npm, otherwise use require('./path/to/socket.io')
+var io;
 var Q = require('q');
 
 var dependency =require('../../../dependency.js');
@@ -76,28 +77,33 @@ function Realtime(opts) {
 @toc 1.
 @param {Object} opts
 	@param {Object} db
+	@param {Object} io Socket.io io.listen object
 */
 Realtime.prototype.init =function(opts) {
 	db =opts.db;
 
-	/**
-	@toc 1.1.
-	*/
-	io.of('/test').on('connection', function(socket) {
-		console.log("socket connected on '/test' channel");
-		socket.emit('connect', { });
+	if(opts.io !==undefined) {
+		io =opts.io;
 		
-		socket.on('doStuff', function (data) {
-			console.log('doStuff..');
-			var ret ={'msg':'', 'valid':1, data: data, dataStringify: 'You sent: '+JSON.stringify(data)};
-			socket.broadcast.emit('doStuff', ret);		//emit to everyone else
-			socket.emit('doStuff', ret);		//emit to self
+		/**
+		@toc 1.1.
+		*/
+		io.of('/test').on('connection', function(socket) {
+			console.log("socket connected on '/test' channel");
+			socket.emit('connect', { });
 			
-			self.testTriggerEvent(db, {socket: socket}, {});
+			socket.on('doStuff', function (data) {
+				console.log('doStuff..');
+				var ret ={'msg':'', 'valid':1, data: data, dataStringify: 'You sent: '+JSON.stringify(data)};
+				socket.broadcast.emit('doStuff', ret);		//emit to everyone else
+				socket.emit('doStuff', ret);		//emit to self
+				
+				self.testTriggerEvent(db, {socket: socket}, {});
+			});
 		});
-	});
 
-	console.log('Realtime inited');
+		console.log('Realtime inited');
+	}
 };
 
 /*
