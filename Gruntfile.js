@@ -172,7 +172,7 @@ module.exports = function(grunt) {
 		var seleniumStartupCmd =seleniumStartupParts[0];
 		var seleniumStartupArgs =seleniumStartupParts.slice(1, seleniumStartupParts.length);
 		
-		var seleniumShutdown ='http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer';
+		var seleniumShutdown ='http://localhost:4444/selenium-server/driver/?cmd=shutDownSeleniumServer';		//do NOT need to use config server.scheme here?
 		
 		var publicPathRelativeRootNoSlash ="app/src";
 		var publicPathRelativeRoot =publicPathRelativeRootNoSlash+"/";
@@ -665,7 +665,7 @@ module.exports = function(grunt) {
 				//sometimes get EADDRINUSE error.. going to the page seems to fix it..
 				nodeShutdown: {
 					options: {
-						url: 'http://'+cfgTestJson.server.domain+':'+cfgTestJson.server.port,
+						url: cfgTestJson.server.scheme+'://'+cfgTestJson.server.domain+':'+cfgTestJson.server.port,
 						ignoreErrors: true
 					}
 				}

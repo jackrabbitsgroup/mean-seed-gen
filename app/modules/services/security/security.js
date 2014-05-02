@@ -174,7 +174,7 @@ function preCheck(params, callback)
 			function(ret1)
 			{
 				//Check session
-				if(ret1.result.sess_id == params.data.authority_keys.sess_id)
+				if(ret1.result && ret1.result.sess_id == params.data.authority_keys.sess_id)
 				{
 					if((typeof params.auths_obj == 'string' && params.auths_obj == 'session') || ret1.result.super_admin === 1)
 					{
