@@ -5,7 +5,7 @@ NOTE: this currently relies on global.cfgJson to exist and be set correctly
 NOTE: make sure to include the socket.io client side script on the frontend (i.e. in index.html), i.e. (for grunt templated version)
 <%
 var cfgJson = grunt.config('cfgJson');
-    print('\t<script type="text/javascript" src="http://'+cfgJson.server.domain+':'+cfgJson.server.socketPort+'/socket.io/socket.io.js"></script>\n');
+    print('\t<script type="text/javascript" src="'+cfgJson.server.scheme+'://'+cfgJson.server.domain+':'+cfgJson.server.socketPort+'/socket.io/socket.io.js"></script>\n');
 %>
 
 NOTE: use `socket.broadcast.emit` to send to everyone BUT the self (the incoming socket) and `socket.emit` to send to just self (the incoming socket). Use both together to send to EVERYONE (self and all others). `io.sockets.emit` will also send to EVERYONE (in just one call instead of two) BUT may not stay within namespace / `io.of` for a particular channel?

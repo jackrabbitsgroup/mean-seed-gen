@@ -28,11 +28,18 @@ HTTPS / SSL:
 		- http://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
 		
 		
-- places that have 'http' scheme
-	- config-grunt.js
-	- apiTestHelpers.js
-	- emailMandrill.js
-	- index-*-grunt.html
-	- others?
-		- protractor.conf-grunt
-		- others?
+- places that DID have 'http' scheme
+	- ci.js
+	- Gruntfile.js
+	- app
+		- modules
+			- emailMandrill.js
+		- src
+			- index-*-grunt.html
+			- config-grunt.js
+			- protractor.conf-grunt
+		- test
+			- apiTestHelpers.js
+	- docs
+		- README
+		

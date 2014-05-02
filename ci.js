@@ -235,12 +235,12 @@ function sendFailureEmails(params) {
 		html +="Build failed, auto rolled back to previous commit<br />";
 	}
 	html +=
-	"Go to http://"+cfg.server.domain+":"+cfg.ci.server.portCiServer.toString()+"/ to see build/error info<br />"+
+	"Go to "+cfg.server.scheme+"://"+cfg.server.domain+":"+cfg.ci.server.portCiServer.toString()+"/ to see build/error info<br />"+
 	"FIX ASAP (make sure to run grunt to ensure the build completes locally BEFORE pushing!) and re-push!<br />"+
 	"<br />"+
 	"Author: "+params.author+", email: "+params.authorEmail+"<br />"+		//the email isn't displayed so use author AND authorEmail..
 	"Commit: "+params.commit+"<br />"+
-	"Server: http://"+cfg.server.domain+":"+cfg.server.port.toString()+"/"+"<br />"+
+	"Server: "+cfg.server.scheme+"://"+cfg.server.domain+":"+cfg.server.port.toString()+"/"+"<br />"+
 	"";
 	
 	if(Emailer){
@@ -410,6 +410,7 @@ var app = express();
 
 var port =cfg.ci.server.port;
 var host =cfg.server.domain;
+var scheme =cfg.server.scheme;
 var serverPath ='/';
 	
 // app.configure(function(){
@@ -417,7 +418,7 @@ var serverPath ='/';
 
 app.listen(port);
 
-console.log('Server running at http://'+host+':'+port.toString()+'/');
+console.log('Server running at '+scheme+'://'+host+':'+port.toString()+'/');
 
 //call the appropriate function based on the build (failed or worked)
 if(build) {

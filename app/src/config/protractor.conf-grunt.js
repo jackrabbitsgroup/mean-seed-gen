@@ -64,7 +64,7 @@ exports.config = {
 	print("seleniumAddress: null,\n");
 	}
 	else {
-	print("\tseleniumAddress: 'http://localhost:4444/wd/hub',\n");
+	print("\tseleniumAddress: 'http://localhost:4444/wd/hub',\n");		//do NOT need server scheme / https here?
 	}
 	%>
 	
@@ -105,7 +105,7 @@ exports.config = {
 	// A base URL for your application under test. Calls to protractor.get()
 	// with relative paths will be prepended with this.
 	// baseUrl: 'http://localhost:8000',
-	baseUrl: 'http://<% print(cfgTestJson.server.domain); %>:<% print(cfgTestJson.server.port); %>',
+	baseUrl: '<% print(cfgTestJson.server.scheme); %>://<% print(cfgTestJson.server.domain); %>:<% print(cfgTestJson.server.port); %>',
 
 	// Selector for the element housing the angular app - this defaults to
 	// body, but is necessary if ng-app is on a descendant of <body>  

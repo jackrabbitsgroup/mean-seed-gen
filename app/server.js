@@ -230,7 +230,8 @@ Default listen callback function after server starts listening. Used when nothin
 @parm env {String} runtime environment (e.g. 'development', 'production')
 **/
 Server.prototype.defaultListenCallback = function(port, env){
-    console.log('Express server listening on port %d in %s mode', port, env);
+	var loc1 =this.cfg.server.scheme+'://'+this.cfg.server.domain+':'+port.toString()+'/';
+    console.log('Express server listening at '+loc1+' in '+evt+' mode');
 };
 
 /**
