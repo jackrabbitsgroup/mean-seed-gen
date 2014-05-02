@@ -117,6 +117,10 @@ function Server(cfg){
 		thisObj.app = expressApp.app;
 		thisObj.server = expressApp.server;
 		thisObj.db = expressApp.db;
+		if(expressApp.httpApp !==undefined && expressApp.httpServer !==undefined) {
+			thisObj.httpApp = expressApp.httpPpp;
+			thisObj.httpServer = expressApp.httpServer;
+		}
 		
 		//site-specific
 		//set up realtime
@@ -149,8 +153,13 @@ Server.prototype.configure = function(cfg, db){
     // create main app/server
     var app = express();
     var server;
+	var httpApp =false, httpServer =false;
 
     if( cfg.ssl.enabled ){
+		//create http version too for redirect to https
+		httpApp =express();
+		httpServer = http.createServer(httpApp);
+		
         server = https.createServer({
             key:    fs.readFileSync(__dirname+cfg.ssl.key),
             cert:   fs.readFileSync(__dirname+cfg.ssl.cert)
@@ -219,11 +228,24 @@ Server.prototype.configure = function(cfg, db){
 	// load routes (must be loaded after API since routes may contain catch-all route)
 	app.use( require('./routes')(cfg) );
 
-    return {
+    var ret ={
         app: app,
         server: server,
         db: db
-    };
+	};
+		console.log('1');
+	if(httpApp && httpServer) {
+		//redirect all http requests to https
+			console.log('2');
+		httpApp.get('*',function(req,res){
+			console.log('httpApp redirect');
+			res.redirect(self.cfg.server.scheme+'://'+self.cfg.server.domain+':'+self.cfg.server.port.toString()+req.url);
+		});
+
+		ret.httpApp =httpApp;
+		ret.httpServer =httpServer;
+	}
+    return ret;
 };
 
 /**
@@ -252,5 +274,9 @@ Server.prototype.listen = function(callback){
     this.server.listen(port, function(){
         callback(port, env);
     });
+	
+	if(this.httpServer !==undefined && this.cfg.server.httpPort !==undefined && this.cfg.server.httpPort) {
+		this.httpServer.listen(this.cfg.server.httpPort);
+	}
 };
 
