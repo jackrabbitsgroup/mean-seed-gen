@@ -44,8 +44,8 @@
 	},
 	"ssl": {
 		"enabled": false,
-		"key": "/ssl.key",
-		"cert": "/ssl.crt"
+		"key": "/ssl/ssl.key",
+		"cert": "/ssl/ssl.crt"
 	},
 	"rpc": {
 		"autoDoc": true,
