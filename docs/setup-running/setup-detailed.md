@@ -54,6 +54,9 @@ cp app/config-[your environment].json app/config-[your environment].test.json
 
 5. [OPTIONAL] Git add remote (should have already been git init'ed and commit'ed automatically)
 	1. (optional) add a remote: `git remote add origin [url to repository]`
+	
+	
+6. optional additional steps: see [extra-setup.md](extra-setup.md)
 
 	
 

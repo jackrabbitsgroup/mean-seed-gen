@@ -1,7 +1,16 @@
 HTTPS / SSL:
 
 1. get / generate SSL certificate (*.key and *.crt files)
-	1. NOTE: to get a "trusted" certificate (for production) that browsers won't issue a warning for, it will cost money (around $100 per year)
+	1. NOTE: to get a "trusted" certificate (for production) that browsers won't issue a warning for, it will cost money (around $50 - $100+ per year)
+	2. add certificates (i.e. to the `app` folder) and then reference those certifications in `config.json`, e.g.:
+		```js
+		"ssl": {
+			"enabled": true,
+			"key": "/server.key",
+			"cert": "/server.crt"
+		},
+		```
+	3. set `server.scheme` to `https` in `config.json`
 2. open port 443
 3. configure (node) server to use certificates and HTTPS (instead of plain HTTP) and port 443
 
@@ -19,11 +28,11 @@ HTTPS / SSL:
 		- http://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
 		
 		
-- places that have 'http'
+- places that have 'http' scheme
 	- config-grunt.js
 	- apiTestHelpers.js
 	- emailMandrill.js
 	- index-*-grunt.html
-	- others? & need to update port as well?
+	- others?
 		- protractor.conf-grunt
 		- others?
