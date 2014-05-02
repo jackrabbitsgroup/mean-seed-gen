@@ -48,3 +48,6 @@ app/src/config/protractor/*
 
 # ignore deploys (i.e. PhoneGap, TriggerIO build folder/files)
 app/src/deploys
+
+# ignore SSL / HTTPS certs
+app/ssl
