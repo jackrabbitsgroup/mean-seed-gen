@@ -233,13 +233,22 @@ Server.prototype.configure = function(cfg, db){
         server: server,
         db: db
 	};
-		console.log('1');
 	if(httpApp && httpServer) {
 		//redirect all http requests to https
-			console.log('2');
 		httpApp.get('*',function(req,res){
-			console.log('httpApp redirect');
-			res.redirect(self.cfg.server.scheme+'://'+self.cfg.server.domain+':'+self.cfg.server.port.toString()+req.url);
+			console.log('httpApp redirect (to https)');
+			var url1 =self.cfg.server.scheme+'://'+self.cfg.server.domain;
+			if(self.cfg.server.httpRedirectPort !==undefined) {
+				if(self.cfg.server.httpRedirectPort) {		//only add port if set; if false want NO port
+					url1 +=':'+self.cfg.server.httpRedirectPort.toString();
+				}
+			}
+			else {		//just use normal port
+				url1 +=':'+self.cfg.server.port.toString();
+			}
+			url1 +=req.url;
+			// self.cfg.server.scheme+'://'+self.cfg.server.domain+':'+self.cfg.server.port.toString()+req.url
+			res.redirect(url1);
 		});
 
 		ret.httpApp =httpApp;

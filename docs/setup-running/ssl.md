@@ -6,6 +6,8 @@ HTTPS / SSL:
 	3. set `server.scheme` to `https` in `config.json`
 2. open port 443
 3. configure (node) server to use certificates and HTTPS (instead of plain HTTP) and port 443
+4. [on production] ip tables redirect the 443 as well as port 80
+	1. http://stackoverflow.com/questions/7907102/how-can-i-configure-expressjs-to-handle-both-http-and-https
 
 - startSSL for free (development) certificate
 
@@ -29,6 +31,8 @@ HTTPS / SSL:
 	- http://stackoverflow.com/questions/5998694/how-to-create-an-https-server-in-node-js
 		- http://expressjs.com/api.html#app.listen
 		- http://nodejs.org/api/https.html#https_https_createserver_options_requestlistener
+- run BOTH http & https (& redirect http to https)
+	- http://chrislarson.me/blog/ssl-nodejs-express-and-socketio
 		
 		
 - places that do (or DID) have 'http' scheme

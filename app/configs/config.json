@@ -18,6 +18,8 @@
 		"port": 3000,
 		"_httpsPort": 443,
 		"httpPort": 3002,
+		"httpRedirectPort": 3000,
+		"_httpRedirectPortComment": "set to 'false' to have no port - i.e. for production use with iptables routing",
 		"socketIOEnabled": true,
 		"_socketPort": 3001,
 		"_socketPortComment": "Must be same port with express?",
