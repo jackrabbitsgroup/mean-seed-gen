@@ -37,9 +37,10 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 			
 			var html ="<div class='social-auth-btn-buttons center margin-t'>"+
 				// "<div class='social-auth-btn-button-facebook' ng-click='fbLogin()'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>"+attrs.buttonText+"</div></div>"+
-				"<div class='social-auth-btn-button-facebook' ng-click='fbLogin()'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Facebook</div></div>"+
+				// "<div class='social-auth-btn-button-facebook' ng-click='fbLogin()'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Facebook</div></div>"+
+				"<a class='a-div social-auth-btn-button-facebook' ng-href='{{fbLink}}'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Facebook</div></a>"+
 				"<div class='social-auth-btn-button-google' ng-click='googleLogin()'><i class='fa fa-google-plus padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Google+</div></div>"+
-				"<a class='a-div social-auth-btn-button-twitter' ng-href='https://api.twitter.com/oauth/authorize?oauth_token={{twitter.requestToken}}' target='_blank'><i class='fa fa-twitter padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Twitter</div></a>"+
+				"<a class='a-div social-auth-btn-button-twitter' ng-href='https://api.twitter.com/oauth/authorize?oauth_token={{twitter.requestToken}}'><i class='fa fa-twitter padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Twitter</div></a>"+
 			"</div>";
 			return html;
 		},
@@ -51,11 +52,20 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 				// callback_url: appConfig.cfgJson.twitter.callback_url
 			};
 			
+			$scope.fbLink ='';		//will be form in init
+			
 			/**
 			@toc 0.
 			@method init
 			*/
 			function init(params) {
+				//form facebook link
+				var publicPathNoSlash =appConfig.dirPaths.publicPath.slice(0, (appConfig.dirPaths.publicPath.length-1));
+				var redirectUri =publicPathNoSlash+appConfig.dirPaths.appPathLink+'callback-facebook-auth';
+				var state ='randState';		//@todo - vary this by user (and by session) for security
+				$scope.fbLink ='https://www.facebook.com/dialog/oauth?client_id='+appConfig.cfgJson.facebook.appId+'&redirect_uri='+redirectUri+'&response_type=token&scope='+appConfig.cfgJson.facebook.scope+'&state='+state;
+				
+				//get twitter request token
 				appHttp.go({}, {url:'twitter/requestToken', data:{} }, {}, {})
 				.then(function(response) {
 					$scope.twitter.requestToken =response.result.request_token;
@@ -68,6 +78,7 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 			@toc 1.
 			@method $scope.fbLogin
 			*/
+			/*
 			$scope.fbLogin =function() {
 				var promise =appSocialAuth.checkAuthFacebook({});
 				promise.then(function(data) {
@@ -92,6 +103,7 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 					var dummy =1;
 				});
 			};
+			*/
 			
 			
 			/**
@@ -119,8 +131,9 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 						UserModel.save(user);
 						$rootScope.$broadcast('loginEvt', {'loggedIn': true, 'sess_id':user.sess_id, 'user_id':user._id});
 					});
-				}, function(data) {
-					var dummy =1;
+				//no reject's so can't get error
+				// }, function(data) {
+					// var dummy =1;
 				});
 			};
 			

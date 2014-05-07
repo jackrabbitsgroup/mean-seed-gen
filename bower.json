@@ -30,7 +30,6 @@
 		"angular-hammer": "latest",
 		"angular-string": "latest",
 		"angular-array": "latest",
-		"angular-facebook-auth": "latest",
 		"angular-google-auth": "latest",
 		"angular-forminput": "latest",
 		"angular-socket-io": "latest"

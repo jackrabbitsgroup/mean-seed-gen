@@ -30,7 +30,6 @@
 							"hammerjs/dist/hammer.min.js",
 							"angular-array/array.min.js",
 							"angular-string/string.min.js",
-							"angular-facebook-auth/facebook-auth.min.js",
 							"angular-google-auth/google-auth.min.js"
 						]
 					},
@@ -98,7 +97,6 @@
 					"files": {
 						"js": [
 							"angular-ui-bootstrap/ui-bootstrap-custom-tpls-0.4.0.min.js",
-							"facebook/facebook.all.min.js",
 							"google/gapi-plusone.min.js"
 						]
 					}
@@ -503,19 +501,36 @@
 							"name": "callback",
 							"dirs": [
 								{
-									"name": "twitter-auth-callback",
+									"name": "callback-twitter-auth",
 									"files": {
 										"js": [
-											"TwitterAuthCallbackCtrl.js"
+											"CallbackTwitterAuthCtrl.js"
 										],
 										"html": [
-											"twitter-auth-callback.html"
+											"callback-twitter-auth.html"
 										],
 										"less": [
-											"twitter-auth-callback.less"
+											"callback-twitter-auth.less"
 										],
 										"testUnit": [
-											"TwitterAuthCallbackCtrl.spec.js"
+											"CallbackTwitterAuthCtrl.spec.js"
+										]
+									}
+								},
+								{
+									"name": "callback-facebook-auth",
+									"files": {
+										"html": [
+											"callback-facebook-auth.html"
+										],
+										"js": [
+											"CallbackFacebookAuthCtrl.js"
+										],
+										"testUnit": [
+											"CallbackFacebookAuthCtrl.spec.js"
+										],
+										"less": [
+											"callback-facebook-auth.less"
 										]
 									}
 								}

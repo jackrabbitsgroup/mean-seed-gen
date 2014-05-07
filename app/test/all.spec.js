@@ -34,6 +34,7 @@ var AuthTests = require(pathParts.modules+'/controllers/auth/auth.test.js');
 var UserTests = require(pathParts.modules+'/controllers/user/user.test.js');
 var FollowTests = require(pathParts.modules+'/controllers/follow/follow.test.js');
 var TwitterTests = require(pathParts.modules+'/controllers/twitter/twitter.test.js');
+var FacebookTests =require(pathParts.modules+'/controllers/facebook/facebook.test.js');
 //site-specific
 //yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 //end: yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
@@ -137,6 +138,7 @@ describe('all tests', function() {
 			UserTests =new UserTests({db: db, api:api});
 			FollowTests =new FollowTests({db: db, api:api});
 			TwitterTests =new TwitterTests({db: db, api:api});
+			FacebookTests = new FacebookTests({db: db, api:api});
 			//site-specific
 			//yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 			//end: yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
@@ -164,6 +166,7 @@ describe('all tests', function() {
 					.then(UserTests.run({}))
 					.then(FollowTests.run({}))
 					.then(TwitterTests.run({}))
+					.then(FacebookTests.run({}))
 					//site-specific
 					//yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 					//end: yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
