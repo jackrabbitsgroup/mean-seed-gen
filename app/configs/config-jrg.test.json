@@ -94,7 +94,7 @@
 		"consumerKey": "qUKgvUAijKgIww2UuarUQ",
 		"consumerSecret": "QQAwCc5TeLaxERzK3pddsutZYZpZM3nLX1xjpYaxXE",
 		"consumerComment":"Make sure to CHANGE the key and secret!",
-		"callback_url": "http://198.199.118.44:3000/twitter-auth-callback",
+		"callback_url": "http://198.199.118.44:3000/callback-twitter-auth",
 		"handle": ""
 	},
 	"google":{
