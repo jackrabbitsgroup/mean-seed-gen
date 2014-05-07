@@ -22,7 +22,7 @@ angular.module('jrg', [
 		//services
 		'jackrabbitsgroup.angular-string',
 		'jackrabbitsgroup.angular-array',
-		'jackrabbitsgroup.angular-facebook-auth',
+		// 'jackrabbitsgroup.angular-facebook-auth',
 		'jackrabbitsgroup.angular-google-auth',
 		//directives
 		'jackrabbitsgroup.angular-forminput'
@@ -126,7 +126,14 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	});
 	
 	//3rd party redirect/callback routes
-	$routeProvider.when(appPathRoute+'twitter-auth-callback', {templateUrl: pagesPath+'callback/twitter-auth-callback/twitter-auth-callback.html',
+	$routeProvider.when(appPathRoute+'callback-twitter-auth', {templateUrl: pagesPath+'callback/callback-twitter-auth/callback-twitter-auth.html',
+		resolve: {
+			auth: function(appAuth) {
+				return appAuth.checkSess({});
+			}
+		}
+	});
+	$routeProvider.when(appPathRoute+'callback-facebook-auth', {templateUrl: pagesPath+'callback/callback-facebook-auth/callback-facebook-auth.html',
 		resolve: {
 			auth: function(appAuth) {
 				return appAuth.checkSess({});

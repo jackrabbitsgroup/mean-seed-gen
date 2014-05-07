@@ -881,7 +881,7 @@ Auth.prototype.userExists = function(db, user, params)
 @toc 13.
 @method socialLogin
 @param {Object} data
-	@param {Object} user A user object. Can have one of the following defined: '_id', 'email', 'phone', 'social.[type].id' BUT social.[type].id will be autofilled as a backup so this can be empty.
+	@param {Object} user A user object for BOTH matching (if any existing user) and setting/updating info. Can have one of the following defined for matching: '_id', 'email', 'phone', 'social.[type].id' BUT social.[type].id will be autofilled as a backup so this can be empty. Once the user is matched or created, these fields will be EXTENDED onto the user object for user update.
 	@param {Object} socialData The social data to save, i.e.
 		@param {String} [token] The social login token to save.
 		@param {String} [id] The social platform user id for this user.
@@ -920,6 +920,15 @@ Auth.prototype.socialLogin = function(db, data, params)
 			
 			var set_obj = {};
 			set_obj["social." + data.type] = data.socialData;
+			
+			//update other fields (i.e. name, email) too IF not already set. //@todo - extend existing fields and/or add to emails array with new ones?
+			var xx;
+			for(xx in data.user) {
+				if(ret.user[xx] ===undefined || !ret.user[xx]) {
+					set_obj[xx] =data.user[xx];
+				}
+			}
+			
 			db.user.update({_id:MongoDBMod.makeIds({'id':ret1.user._id}) }, {$set: set_obj}, function(err, valid)
 			{
 				if(err)
