@@ -14,9 +14,16 @@
 	"platform":"",
 	"server": {
 		"domain": "198.199.118.44",
+		"scheme": "http",
 		"port": 3005,
-		"httpsPort": 443,
-		"socketPort": 3006,
+		"_httpsPort": 443,
+		"httpPort": 3007,
+		"httpRedirectPort": 3005,
+		"_httpRedirectPortComment": "set to 'false' to have no port - i.e. for production use with iptables routing",
+		"socketIOEnabled": true,
+		"_socketPort": 3006,
+		"_socketPortComment": "Must be same port with express?",
+		"socketPort": 3005,
 		"serverPath": "/",
 		"appPath": "/",
 		"staticFilePath": "/src/",
@@ -40,8 +47,8 @@
 	},
 	"ssl": {
 		"enabled": false,
-		"key": "/etc/apache2/conf.d/ssl.key",
-		"cert": "/etc/apache2/conf.d/ssl.crt"
+		"key": "/ssl/ssl.key",
+		"cert": "/ssl/ssl.crt"
 	},
 	"rpc": {
 		"autoDoc": true,
