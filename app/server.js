@@ -160,10 +160,18 @@ Server.prototype.configure = function(cfg, db){
 		httpApp =express();
 		httpServer = http.createServer(httpApp);
 		
-        server = https.createServer({
+        var opts ={
             key:    fs.readFileSync(__dirname+cfg.ssl.key),
             cert:   fs.readFileSync(__dirname+cfg.ssl.cert)
-        }, app);
+        };
+        if(cfg.ssl.ca !==undefined && cfg.ssl.ca.length >0) {
+            opts.ca =[];
+            var ss;
+            for(ss =0; ss<cfg.ssl.ca.length; ss++) {
+                opts.ca.push(fs.readFileSync(__dirname+cfg.ssl.ca[ss]));
+            }
+        }
+        server = https.createServer(opts, app);
     } else {
         server = http.createServer(app);
     }

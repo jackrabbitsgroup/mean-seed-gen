@@ -175,6 +175,10 @@ var inst ={
 					icon: 'fa fa-bolt',
 					iconHtml: 'Test',
 					href: this.paths.appPathLink+'dev-test/test'
+				},
+				{
+					html: "Social",
+					href: this.paths.appPathLink+'dev-test/social'
 				}
 			]
 		};
