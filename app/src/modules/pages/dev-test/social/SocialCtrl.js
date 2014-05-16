@@ -8,6 +8,7 @@ function($scope, appConfig, appHttp, UserModel) {
 
 	$scope.user =UserModel.load();
 	
+	/*
 	$scope.shareFacebook =function() {
 		if($scope.user.social !==undefined && $scope.user.social.facebook !==undefined) {
 			var urlBase =appConfig.dirPaths.publicPath;
@@ -42,11 +43,12 @@ function($scope, appConfig, appHttp, UserModel) {
 			$scope.$emit('evtAppalertAlert', {type:'error', msg:'No user.social.facebook login/token yet! Login with Facebook first.'});
 		}
 	};
+	*/
 	
 	$scope.shareFacebookFeed =function() {
 		if($scope.user.social !==undefined && $scope.user.social.facebook !==undefined) {
 			var urlBase =appConfig.dirPaths.publicPath;		//NOTE: this will NOT work on localhost - must be a PUBLIC url
-			// urlBase ="http://198.199.118.44:3000/"		//TESTING locally
+			// urlBase ="http://198.199.118.44:3000/";		//TESTING locally
 			var vals ={
 				message: 'My message!',
 				link: urlBase+'dev-test/social',
@@ -59,7 +61,7 @@ function($scope, appConfig, appHttp, UserModel) {
 			};
 			appHttp.go({}, {url: 'facebook/publishUserFeed', data:vals}, {})
 			.then(function(response) {
-				//handle success
+				$scope.$emit('evtAppalertAlert', {type:'success', msg:'Posted to Facebook!'});
 			});
 		}
 		else {
@@ -79,7 +81,7 @@ function($scope, appConfig, appHttp, UserModel) {
 			};
 			appHttp.go({}, {url: 'twitter/tweetWithPicture', data:vals}, {})
 			.then(function(response) {
-				//handle success
+				$scope.$emit('evtAppalertAlert', {type:'success', msg:'Posted to Twitter!'});
 			});
 		}
 		else {

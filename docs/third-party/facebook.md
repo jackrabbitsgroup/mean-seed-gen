@@ -7,6 +7,9 @@ Two ways to do this:
 2. manually (this is the only way to make it work on iOS Chrome)
 	1. https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 
+NOTE: you must make sure your app is "live" and available to the public in the "status & review" section of your app settings on developers.facebook.com otherwise you'll get sporadic "App not setup" errors (especially in Firefox)...
+	- http://stackoverflow.com/questions/21329250/the-developers-of-this-app-have-not-set-up-this-app-properly-for-facebook-login
+
 	
 # Facebook API Calls
 The main (only?) way to do this is the Graph API. There's 3 ways to do this:
