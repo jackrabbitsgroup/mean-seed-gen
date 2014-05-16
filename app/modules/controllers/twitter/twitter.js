@@ -11,7 +11,7 @@ Docs:
 
 NOTE: this currently relies on global.cfgJson to exist and be set correctly
 Uses config.json twitter properties (config.twitter) for configuration
-@example config.email
+@example config.twitter
 {
     consumerKey: 'your consumer Key',
 	consumerSecret: 'your consumer secret',
@@ -25,6 +25,7 @@ Uses config.json twitter properties (config.twitter) for configuration
 public methods
 1. requestToken
 2. accessToken
+3. tweetWithPicture
 
 private methods
 */
@@ -62,6 +63,12 @@ var MongoDBMod =require(pathParts.services+'mongodb/mongodb.js');
 
 var AuthMod =require(pathParts.controllers+'auth/auth.js');
 var UserMod =require(pathParts.controllers+'user/user.js');
+
+//hardcoded
+var imageInfo ={
+	basePath: 'app/'
+};
+//end: hardcoded
 
 //global values that will be set by passed in objects (to avoid having to require in every file)
 // var db;
@@ -173,6 +180,86 @@ Twitter.prototype.accessToken = function(db, data, params)
 			
 			//Step 4: Verify Credentials belongs here
 		}
+	});
+
+	return deferred.promise;
+};
+
+/**
+Shares / posts on Twitter with a picture
+@toc 3.
+@method tweetWithPicture
+@param {Object} data
+	@param {String} user_id The id of the user to tweet for (used to look up access token and token secret)
+	@param {String} tweet_text The text to tweet / status to post
+	@param {Array} pictures Array of picture urls - NOTE: currently twitter only supports ONE picture so the LAST one specified will be used. The picture url should be relative to the 'app/' folder so it can be read here on the backend. E.g. 'src/common/img/pic1.jpg'
+@param {Object} params
+@return {Object} (via Promise)
+	@param {String} code
+	@param {String} msg
+
+@usage
+	var urlBase ='src/common/img';
+	var vals ={
+		user_id: '[userId]',
+		tweet_text: 'my tweet!',
+		pictures: [
+			urlBase+'/ie-chrome-logo.png'
+		]
+	};
+	Twitter.tweetWithPicture(db, vals, {})
+	.then(function(ret1) {
+		//success
+	}, function(retErr) {
+		//error
+	});
+**/
+Twitter.prototype.tweetWithPicture = function(db, data, params)
+{
+	var deferred = Q.defer();
+	var ret ={code:0, err:false, msg:'Twitter.tweetWithPicture '};
+	
+	//get twitter access token & secret for this user
+	UserMod.read(db, {_id: data.user_id, fields:{social:1} }, {})
+	.then(function(retUser) {
+		if(retUser.result && retUser.result.social !==undefined && retUser.result.social.twitter !==undefined && retUser.result.social.twitter.token !==undefined && retUser.result.social.twitter.token_secret !==undefined) {
+			var token =retUser.result.social.twitter.token;
+			var tokenSecret =retUser.result.social.twitter.token_secret;
+			
+			//tweet
+			//form full media paths for reading
+			var ii, media =[];
+			for(ii =0; ii<data.pictures.length; ii++) {
+				media[ii] =imageInfo.basePath +data.pictures[ii];
+			}
+			
+			twitter.statuses("update_with_media", {
+				status: data.tweet_text,
+				media: media
+			}, token, tokenSecret, function(error, data, response) {
+				if (error) {
+					ret.code =1;
+					ret.msg +="Error tweeting with picture for user id: "+data.user_id;
+					ret.err =error;
+					ret.debug =data;
+					deferred.reject(ret);
+				} else {
+					// console.log(response);
+					// ret.response =response;		//breaks things - too raw of data..
+					ret.debug =data;
+					deferred.resolve(ret);
+				}
+			});
+			
+		}
+		else {
+			ret.code =2;
+			ret.msg +="Error get user Twitter token/secret for user id: "+data.user_id;
+			deferred.reject(ret);
+		}
+		
+	}, function(retErr) {
+		deferred.reject(retErr);
 	});
 
 	return deferred.promise;

@@ -165,6 +165,13 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 			}
 		}
 	});
+	$routeProvider.when(appPathRoute+'dev-test/social', {templateUrl: pagesPath+'dev-test/social/social.html',
+		resolve: {
+			auth: function(appAuth) {
+				return appAuth.checkSess({});
+			}
+		}
+	});
 
 	
 	/**

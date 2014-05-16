@@ -12,6 +12,7 @@ HTTPS / SSL:
 - startSSL for free (development) certificate
 
 - generating self-signed certificate (using openSSL)
+	- https://help.ubuntu.com/10.04/serverguide/certificates-and-security.html
 	- https://devcenter.heroku.com/articles/ssl-certificate-self
 	- https://devcenter.heroku.com/articles/ssl-endpoint#acquire-ssl-certificate
 	- NOTE: can use 'localhost' for Common Name / domain
@@ -25,6 +26,11 @@ HTTPS / SSL:
 			- use your domain name for the 'Common Name' prompt, e.g. `example.com` or `www.example.com` or `*.example.com` or `localhost`
 			- leave the 'Challenge Password' blank (just press 'Enter' to skip)
 		- `openssl x509 -req -days 365 -in ssl.csr -signkey ssl.key -out ssl.crt`
+- using "official" / verified certificates
+	- some SSL certs such as with GoDaddy will give you multiple certificate files (i.e. a 'bundle' certificate that actually has multiple certificates in it) - in which case one of these should be the standard certificate and the other(s) should be CA certificates). If you have a bundle certificate, you'll need to break them out into separate CA cert files and use those in node.
+	- http://stackoverflow.com/questions/16224064/running-ssl-node-js-server-with-godaddy-gd-bundle-crt
+	- to copy the ssl certs to the server use the `scp` command:
+		- http://www.mkyong.com/linux/copy-file-to-from-server-via-scp-command/
 	
 - using with node.js / express (already handled for you in MEAN-seed - just update `config.json` `ssl` field to point to your certs and be enabled)
 	- http://stackoverflow.com/questions/21397809/create-a-self-signed-ssl-cert-for-localhost-for-use-with-express-node

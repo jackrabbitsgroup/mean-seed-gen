@@ -6,6 +6,7 @@ RPC twitter endpoints
 @toc
 1. rpcRequestToken
 2. rpcAccessToken
+3. rpcTweetWithPicture
 */
 
 'use strict';
@@ -53,7 +54,8 @@ inherits(TwitterApi, Base);
 TwitterApi.prototype.getRpcMethods = function(){
 	return {
 		requestToken: this.rpcRequestToken(),
-		accessToken: this.rpcAccessToken()
+		accessToken: this.rpcAccessToken(),
+		tweetWithPicture: this.rpcTweetWithPicture()
 	};
 };
 
@@ -125,6 +127,46 @@ TwitterApi.prototype.rpcAccessToken = function(){
 		**/
 		action: function(params, out) {
 			var promise = TwitterMod.accessToken(db, params, {});
+			promise.then(function(ret1)
+			{
+				out.win(ret1);
+				// self.handleError(out, {}, {});		//TESTING
+			}, function(err) {
+				self.handleError(out, err, {});
+			});
+		}
+	};
+};
+
+/**
+@toc 3.
+@method rpcTweetWithPicture
+**/
+TwitterApi.prototype.rpcTweetWithPicture = function(){
+	var self = this;
+
+	return {
+		info: 'Share on Twitter by tweeting / posting a status update with a picture',
+		params:
+		{
+			user_id: { required: true, type: 'string', info: "The id of the user to tweet for" },
+			tweet_text: { required: true, type: 'string', info: "The tweet to post" },
+			pictures: { required: true, type: 'array', info: "Array of picture urls - NOTE: currently twitter only supports ONE picture so the LAST one specified will be used. The picture url should be relative to the 'app/' folder so it can be read here on the backend. E.g. 'src/common/img/pic1.jpg'" }
+		},
+		returns:
+		{
+			code: 'string',
+			msg: 'string'
+		},
+		/**
+		@method action
+		@param {Object} params (detailed above)
+		@param {Object} out callback object which provides `win` and `fail` functions for handling `success` and `fail` callbacks
+			@param {Function} win Success callback
+			@param {Function} fail Fail callback
+		**/
+		action: function(params, out) {
+			var promise = TwitterMod.tweetWithPicture(db, params, {});
 			promise.then(function(ret1)
 			{
 				out.win(ret1);
