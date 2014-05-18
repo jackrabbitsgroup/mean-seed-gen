@@ -2,6 +2,7 @@
 
 ## Twitter Login
 @todo
+- note that Twitter does NOT give email address: https://dev.twitter.com/discussions/4019
 
 
 ## Twitter API Calls

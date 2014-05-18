@@ -501,7 +501,7 @@ Auth.prototype.createGuest = function(db, guest, params)
 	
 	//if social key, allow no email and just create a random/dummy one
 	if(guest.email ===undefined && guest.social !==undefined) {
-		guest.email =randStr+'@email.com';
+		guest.email =randStr+'@_fakeemail_.com';
 	}
 	
 	guest.password = randStr;

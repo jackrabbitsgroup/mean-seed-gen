@@ -71,7 +71,8 @@ FacebookApi.prototype.rpcMe = function(){
 	return {
 		info: 'Get the logged in user (the user with the access token)',
 		params: {
-			access_token: { type: 'string', required: true, info: "Access token for user to get" }
+			access_token: { type: 'string', required: true, info: "Access token for user to get" },
+			pull_pic: { type: 'number', required: false, info: "0 to NOT pull profile image from facebook. This will be better for performance and avoiding creating image files on the server if you are not using user pictures. By default, it WILL pull the image IF it does not exist (i.e. no overwrites will happen in case the user set their profile picture manually we do not want to change it on each login!)" }
 		},
 		returns: {
 			code: 'string',

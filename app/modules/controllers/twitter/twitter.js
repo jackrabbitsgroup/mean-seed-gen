@@ -54,6 +54,9 @@ var crypto =require('crypto');
 var moment = require('moment');
 var Q = require('q');
 var lodash = require('lodash');
+// var fs =require('fs');
+var fs =require('node-fs');		//want recursive directory/folder creating
+var request = require('request');
 
 var dependency =require('../../../dependency.js');
 var pathParts =dependency.buildPaths(__dirname, {});
@@ -66,7 +69,8 @@ var UserMod =require(pathParts.controllers+'user/user.js');
 
 //hardcoded
 var imageInfo ={
-	basePath: 'app/'
+	basePath: 'app',
+	imgPath: 'src/common/img'
 };
 //end: hardcoded
 
@@ -134,6 +138,7 @@ Gets an access token and then uses that info to call auth.socialLogin to signup/
 	// @param {String} request_token
 	// @param {String} request_token_secret
 	@param {String} oauth_verifier
+	@param {Number} [pull_pic =1] 0 to NOT pull profile image from twitter. This will be better for performance and avoiding creating image files on the server if you are not using user pictures. By default, it WILL pull the image IF it does not exist (i.e. no overwrites will happen in case the user set their profile picture manually we do not want to change it on each login!)
 @param {Object} params
 @return {Object} (via Promise)
 	@param {Object} user The existing or created user
@@ -145,10 +150,15 @@ Twitter.prototype.accessToken = function(db, data, params)
 	var deferred = Q.defer();
 	var ret ={code:0, err:false, msg:'Twitter.accessToken '};
 	
+	if(data.pull_pic ===undefined) {
+		data.pull_pic =1;
+	}
+	else {
+		data.pull_pic =parseInt(data.pull_pic, 10);
+	}
+	
 	data.request_token =twitterData.requestToken;
 	data.request_token_secret =twitterData.requestTokenSecret;
-	
-	// console.log('data.request_token: '+data.request_token+' data.request_token_secret: '+data.request_token_secret+' data.oauth_verifier: '+data.oauth_verifier);		//TESTING
 	
 	twitter.getAccessToken(data.request_token, data.request_token_secret, data.oauth_verifier, function(error, accessToken, accessTokenSecret, results) {
 		if (error) {
@@ -159,26 +169,114 @@ Twitter.prototype.accessToken = function(db, data, params)
 			deferred.reject(ret);
 		} else {
 		
-			// console.log('results: '+JSON.stringify(results));		//TESTING
-			//do user import
-			var vals ={
-				type: 'twitter',
-				user: {},
-				socialData: {
-					id: results.user_id,
-					token: accessToken,
-					token_secret: accessTokenSecret
-				}
-			};
-			
-			AuthMod.socialLogin(db, vals, {})
-			.then(function(retLogin) {
-				deferred.resolve(retLogin);
-			}, function(err) {
-				deferred.reject(err);
-			});
-			
 			//Step 4: Verify Credentials belongs here
+			
+			//get user info (name, picture)
+			twitter.users("show", {
+				user_id: results.user_id
+			}, accessToken, accessTokenSecret, function(error, dataUser, responseUser) {
+				if (error) {
+					ret.code =1;
+					ret.msg +="Error getting user for Twitter id: "+results.user_id;
+					ret.err =error;
+					ret.debug =data;
+					deferred.reject(ret);
+				} else {
+					// ret.response =responseUser;		//breaks things - too raw of data..
+					ret.debug =dataUser;
+					
+					//separate name into first and last (default both to blank)
+					var first_name ='';
+					var last_name ='';
+					if(dataUser.name !==undefined) {
+						//if has a space
+						var indexSpace =dataUser.name.indexOf(' ');
+						if(indexSpace >-1) {
+							first_name =dataUser.name.slice(0, indexSpace);
+							last_name =dataUser.name.slice((indexSpace+1), dataUser.name.length);
+						}
+						else {
+							first_name =dataUser.name;
+						}
+					}
+					
+					//do user import
+					var vals ={
+						type: 'twitter',
+						user: {
+							first_name: first_name,
+							last_name: last_name
+						},
+						socialData: {
+							id: results.user_id,
+							token: accessToken,
+							token_secret: accessTokenSecret
+						}
+					};
+					
+					AuthMod.socialLogin(db, vals, {})
+					.then(function(retLogin) {
+						
+						//profile image: now that we have a user with a user id, IF user does NOT already have a profile image AND IF we have a profile image from Twitter, add that in for the user
+						if(data.pull_pic && (retLogin.user.image ===undefined || retLogin.user.image.profile ===undefined) && dataUser.profile_image_url !==undefined) {
+							var imgUrl =dataUser.profile_image_url;
+							//get the file extension
+							var posExt =imgUrl.lastIndexOf('.');
+							var ext =imgUrl.slice(posExt, imgUrl.length);
+							
+							//get the big sized image by removing the underscore part - https://dev.twitter.com/docs/user-profile-images-and-banners
+							var posUnderscore =imgUrl.lastIndexOf('_');
+							if(posUnderscore >-1 && posUnderscore >imgUrl.lastIndexOf('/')) {
+								imgUrl =imgUrl.slice(0, posUnderscore) +ext;
+							}
+							
+							var filename ='profile'+ext;
+							var imgSavePath ='user/'+retLogin.user._id;
+							var folderWritePath =__dirname +'../../../../' +imageInfo.imgPath +'/' +imgSavePath;		//hardcoded - 4 '../' to get from this directory back to 'app/'
+							
+							//recursively create directories / folders in case they don't exist yet
+							fs.mkdirSync(folderWritePath, parseInt('777', 8), true);		//0777 octal in strict mode is not allowed
+							
+							var dbSavePath =imgSavePath +'/' +filename;		//what will be stored in the database
+							var imgWritePath =folderWritePath +'/' +filename;
+							var picStream =fs.createWriteStream(imgWritePath);
+							picStream.on('close', function() {
+								//update user with this image
+								var userUpdate ={
+									user_id: retLogin.user._id
+								};
+								if(retLogin.user.image !==undefined) {		//image key already exists
+									userUpdate.image.profile =dbSavePath;
+									//update for return as well
+									retLogin.user.image.profile =dbSavePath;
+								}
+								else {		//image key doesn't exist yet
+									userUpdate.image ={
+										profile: dbSavePath
+									};
+									//update for return as well
+									retLogin.user.image ={
+										profile: dbSavePath
+									};
+								}
+								UserMod.update(db, userUpdate, {})
+								.then(function(retUserUpdate) {
+									deferred.resolve(retLogin);
+								}, function(retErr) {
+									deferred.reject(retErr);
+								});
+							});
+							request(imgUrl).pipe(picStream);
+						}
+						else {
+							deferred.resolve(retLogin);
+						}
+						
+					}, function(err) {
+						deferred.reject(err);
+					});
+				}
+			});
 		}
 	});
 
@@ -230,7 +328,7 @@ Twitter.prototype.tweetWithPicture = function(db, data, params)
 			//form full media paths for reading
 			var ii, media =[];
 			for(ii =0; ii<data.pictures.length; ii++) {
-				media[ii] =imageInfo.basePath +data.pictures[ii];
+				media[ii] =imageInfo.basePath +'/'+data.pictures[ii];
 			}
 			
 			twitter.statuses("update_with_media", {

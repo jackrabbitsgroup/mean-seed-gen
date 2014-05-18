@@ -60,3 +60,4 @@ Sharing on open graph with OBJECT and ACTION requires 2 steps:
 - You must "enable" the actions first on developers.facebook.com in your app dashboard for users to use them AND get them APPROVED by facebook..
 - The documentation has an example of a publish call with an object type as the key but it SHOULD be (and only works with) 'object' as the key. I.e. 'book=bookObjectId' does NOT work whereas 'object=bookObjectId' does.
 	- http://stackoverflow.com/questions/12607458/facebook-open-graph-did-not-specify-reference-object
+	
