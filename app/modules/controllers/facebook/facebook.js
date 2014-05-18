@@ -210,7 +210,7 @@ Facebook.prototype.me = function(db, data, params) {
 							user_id: retLogin.user._id
 						};
 						if(retLogin.user.image !==undefined) {		//image key already exists
-							userUpdate.image.profile =dbSavePath;
+							userUpdate['image.profile'] =dbSavePath;		//have to do it this way for mongo db syntax and to avoid over-writing any other keys (other than 'profile') that may exist
 							//update for return as well
 							retLogin.user.image.profile =dbSavePath;
 						}
