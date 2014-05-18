@@ -51,3 +51,6 @@ app/src/deploys
 
 # ignore SSL / HTTPS certs
 app/ssl
+
+# ignore uploaded images
+app/src/common/img/user

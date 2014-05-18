@@ -27,6 +27,8 @@ var Q = require('q');
 var lodash = require('lodash');
 var request = require('request');
 var qs =require('qs');
+// var fs =require('fs');
+var fs =require('node-fs');		//want recursive directory/folder creating
 
 var dependency =require('../../../dependency.js');
 var pathParts =dependency.buildPaths(__dirname, {});
@@ -35,6 +37,13 @@ var AuthMod =require(pathParts.controllers+'auth/auth.js');
 var UserMod =require(pathParts.controllers+'user/user.js');
 
 var cfg =global.cfgJson;
+
+//hardcoded
+var imageInfo ={
+	imgPath: 'src/common/img'
+};
+//end: hardcoded
+
 
 var self;
 
@@ -113,6 +122,7 @@ function Facebook(options){
 @method me
 @param {Object} data
 	@param {String} access_token The user access token to get user info for
+	@param {Number} [pull_pic =1] 0 to NOT pull profile image from facebook. This will be better for performance and avoiding creating image files on the server if you are not using user pictures. By default, it WILL pull the image IF it does not exist (i.e. no overwrites will happen in case the user set their profile picture manually we do not want to change it on each login!)
 @param {Object} params
 @return {Object} (via Promise)
 		@param {Number} code
@@ -123,6 +133,13 @@ Facebook.prototype.me = function(db, data, params) {
 	var deferred = Q.defer();
 	var ret ={code:0, msg:'Facebook.me ', user:false};
 
+	if(data.pull_pic ===undefined) {
+		data.pull_pic =1;
+	}
+	else {
+		data.pull_pic =parseInt(data.pull_pic, 10);
+	}
+	
 	var reqObj ={
 		method: 'get',
 		qs: {
@@ -149,7 +166,79 @@ Facebook.prototype.me = function(db, data, params) {
 		
 		AuthMod.socialLogin(db, vals, {})
 		.then(function(retLogin) {
-			deferred.resolve(retLogin);
+			
+			//profile image: now that we have a user with a user id, IF user does NOT already have a profile image, try to pull one from Facebook
+			if(data.pull_pic && (retLogin.user.image ===undefined || retLogin.user.image.profile ===undefined)) {
+				//https://developers.facebook.com/docs/graph-api/reference/v2.0/user/picture/
+				reqObj ={
+					method: 'get',
+					qs: {
+						access_token: data.access_token,		//not required for this call since it's public but leave it in just in case?
+						redirect: 0,		//NOTE: could save an http request by NOT setting this since want the actual picture file anyway? But how to get file extension that way?
+						width: 800,
+						height: 800
+					}
+				};
+				var promise =sendRequest('me/picture', reqObj, {});
+				/**
+				// @param {File} retPic the image
+				@param {Object} retPic
+					@param {Object} data
+						@param {String} url
+						@param {Number} width
+						@param {Number} height
+				*/
+				promise.then(function(retPic) {
+					var imgUrl =retPic.data.url;
+					//get the file extension
+					var posExt =imgUrl.lastIndexOf('.');
+					var ext =imgUrl.slice(posExt, imgUrl.length);
+					
+					var filename ='profile'+ext;
+					var imgSavePath ='user/'+retLogin.user._id;
+					var folderWritePath =__dirname +'../../../../' +imageInfo.imgPath +'/' +imgSavePath;		//hardcoded - 4 '../' to get from this directory back to 'app/'
+					
+					//recursively create directories / folders in case they don't exist yet
+					fs.mkdirSync(folderWritePath, parseInt('777', 8), true);		//0777 octal in strict mode is not allowed
+					
+					var dbSavePath =imgSavePath +'/' +filename;		//what will be stored in the database
+					var imgWritePath =folderWritePath +'/' +filename;
+					var picStream =fs.createWriteStream(imgWritePath);
+					picStream.on('close', function() {
+						//update user with this image
+						var userUpdate ={
+							user_id: retLogin.user._id
+						};
+						if(retLogin.user.image !==undefined) {		//image key already exists
+							userUpdate.image.profile =dbSavePath;
+							//update for return as well
+							retLogin.user.image.profile =dbSavePath;
+						}
+						else {		//image key doesn't exist yet
+							userUpdate.image ={
+								profile: dbSavePath
+							};
+							//update for return as well
+							retLogin.user.image ={
+								profile: dbSavePath
+							};
+						}
+						UserMod.update(db, userUpdate, {})
+						.then(function(retUserUpdate) {
+							deferred.resolve(retLogin);
+						}, function(retErr) {
+							deferred.reject(retErr);
+						});
+					});
+					request(imgUrl).pipe(picStream);
+				}, function(err) {
+					deferred.reject(err);
+				});
+			}
+			else {
+				deferred.resolve(retLogin);
+			}
+			
 		}, function(err) {
 			deferred.reject(err);
 		});

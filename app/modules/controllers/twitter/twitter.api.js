@@ -112,6 +112,7 @@ TwitterApi.prototype.rpcAccessToken = function(){
 			// request_token: { required: true, type: 'string', info: "The request token from earlier (step 1)" },
 			// request_token_secret: { required: true, type: 'string', info: "The request token secret from earlier (step 1)" },
 			oauth_verifier: { required: true, type: 'string', info: "The value returned from the frontend twitter authentication (step 2)" },
+			pull_pic: { type: 'number', required: false, info: "0 to NOT pull profile image from twitter. This will be better for performance and avoiding creating image files on the server if you are not using user pictures. By default, it WILL pull the image IF it does not exist (i.e. no overwrites will happen in case the user set their profile picture manually we do not want to change it on each login!)" }
 		},
 		returns:
 		{
