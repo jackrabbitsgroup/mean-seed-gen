@@ -27,7 +27,6 @@
 							"angular-animate/angular-animate.min.js",
 							"angular-cookies/angular-cookies.min.js",
 							"momentjs/min/moment.min.js",
-							"hammerjs/dist/hammer.min.js",
 							"angular-array/array.min.js",
 							"angular-string/string.min.js",
 							"angular-google-auth/google-auth.min.js"
@@ -77,7 +76,6 @@
 					"comment": "directory paths are part of file lists/names",
 					"files": {
 						"js": [
-							"angular-hammer/angular-hammer.js",
 							"angular-socket-io/socket.js"
 						],
 						"testUnit": [
