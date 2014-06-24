@@ -127,6 +127,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-focus');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-exit');
+	grunt.loadNpmTasks('grunt-dev-update');
 	
 
 	/**
@@ -896,6 +897,25 @@ module.exports = function(grunt) {
 			},
 			exit: {
 				normal: {
+				}
+			},
+			devUpdate: {
+				//apparently can only check production dependencies OR dev dependencies but not both at once; so need to 2 tasks
+				prod: {
+					options: {
+						packages: {
+							devDependencies: false,
+							dependencies: true
+						}
+					}
+				},
+				dev: {
+					options: {
+						packages: {
+							devDependencies: true,
+							dependencies: false
+						}
+					}
 				}
 			}
 		});

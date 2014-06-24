@@ -42,6 +42,8 @@ PERMISSIONS_GROUP developers		//the (optional) linux user group to give access
 
 APP_DOMAIN someurl.com				//this can also be an ip address, i.e. xxx.xxx.xxx.xx
 
+GIT_BRANCH master					//this is what branch concrete will use to pull in updates (concrete will run on EVERY git push, even to other branches, but will only pull from THIS branch). E.g. 'master', 'prod', 'dev', 'staging'
+
 1. create a Github repo on github.com (if you haven't already) and push to it
 2. [on new server] setup git config on the new server for your user
 	1. `git config --global user.name "GIT_NAME"`
@@ -59,11 +61,17 @@ APP_DOMAIN someurl.com				//this can also be an ip address, i.e. xxx.xxx.xxx.xx
 4. [on new server] Do some setup
 	1. clone the github repo (we'll just have to do this manually once) - `git clone GIT_REPO_URL APP_PATH` - make sure to use the HTTPS git url - otherwise will get a 'Permission denied (publickey).' error!
 		1. set permissions on this folder (especially if you cloned with `sudo`)
+			1. `sudo chown -R root:PERMISSIONS_GROUP APP_PATH`
+			2. `sudo chmod -R g+w APP_PATH`
 		2. go into the repo - `cd APP_PATH`
 		3. if it prompts you for a username and/or password during git pull or other commands, the CI won't work so set your username and password by doing: `git config remote.origin.url GIT_REPO_URL_PASS` (basically just prepend [username]:[password] to your existing remote url).
 			1. http://superuser.com/questions/199507/how-do-i-ensure-git-doesnt-ask-me-for-my-github-username-and-password
 	2. copy and set the `config_environment.json` to use this environment with: `cp app/config_environment.json config_environment.json` and then edit the file to set the `environment` key to your new environment (the SAME name you used when creating the new `config-[new-server-environment].json` file earlier - these MUST match!)
 	3. add the concrete runner to the git config so concrete will run: `git config --add concrete.runner "npm install && bower update && bower install && grunt --type=prod"`
+		1. set the git branch (so it will only run if this branch is updated. This is useful for distinguishing between the production and staging/development server for example - so production code is only updated when you push to the production branch)
+			1. `git config --add concrete.branch GIT_BRANCH`
+				1. NOTE: if you change this config later, you'll have to restart concrete for the change to take effect (i.e. with `forever restart [forever process number for concrete]`)
+				2. more info: http://codesquire.com/post/ContinuousDeployment
 	4. configure git hooks for worked and failed
 		1. create (if not already present) `.git/hooks/build-failed` and add `node ci.js build=failed` to it, i.e. using `echo 'node ci.js build=failed' > APP_PATH/.git/hooks/build-failed`
 		2. create (if not already present) `.git/hooks/build-worked` and add `node ci.js build=worked` to it, i.e. using `echo 'node ci.js build=worked' > APP_PATH/.git/hooks/build-worked`
@@ -74,6 +82,7 @@ APP_DOMAIN someurl.com				//this can also be an ip address, i.e. xxx.xxx.xxx.xx
 	1. In your repo on github.com, click on `Settings` then `Service Hooks` then `WebHook URLs` and add a URL: `http://APP_DOMAIN:CONCRETE_PORT/webhook`
 7. [locally / on original server] Do a Git push (i.e. `git push origin master`) and then refresh your Concrete page and you should see a new build running!
 	1. Now each time you (locally) do a `git push` to github, your 2nd server will automatically get updated, tests run, etc.!
+8. NOTE: you may have to do some final setup steps - see [cloning.md](cloning.md) and make sure all those steps have been done. Most should have already been but a notable one you'll likely still have to do is installing chromedriver for Protractor tests (i.e. with `./node_modules/protractor/bin/webdriver-manager update` )
 
 
 ### Direct, no CI (or Github)

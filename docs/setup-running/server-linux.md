@@ -22,9 +22,11 @@ For a remote server, SSH in to login with `ssh [user]@[ip address or domain of s
 	- optional but recommended
 		1. run on port 80 (assuming node runs on port 3000 - change according to config) `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3000`. This is only if using one server/domain on this host and want to be able to access it without typing in a port number at the end of the url - i.e. 'http://mydomain.com' instead of 'http://mydomain.com:3000'
 			- see more details: http://stackoverflow.com/questions/7929563/node-js-express-app-wont-start-listening-on-port-80
-			- if using https, redirect port 443 as well: http://stackoverflow.com/questions/7907102/how-can-i-configure-expressjs-to-handle-both-http-and-https
+			- if using https, redirect port 443 as well / instead: http://stackoverflow.com/questions/7907102/how-can-i-configure-expressjs-to-handle-both-http-and-https
+				- `sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 3000`
+				- `sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 3002`
 			- removing iptables rules: http://lubos.rendek.org/remove-all-iptables-prerouting-nat-rules
-		2. create 'node' user for using with things like 'forever' (since it's user specific so whatever user started it is the only one who can stop it..)
+		2. OPTIONAL / not really used anymore: create 'node' user for using with things like 'forever' (since it's user specific so whatever user started it is the only one who can stop it..)
 			- use `su node` to switch to node users
 6. Install MongoDB - NOTE: maybe want to use hosted service (i.e. MongoLab or MongoHQ) to save on diskspace - see below
 	- http://docs.mongodb.org/manual/tutorial/install-mongodb-on-debian-or-ubuntu-linux/ (have to go through some setup steps before can run the standard apt-get install command..)
