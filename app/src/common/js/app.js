@@ -37,7 +37,6 @@ angular.module('app', [
 
 angular.module('myApp', [
 'ngRoute', 'ngSanitize', 'ngTouch', 'ngAnimate', 'ngCookies',		//additional angular modules
-'hmTouchEvents',		//hammer swipe / touch
 'ui.bootstrap',
 'btford.socket-io',
 'jrg',
