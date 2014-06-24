@@ -29,6 +29,7 @@ var request = require('request');
 var qs =require('qs');
 // var fs =require('fs');
 var fs =require('node-fs');		//want recursive directory/folder creating
+var path =require('path');
 
 var dependency =require('../../../dependency.js');
 var pathParts =dependency.buildPaths(__dirname, {});
@@ -123,6 +124,7 @@ function Facebook(options){
 @param {Object} data
 	@param {String} access_token The user access token to get user info for
 	@param {Number} [pull_pic =1] 0 to NOT pull profile image from facebook. This will be better for performance and avoiding creating image files on the server if you are not using user pictures. By default, it WILL pull the image IF it does not exist (i.e. no overwrites will happen in case the user set their profile picture manually we do not want to change it on each login!)
+	@param {String} [pic_directory ='user'] Where to save the user image
 @param {Object} params
 @return {Object} (via Promise)
 		@param {Number} code
@@ -138,6 +140,9 @@ Facebook.prototype.me = function(db, data, params) {
 	}
 	else {
 		data.pull_pic =parseInt(data.pull_pic, 10);
+	}
+	if(data.pic_directory ===undefined) {
+		data.pic_directory ='user';
 	}
 	
 	var reqObj ={
@@ -168,7 +173,7 @@ Facebook.prototype.me = function(db, data, params) {
 		.then(function(retLogin) {
 			
 			//profile image: now that we have a user with a user id, IF user does NOT already have a profile image, try to pull one from Facebook
-			if(data.pull_pic && (retLogin.user.image ===undefined || retLogin.user.image.profile ===undefined)) {
+			if(data.pull_pic && (retLogin.user.image ===undefined || retLogin.user.image.profile ===undefined || !retLogin.user.image.profile)) {
 				//https://developers.facebook.com/docs/graph-api/reference/v2.0/user/picture/
 				reqObj ={
 					method: 'get',
@@ -195,8 +200,8 @@ Facebook.prototype.me = function(db, data, params) {
 					var ext =imgUrl.slice(posExt, imgUrl.length);
 					
 					var filename ='profile'+ext;
-					var imgSavePath ='user/'+retLogin.user._id;
-					var folderWritePath =__dirname +'../../../../' +imageInfo.imgPath +'/' +imgSavePath;		//hardcoded - 4 '../' to get from this directory back to 'app/'
+					var imgSavePath =data.pic_directory +'/'+retLogin.user._id;
+					var folderWritePath =path.normalize(__dirname +'../../../../' +imageInfo.imgPath +'/' +imgSavePath);		//hardcoded - 4 '../' to get from this directory back to 'app/'. Very important to use path.normalize so it works on both windows and linux!!
 					
 					//recursively create directories / folders in case they don't exist yet
 					fs.mkdirSync(folderWritePath, parseInt('777', 8), true);		//0777 octal in strict mode is not allowed

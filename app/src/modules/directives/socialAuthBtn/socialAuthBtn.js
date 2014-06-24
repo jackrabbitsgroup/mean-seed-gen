@@ -40,19 +40,25 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 				// "<div class='social-auth-btn-button-facebook' ng-click='fbLogin()'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Facebook</div></div>"+
 				"<a class='a-div social-auth-btn-button-facebook' ng-href='{{fbLink}}'><i class='fa fa-facebook padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Facebook</div></a>"+
 				"<div class='social-auth-btn-button-google' ng-click='googleLogin()'><i class='fa fa-google-plus padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Google+</div></div>"+
-				"<a class='a-div social-auth-btn-button-twitter' ng-href='https://api.twitter.com/oauth/authorize?oauth_token={{twitter.requestToken}}'><i class='fa fa-twitter padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Twitter</div></a>"+
+				"<a class='a-div social-auth-btn-button-twitter' ng-href='{{twitterLink}}'><i class='fa fa-twitter padding-lr social-auth-btn-button-icon'></i><div class='social-auth-btn-button-text'>Twitter</div></a>"+
 			"</div>";
 			return html;
 		},
 		
 		controller: function($scope, $element, $attrs) {
+		
+			var twitterLinkPart ='authorize';		//this will always give user the option to change users - https://dev.twitter.com/docs/api/1/get/oauth/authorize
+			// twitterLinkPart ='authenticate';		//use this to auto redirect if already logged in to twitter and have authorized this app before (good unless want to be able to change users..) - https://dev.twitter.com/docs/api/1/get/oauth/authenticate
+			
 			$scope.twitter ={
 				requestToken: false,
 				requestTokenSecret: false,
 				// callback_url: appConfig.cfgJson.twitter.callback_url
 			};
 			
-			$scope.fbLink ='';		//will be form in init
+			$scope.fbLink ='';		//will be formed in init
+			
+			$scope.twitterLink ='';		//will be formed in init
 			
 			/**
 			@toc 0.
@@ -70,6 +76,8 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 				.then(function(response) {
 					$scope.twitter.requestToken =response.result.request_token;
 					$scope.twitter.requestTokenSecret =response.result.request_token_secret;
+					
+					$scope.twitterLink ='https://api.twitter.com/oauth/'+twitterLinkPart+'?oauth_token='+$scope.twitter.requestToken;
 				});
 			}
 			

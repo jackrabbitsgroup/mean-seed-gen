@@ -1,5 +1,11 @@
 # Continuous Integration (CI)
 
+## Multiple Servers
+To deploy to multiple servers just use GIT branches (e.g. the 'master' branch for the development/staging server and 'prod' for the production server). Then set the branch appropriately in the CI and then it will only pull in updates to that branch. Code in development (master) first and then merge in to production as needed. Push to production to deploy updates to production, i.e.:
+`git checkout prod` then `git merge master` then `git push origin prod`
+This leaves the standard (development) workflow unchanged and allows setting up as many additional servers as needed (one per GIT branch) and only deploying to a particular server as needed (i.e. not on EVERY code change/push) BUT you still get "one command" automated deploys (everything just uses a `git push`), one per each server/environment/deploy. This keeps things simple and almost entirely in GIT.
+
+
 ## Terminology: CI vs CD
 We're really talking about and implementing Continuous Delivery (and almost Continuous Deployment as well), specific definitions below.
 

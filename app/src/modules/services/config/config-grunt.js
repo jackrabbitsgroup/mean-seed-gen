@@ -26,7 +26,7 @@ var cfgJson = grunt.config('cfgJson');
 	'rootPath': '/',
 	'serverUrl': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>/",
 	'serverPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.socketPort); %>/",
-	'publicPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.port); %>/",
+	'publicPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.port); %>/",		//this will be OVERWRITTEN later by the vanity port, IF set
 	'homeDirectory': false,
 	'images':"common/img/",		//will have staticPath prepended to it
 	'uploads':"uploads/",		//will have appPath prepended to it
@@ -304,6 +304,11 @@ var cfgJson = grunt.config('cfgJson');
 		
 		
 		
+		//must do AFTER cfgJson is set!
+		//use vanity port for public path IF set
+		if(this.cfgJson.server.vanityPortString !==undefined) {
+			this.dirPaths.publicPath =this.cfgJson.server.scheme+'://'+this.cfgJson.server.domain+this.cfgJson.server.vanityPortString+'/';
+		}
 		
 	};
 

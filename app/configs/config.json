@@ -16,6 +16,7 @@
 		"domain": "localhost",
 		"scheme": "http",
 		"port": 3000,
+		"_vanityPortStringComment": "E.g. ':3000' or blank '' for no port - set an optional 'vanityPortString' key for port 80 redirects for production sites to hide port for social logins, user communication, etc.",
 		"_httpsPort": 443,
 		"httpPort": 3002,
 		"httpRedirectPort": 3000,
