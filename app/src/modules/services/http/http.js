@@ -74,7 +74,11 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					// response.error is only pressent when an error has occurred
 					if( response.hasOwnProperty('error') ) {
 						if(params.suppressErrorAlert ===undefined || !params.suppressErrorAlert) {
-							$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:response.error.message});
+							var msg =response.error.message;
+							if(response.error.message !==undefined && response.error.message.msg !==undefined) {
+								msg =response.error.message.msg;
+							}
+							$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:msg});
 						}
 						deferred.reject(response);
 					} else {
