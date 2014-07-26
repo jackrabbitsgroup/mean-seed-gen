@@ -8,11 +8,6 @@ When initialized this file sets up the following modules:
 - JSON-RPC API
 - All non-API routes
 
-The Express server configuration uses the following:
-
-- `express.compress()` for static content
-- `express.bodyParser()`, `express.query()`, `express.methodOverride()`, and `express.cookieParser()`
-
 Server module
 @module server
 **/
@@ -20,6 +15,12 @@ Server module
 'use strict';
 
 var express = require('express');
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var compression = require('compression');
+var errorhandler = require('errorhandler');
+var cookieParser = require('cookie-parser');
 var http    = require('http');
 var https   = require('https');
 var fs      = require('fs');
@@ -187,48 +188,28 @@ Server.prototype.configure = function(cfg, db){
     }
 
     // configure express
-    app.configure(function(){
-        app.use(express.logger(cfg.logKey));
+	app.use(morgan(cfg.logKey));
 
-        // compress static content
-        app.use(express.compress());
-        app.use(cfg.server.staticPath, express.static(staticFilePath));
-        //app.use(express.favicon());
+	// compress static content
+	app.use(compression());
+	app.use(cfg.server.staticPath, express.static(staticFilePath));
 
-        app.use(express.bodyParser());
-        app.use(express.query());
-        app.use(express.methodOverride());
-        app.use(express.cookieParser(cfg.cookie.secret));
+	app.use(bodyParser());
+	// app.use(express.query());		//not sure how to replace this for express 4.0 or if it's even necessary in the first place - https://github.com/senchalabs/connect#middleware
+	app.use(methodOverride());
+	app.use(cookieParser(cfg.cookie.secret));
 
-        // allow cors
-        if( cfg.cors && cfg.cors.domains ){
-            app.use( allowCors(cfg.cors.domains) );
-        }
+	// allow cors
+	if( cfg.cors && cfg.cors.domains ){
+		app.use( allowCors(cfg.cors.domains) );
+	}
 
-        app.use(app.router);
-    });
+	// app.use(app.router);			//deprecated in express 4.x
 
     // set app settings variables
     app.set('db.database', cfg.db.database);
     app.set('server.port', cfg.server.port);
     app.set('staticFilePath', staticFilePath);
-
-    // set error handling
-    if(cfg.env === 'development'){
-        app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    } else {
-        app.use(express.errorHandler());
-    }
-	
-	// Configure session store
-	// var storeOpts = cfg.session.store;
-	// storeOpts.mongoose_connection = db;
-
-	// app.use(express.session({
-		// secret: cfg.cookie.secret,
-		// maxAge: new Date(Date.now() + cfg.session.maxAge),
-		// store: new MongoStore(storeOpts)
-	// }));
 
 	// load api
 	app.use( require('./routes/api')(cfg, server, db) );
@@ -262,6 +243,15 @@ Server.prototype.configure = function(cfg, db){
 		ret.httpApp =httpApp;
 		ret.httpServer =httpServer;
 	}
+	
+	//put this at the end for express 4.x? - https://github.com/visionmedia/express/wiki/Migrating-from-3.x-to-4.x
+	// set error handling
+    if(cfg.env === 'development'){
+        app.use(errorhandler({ dumpExceptions: true, showStack: true }));
+    } else {
+        app.use(errorhandler());
+    }
+	
     return ret;
 };
 
