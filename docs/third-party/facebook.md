@@ -34,6 +34,18 @@ The main (only?) way to do this is the Graph API. There's 3 ways to do this:
 			- me/[action]
 	- The options go from simplest to most powerful (and most complicated) - the share button and share dialog do not require facebook login and are quicker to implement BUT they're frontend and require Facebook SDKs and pop-ups/redirects (so may not work well in apps - there's separate iOS and Android SDKs for native apps but those do not work for hybrid HTML5 apps). The graph (backend) API is the only way to do custom stories and the only sure way to work 100% cross platform (including in wrapped apps) since it's 100% backend calls. It's also fully customizable on the frontend / design-wise since it's all backend.
 	- For the graph API, there's 2 main ways to share - with an object (an 'action') or the standard user/feed. Stick with user/feed unless you really need an action because using objects is much more complicated and requires Facebook APPROVAL for each open graph action you want to use...
+- NOTE: when sharing, you can set the default share permissions reach (i.e. "public", "friends", "only me") in the "app permissions" on developers.facebook.com. It's pretty buried and hard to find but currently it's in App Details --> App Center Listed Platforms --> Configure App Center Permissions.
+
+
+# Friends
+- in v2.0 of the Graph API (April 2014), friends no longer returns ALL friends, just friends who use the app. So the only way to get all friends / a friend count is the soon to be deprecated FQL. There's a "taggable friends" and "invitable friends" endpoint that could also work but I don't think this is what it's for and it requires "Facebook Review" to use this..
+	- https://graph.facebook.com/fql?q=SELECT%20friend_count%20FROM%20user%20WHERE%20uid%20=%20273103345
+		- replace "273103345" with the user id you want to lookup
+	- http://stackoverflow.com/questions/23417356/facebook-graph-api-v2-0-me-friends-returns-empty-or-only-friends-who-also-use-m
+	- https://developers.facebook.com/docs/apps/upgrading#upgrading_v2_0_user_ids
+	- https://developers.facebook.com/docs/graph-api/reference/v2.0/user/taggable_friends
+	- https://developers.facebook.com/docs/graph-api/reference/v2.0/user/invitable_friends
+
 	
 ## Graph API
 
