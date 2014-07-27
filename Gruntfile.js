@@ -163,11 +163,11 @@ module.exports = function(grunt) {
 		var protractorPath ='node_modules/protractor/bin/protractor';		//non-Windows
 		var pathPrefix ='';
 		pathPrefix ='node_modules/protractor/';
-		var seleniumStartupParts =['java', '-jar', pathPrefix+'selenium/selenium-server-standalone-2.39.0.jar', '-p', '4444', '-Dwebdriver.chrome.driver='+pathPrefix+'selenium/chromedriver'];
+		var seleniumStartupParts =['java', '-jar', pathPrefix+'selenium/selenium-server-standalone-2.42.2.jar', '-p', '4444', '-Dwebdriver.chrome.driver='+pathPrefix+'selenium/chromedriver'];
 		if(cfgJson.operatingSystem !==undefined && cfgJson.operatingSystem =='windows') {
 			pathPrefix ='node_modules\\protractor\\';
 			protractorPath ='node_modules\\.bin\\protractor';		//Windows
-			seleniumStartupParts =['java', '-jar', pathPrefix+'selenium\\selenium-server-standalone-2.39.0.jar', '-p', '4444', '-Dwebdriver.chrome.driver='+pathPrefix+'selenium\\chromedriver.exe'];
+			seleniumStartupParts =['java', '-jar', pathPrefix+'selenium\\selenium-server-standalone-2.42.2.jar', '-p', '4444', '-Dwebdriver.chrome.driver='+pathPrefix+'selenium\\chromedriver.exe'];
 		}
 		var seleniumStartup =seleniumStartupParts.join(' ');
 		var seleniumStartupCmd =seleniumStartupParts[0];
@@ -991,16 +991,23 @@ module.exports = function(grunt) {
 		//need to exit otherwise coverage report doesn't display on the console..
 		grunt.registerTask('node-cov', ['test-backend', 'exit']);
 		
-		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running)
-		grunt.registerTask('e2e', ['shell:protractor']);
+		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running so will NOT work by itself)
+		grunt.registerTask('e2e-iso', ['shell:protractor']);
+		
+		//standalone task - starts & stops selenium AND node servers before/after
+		grunt.registerTask('e2e', ['test-cleanup', 'node-test-server', 'test-setup', 'shell:protractor', 'test-cleanup', 'http:nodeShutdown']);
 		
 		grunt.registerTask('karma-cov', ['clean', 'karma:unit', 'coverage']);
 		
-		grunt.registerTask('test-frontend', ['karma-cov', 'e2e']);
+		//can NOT be run by itself as it will fail/error without selenium AND node servers started/stopped before/after
+		grunt.registerTask('test-frontend-iso', ['karma-cov', 'e2e-iso']);
+		
+		//standalone task - starts & stops selenium AND node servers before/after
+		grunt.registerTask('test-frontend', ['test-cleanup', 'node-test-server', 'test-setup', 'karma-cov', 'e2e-iso', 'test-cleanup', 'http:nodeShutdown']);
 
 		grunt.registerTask('test', 'run all tests', function() {
-			// grunt.task.run(['test-backend', 'test-frontend']);
-			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup']);
+			// grunt.task.run(['test-backend', 'test-frontend-iso']);
+			grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend-iso', 'test-cleanup']);
 		});
 		
 		//don't get "done, without errors" grunt completion with 'exit' task and this causes CI to not complete.. Also linux sometimes?? outputs the coverage even without 'exit'?
@@ -1037,11 +1044,11 @@ module.exports = function(grunt) {
 			}
 
 			if(validVersion) {
-				var tasks =['outputCoverage', 'build', 'test'];
+				var tasks =['devUpdate', 'outputCoverage', 'build', 'test'];
 				//see if we want to run forever or not
 				if(cfgJson.forever !==undefined && cfgJson.forever) {
 					// tasks =['build', 'foreverMulti', 'wait:afterForever', 'test'];		//need to wait after restart server to give a chance to initialize before the tests are attempted (otherwise will just error and fail because the server isn't up/restarted yet)
-					tasks =['build', 'foreverMulti', 'test'];		//do NOT need to wait anymore now that moved test server to be started by test task itself!
+					tasks =['devUpdate', 'build', 'foreverMulti', 'test'];		//do NOT need to wait anymore now that moved test server to be started by test task itself!
 				}
 				tasks.push('outputCoverage');
 				//locally ENSURE coverage is enforced (either locally or Windows is NOT running final node coverage)
@@ -1096,7 +1103,7 @@ module.exports = function(grunt) {
 				- karma frontend unit if one of the unit buildfiles files changes
 				- protractor frontend e2e (selenium) if one of the e2e buildfiles files changes - NOT CURRENTLY run / watched as these tests take awhile (more than a few seconds); just run manually with `grunt e2e`
 				- jasmine backend - NOT CURRENTLY run / watched; requires node server restart so probably not worth it/the time; just run manually with `grunt test-backend` in a separate command window
-		//grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend', 'test-cleanup']);
+		//grunt.task.run(['test-cleanup', 'test-setup', 'test-backend', 'test-frontend-iso', 'test-cleanup']);
 		*/
 		//test only
 		// grunt.registerTask('dev-test', ['q-watch', 'test-cleanup', 'test-setup', 'karma:watch:start', 'watch:karmaUnitJs', 'watch:karmaUnitTest']);		//doesn't work - watch isn't a multi-task..
