@@ -66,9 +66,18 @@ module.exports = function (config) {
 		},
 		reporters: ['coverage'],
 		coverageReporter: {
-			type: 'html',
-			// type: 'lcov',
-			dir: 'coverage-angular/'
+			//need to SEPARATELY generate json file now after karma v0.10.10 and karma-coverage v.0.1.2 - https://github.com/karma-runner/karma-coverage/pull/82
+			reporters: [
+				{
+					type: 'html',
+					// type: 'lcov',
+					dir: 'coverage-angular/'
+				},
+				{
+					type: 'json',
+					dir: 'coverage-angular/'
+				}
+			]
 		}
 		
 	});
