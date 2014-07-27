@@ -55,7 +55,7 @@
 		"karma-coverage":"~0.2.4",
 		"karma-jasmine":"~0.1.5",
 		"karma-phantomjs-launcher":"~0.1.4",
-		"protractor":"~0.16.1"
+		"protractor":"~1.0.0"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
