@@ -43,8 +43,7 @@ angular.module('app').directive('appLogin', ['appConfig', function (appConfig) {
 			forgotPass:'&',
 			login:'&',
 		},
-
-		// replace: true,
+		
 		template: function(element, attrs) {
 			var html ="<div class='login-form center center-margin'>"+
 				"<form class='jrg-forminput-form' name='loginForm' ng-submit='submitForm()'>"+

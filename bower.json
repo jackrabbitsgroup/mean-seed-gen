@@ -16,12 +16,12 @@
 		"jackrabbitsgroup"
 	],
 	"dependencies": {
-		"angular": "1.2.5",
-		"angular-animate": "1.2.5",
-		"angular-sanitize": "1.2.5",
-		"angular-touch": "1.2.5",
-		"angular-route": "1.2.5",
-		"angular-cookies": "1.2.5",
+		"angular": "1.3.0-beta.17",
+		"angular-animate": "1.3.0-beta.17",
+		"angular-sanitize": "1.3.0-beta.17",
+		"angular-touch": "1.3.0-beta.17",
+		"angular-route": "1.3.0-beta.17",
+		"angular-cookies": "1.3.0-beta.17",
 		"lesshat": "latest",
 		"font-awesome": "latest",
 		"less-flexbox": "latest",
@@ -34,6 +34,11 @@
 	},
 	"license": "MIT",
 	"resolutions": {
-		"angular": "1.2.5"
+		"angular": "1.3.0-beta.17",
+		"angular-animate": "1.3.0-beta.17",
+		"angular-sanitize": "1.3.0-beta.17",
+		"angular-touch": "1.3.0-beta.17",
+		"angular-route": "1.3.0-beta.17",
+		"angular-cookies": "1.3.0-beta.17"
 	}
 }

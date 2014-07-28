@@ -33,8 +33,7 @@ angular.module('app').directive('appSignup', ['appConfig', function (appConfig) 
 		scope: {
 			signup: '&'
 		},
-
-		// replace: true,
+		
 		template: function(element, attrs) {
 			var html ="<div class='signup-form center center-margin'>"+
 				"<form class='jrg-forminput-form' name='signupForm' ng-submit='submitForm()'>"+

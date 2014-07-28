@@ -27,8 +27,7 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 		restrict: 'A',
 		scope: {
 		},
-
-		// replace: true,
+		
 		template: function(element, attrs) {
 			var defaultAttrs ={
 				buttonText: 'Login'
