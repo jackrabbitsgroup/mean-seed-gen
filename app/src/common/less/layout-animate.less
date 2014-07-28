@@ -3,6 +3,9 @@
 //@leftPx: 200px;
 //@leftPx: 100%;
 @leftPx:@width;
+
+@header-height-copy: 45px;		//hardcoded - must match
+
 /*
 //overflow hidden is necessary to prevent horizontal scrollbar during animation BUT if put on the wrong div it won't work OR it will prevent a vertical scrollbar at ALL times (so tall content gets cut off..)
 //doesn't work - cuts off all content
@@ -14,12 +17,14 @@ overflow:hidden;
 	overflow:hidden;
 }
 */
-#content {
+
+.content-animate {
 	overflow:hidden;		//prevent horizontal scrollbar during animation
 	position:relative;
 }
+
 //both
-.view-enter, .view-leave {
+.content-animate.ng-enter, .content-animate.ng-leave {
 	//.transition(all .25s linear);		//do NOT transition all properties otherwise it creates width issues
 	.transition(left .25s linear);
 	width:@width;
@@ -27,26 +32,28 @@ overflow:hidden;
 	left:0;
 	right:0;
 	*/
-	top:0;
+	//top:0;
+	top: @header-height-copy;
 	bottom:0;
 	position:absolute;
 }
+
 //enter
-.view-enter {
+.content-animate.ng-enter {
 	left:@leftPx;
 	//opacity:0;
 }
-.view-enter.view-enter-active {
+.content-animate.ng-enter.ng-enter-active {
 	left:0;
 	//opacity:1;
 }
 
 //leave
-.view-leave {	
+.content-animate.ng-leave {	
 	left:0px;
 	//opacity:1;
 }
-.view-leave.view-leave-active {
+.content-animate.ng-leave.ng-leave-active {
 	left:(-1 * @leftPx);
 	//opacity:0;
 }

@@ -31,8 +31,8 @@ print('\t<link rel="stylesheet" href="' + filePath + '"/>\n');
 		<div id='{{ids.header}}' ng-include='staticPath+"modules/pages/header/header.html"'></div>
 		
 		<div class='app-appalert-cont' app-appalert></div>
-
-		<div id='{{ids.content}}' ng-view ng-animate="{enter:'view-enter', leave:'view-leave'}" class='{{classes.loggedIn}} {{classes.layout}}'></div>
+		
+		<div id='{{ids.content}}' ng-view class='content-animate {{classes.loggedIn}} {{classes.layout}}'></div>
 
 		<div id='{{ids.footer}}' ng-include='staticPath+"modules/pages/footer/footer.html"'></div>
 	</div>
