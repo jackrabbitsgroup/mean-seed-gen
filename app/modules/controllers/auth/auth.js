@@ -252,6 +252,7 @@ A session / user login is stored by a key pair of the user's id and a session id
 @method logout
 @param {Object} data
 	@param {String} user_id The id of the user to logout
+	@param {String} sess_id The id of user session to remove
 @param {Object} params
 @return {Promise}
 	@param {Object} user
@@ -260,7 +261,7 @@ Auth.prototype.logout = function(db, data, params) {
 	var deferred = Q.defer();
 	var ret ={code:0, msg:'Auth.logout '};
 	
-	db.user.update({_id: MongoDBMod.makeIds({'id': data.user_id}) }, {$set: {sess_id:''}}, function(err, user) {
+	db.user.update({_id: MongoDBMod.makeIds({'id': data.user_id}) }, {$pull: {sess_id: data.sess_id}}, {multi: true}, function(err, user) {
 		if(err) {
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
@@ -293,7 +294,7 @@ Auth.prototype.checkLogin = function(db, data, params) {
 	var deferred = Q.defer();
 	var ret ={code:0, msg:'Auth.checkLogin ', user:false};
 	
-	db.user.findOne({_id: MongoDBMod.makeIds({'id':data.user_id}), sess_id:data.sess_id}, function(err, user) {
+	db.user.findOne({_id: MongoDBMod.makeIds({'id':data.user_id}), sess_id: {$in: [data.sess_id] } }, function(err, user) {
 		if(err) {
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
@@ -303,6 +304,7 @@ Auth.prototype.checkLogin = function(db, data, params) {
 			deferred.reject(ret);
 		}
 		else if(user) {
+			user.sess_id =data.sess_id;		//set to string of CURRENT session instead of array of all sessions
 			ret.user =user;
 			deferred.resolve(ret);
 		}
@@ -1091,7 +1093,8 @@ function createActual(db, data, params) {
 	data.password_salt =StringMod.random(16,{});
 	data.password =createPassword(data.password_salt, data.password, {});
 	delete data.password_confirm;
-	data.sess_id =StringMod.random(16,{});
+	var sessId =StringMod.random(16,{});
+	data.sess_id =[ sessId ];
 	data.signup = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 	db.user.insert(data, function(err, user) {
 		if(err) {
@@ -1100,6 +1103,7 @@ function createActual(db, data, params) {
 		}
 		else {
 			user =user[0];		//return value is an array but just want the one we inserted as an object
+			user.sess_id =sessId;		//set to string of CURRENT session rather than array
 			ret.user =user;
 			deferred.resolve(ret);
 		}
@@ -1165,7 +1169,7 @@ function updateSession(db, user, params) {
 	var deferred =Q.defer();
 	var ret ={code:0, msg:'updateSession: ', user:false};
 	//update session info in database
-	user.sess_id =StringMod.random(16,{});
+	var sessId =StringMod.random(16,{});
 	user.last_login =moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 	
 	//may not have email so need to check by _id too
@@ -1183,7 +1187,7 @@ function updateSession(db, user, params) {
 		deferred.reject(ret);
 	}
 	if(valid) {
-		db.user.update(query, {$set: {sess_id:user.sess_id, last_login:user.last_login} }, function(err, valid) {
+		db.user.update(query, {$set: {last_login:user.last_login}, $push:{sess_id: sessId } }, function(err, valid) {
 			if(err) {
 				ret.msg +='Error: '+err;
 				deferred.reject(ret);
@@ -1193,6 +1197,7 @@ function updateSession(db, user, params) {
 				deferred.reject(ret);
 			}
 			else {
+				user.sess_id =sessId;		//set to string of CURRENT session rather than array of all sessions
 				ret.user =user;
 				deferred.resolve(ret);
 			}

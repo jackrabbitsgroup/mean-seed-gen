@@ -1048,7 +1048,7 @@ module.exports = function(grunt) {
 				//see if we want to run forever or not
 				if(cfgJson.forever !==undefined && cfgJson.forever) {
 					// tasks =['build', 'foreverMulti', 'wait:afterForever', 'test'];		//need to wait after restart server to give a chance to initialize before the tests are attempted (otherwise will just error and fail because the server isn't up/restarted yet)
-					tasks =['devUpdate', 'build', 'foreverMulti', 'test'];		//do NOT need to wait anymore now that moved test server to be started by test task itself!
+					tasks =['build', 'foreverMulti', 'test'];		//do NOT need to wait anymore now that moved test server to be started by test task itself!		//do NOT run 'devUpdate' on production as this seems to break ci? plus it's not really necessary there anyway? or maybe fix this?
 				}
 				tasks.push('outputCoverage');
 				//locally ENSURE coverage is enforced (either locally or Windows is NOT running final node coverage)
