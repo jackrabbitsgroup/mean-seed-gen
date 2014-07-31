@@ -155,7 +155,8 @@ AuthApi.prototype.rpcLogout = function(){
 		info: 'Log out of API',
 		params: {
 			// data: {
-				user_id: { required: true, type: 'string', info: "Id of user to logout" }
+				user_id: { required: true, type: 'string', info: "Id of user to logout" },
+				sess_id: { required: true, type: 'string', info: "Id of user session" }
 			// }
 		},
 		returns: {
@@ -271,7 +272,7 @@ AuthApi.prototype.rpcActive = function(){
 		action: function(params, out){
 			var promise =AuthMod.checkLogin(db, params, {});
 			promise.then(function(ret1) {
-				ret1.user =UserMod.readFilter(ret1.user, {type:'public'});		//only return certain fields (i.e strip out password)
+				ret1.user =UserMod.readFilter(ret1.user, {type:'login'});		//only return certain fields (i.e strip out password)
 				
 				//@example: var fields ={'tribe': {'_id':1, 'email': 1, 'phone': 1, 'first_name': 1, 'last_name': 1}, 'follow':{'_id':1, 'email': 1, 'phone': 1, 'first_name': 1, 'last_name': 1} };
 				// var fields ={};
@@ -403,7 +404,7 @@ AuthApi.prototype.rpcChangePassword = function(){
 		action: function(params, out){
 			var promise =AuthMod.changePassword(db, params, {});
 			promise.then(function(ret1) {
-				ret1.user =UserMod.readFilter(ret1.user, {type:'public'});		//only return certain fields (i.e strip out password)
+				ret1.user =UserMod.readFilter(ret1.user, {type:'login'});		//only return certain fields (i.e strip out password)
 				out.win(ret1);
 			}, function(err) {
 				self.handleError(out, err, {});
@@ -444,7 +445,7 @@ AuthApi.prototype.rpcUserImport = function(){
 		action: function(params, out){
 			var promise =AuthMod.usersImport(db, params, {});
 			promise.then(function(ret1) {
-				ret1.user =UserMod.readFilter(ret1.user, {type:'public'});		//only return certain fields (i.e strip out password)
+				ret1.user =UserMod.readFilter(ret1.user, {type:'login'});		//only return certain fields (i.e strip out password)
 				out.win(ret1);
 			}, function(err) {
 				self.handleError(out, err, {});

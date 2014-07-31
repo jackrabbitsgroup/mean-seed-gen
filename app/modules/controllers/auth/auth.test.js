@@ -259,7 +259,7 @@ function go(params) {
 			@param {String} _id
 	*/
 	var logout =function(opts) {
-		api.expectRequest({method:'Auth.logout'}, {data:{'user_id':opts.user._id}}, {}, {})
+		api.expectRequest({method:'Auth.logout'}, {data:{'user_id':opts.user._id, 'sess_id':opts.user.sess_id}}, {}, {})
 		.then(function(res) {
 			var data =res.data;
 			login({'user':opts.user});		//go to next function/test in sequence
@@ -280,7 +280,39 @@ function go(params) {
 			var data =res.data;
 			expect(data.result.user).toBeDefined();
 			expect(data.result.user._id).toBe(opts.user._id);
-			forgotPassword({});		//go to next function/test in sequence
+			// forgotPassword({});		//go to next function/test in sequence
+			checkLoginMultipleSessions({user: data.result.user});		//go to next function/test in sequence
+		});
+	};
+	
+	/**
+	@toc 7.1.
+	@method checkLoginMultipleSessions
+	@param {Object} opts
+		@param {Object} user
+			@param {String} _id
+			@param {String} sess_id
+	*/
+	var checkLoginMultipleSessions =function(opts) {
+		//first login same user again
+		var params = lodash.clone(testUser);
+		api.expectRequest({method:'Auth.login'}, {data:params}, {}, {})
+		.then(function(res) {
+			var data =res.data;
+			expect(data.result.user).toBeDefined();
+			expect(data.result.user._id).toBe(opts.user._id);
+			expect(data.result.user.sess_id).not.toBe(opts.user.sess_id);		//should be DIFFERENT session id
+			
+			//now ensure that the previous session is still active
+			api.expectRequest({method:'Auth.active'}, {data:{'user_id':opts.user._id, 'sess_id':opts.user.sess_id}}, {}, {})
+			.then(function(res) {
+				data =res.data;
+				expect(data.result.user).toBeDefined();
+				expect(data.result.user.first_name).toBe(opts.user.first_name);
+				expect(data.result.user.email).toBe(opts.user.email.toLowerCase());
+				
+				forgotPassword({});		//go to next function/test in sequence
+			});
 		});
 	};
 	
@@ -401,7 +433,7 @@ function go(params) {
 			
 			//should be able to login the same user again - it's important this also works
 			//logout FIRST - this should clear sess_id and is what normally should happen before re-login
-			api.expectRequest({method:'Auth.logout'}, {data:{'user_id':testUser1._id}}, {}, {})
+			api.expectRequest({method:'Auth.logout'}, {data:{'user_id':testUser1._id, 'sess_id':data.user.sess_id}}, {}, {})
 			.then(function(res) {
 				var data =res.data;
 				
