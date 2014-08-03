@@ -218,12 +218,31 @@ function go(params) {
 			'authorize': true,		//Tell security module to go through checks even though this is the test DB
 			'authority_keys': testUser.authority_keys,
 			user_id: testUser._id,
-			first_name: 'user_newname'
+			user: {
+				first_name: 'user_newname'
+			}
 		};
 		api.expectRequest({method:'User.update'}, {data:params}, {}, {})
 		.then(function(res) {
 			var data =res.data;
-			read({'newFirstName':params.first_name});		//go to next function/test in sequence
+			
+			//check to make sure can NOT update user with an email that is already in use
+			params =
+			{
+				'authorize': true,		//Tell security module to go through checks even though this is the test DB
+				'authority_keys': testUser.authority_keys,
+				user_id: testUser._id,
+				user: {
+					email: TEST_USERS[0].email
+				}
+			};
+			api.expectRequest({method:'User.update'}, {data:params}, {}, {})
+			.then(function(res) {
+				data =res.data;
+				console.log(data);		//TESTING
+			
+				read({'newFirstName':params.first_name});		//go to next function/test in sequence
+			});
 		});
 	};
 	

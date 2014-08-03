@@ -225,9 +225,14 @@ Twitter.prototype.accessToken = function(db, data, params)
 						//profile image: now that we have a user with a user id, IF user does NOT already have a profile image AND IF we have a profile image from Twitter, add that in for the user
 						if(data.pull_pic && (retLogin.user.image ===undefined || retLogin.user.image.profile ===undefined || !retLogin.user.image.profile) && dataUser.profile_image_url !==undefined) {
 							var imgUrl =dataUser.profile_image_url;
+							var imgUrlStripped =imgUrl;
+							//strip url params if they're there as this will mess up things (get an ESDIR or ENOENT error since the file extension isn't at the end)
+							if(imgUrlStripped.indexOf('?') >-1) {
+								imgUrlStripped =imgUrlStripped.slice(0, imgUrlStripped.indexOf('?'));
+							}
 							//get the file extension
-							var posExt =imgUrl.lastIndexOf('.');
-							var ext =imgUrl.slice(posExt, imgUrl.length);
+							var posExt =imgUrlStripped.lastIndexOf('.');
+							var ext =imgUrlStripped.slice(posExt, imgUrlStripped.length);
 							
 							//get the big sized image by removing the underscore part - https://dev.twitter.com/docs/user-profile-images-and-banners
 							var posUnderscore =imgUrl.lastIndexOf('_');
@@ -247,9 +252,7 @@ Twitter.prototype.accessToken = function(db, data, params)
 							var picStream =fs.createWriteStream(imgWritePath);
 							picStream.on('close', function() {
 								//update user with this image
-								var userUpdate ={
-									user_id: retLogin.user._id
-								};
+								var userUpdate ={};
 								if(retLogin.user.image !==undefined) {		//image key already exists
 									userUpdate['image.profile'] =dbSavePath;		//have to do it this way for mongo db syntax and to avoid over-writing any other keys (other than 'profile') that may exist
 									//update for return as well
@@ -264,7 +267,7 @@ Twitter.prototype.accessToken = function(db, data, params)
 										profile: dbSavePath
 									};
 								}
-								UserMod.update(db, userUpdate, {})
+								UserMod.update(db, {user_id: retLogin.user._id, user:userUpdate}, {})
 								.then(function(retUserUpdate) {
 									deferred.resolve(retLogin);
 								}, function(retErr) {

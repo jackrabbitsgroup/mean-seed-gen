@@ -289,9 +289,10 @@ Updates a user's info
 @toc 3.
 @method update
 @param {Object} data
-	@param {String} user_id Id of user to update. Other fields are optional and are used for the update
+	@param {String} user_id Id of user to update
+	@param {Object} user The data to update
 @param {Object} params
-@return {Promise}
+@return {Object} (via Promise)
 	@param {Object} user
 **/
 User.prototype.update = function(db, data, params)
@@ -301,27 +302,49 @@ User.prototype.update = function(db, data, params)
 	var ret ={code:0, msg:'User.update '};
 
 	var _id =data.user_id;
-	delete data.user_id;
-	data = AuthMod.formatAlternateContact(data, {});
-	ret.user = data;
-	delete data._id;			//can't $set _id
+	// delete data.user_id;
+	if(data.user.user_id !==undefined) {
+		delete data.user.user_id;
+	}
+	data.user = AuthMod.formatAlternateContact(data.user, {});
+	ret.user = data.user;
+	delete data.user._id;			//can't $set _id
 	
-	data =self.fixPhoneFormat(db, data, params);
+	data.user =self.fixPhoneFormat(db, data.user, params);
 	
-	db.user.update({_id:MongoDBMod.makeIds({'id':_id}) }, {$set: data}, function(err, valid)
+	//check if user exists since do not want to allow duplicates of email/phone number for more than one user so can not update with an email and/or phone that is already in use. Could merge users but only AFTER email/phone verification to ensure the current user owns both the users he/she is trying to join accounts for.
+	AuthMod.userExists(db, data.user, {})
+	.then(function(ret1) {
+		if(ret1.exists === true)
+		{
+			ret.already_exists = true;
+			ret.user = ret1.user;
+			deferred.reject(ret);
+		}
+		else
+		{
+			db.user.update({_id:MongoDBMod.makeIds({'id':_id}) }, {$set: data.user}, function(err, valid)
+			{
+				if(err) {
+					ret.msg +='Error: '+err;
+					deferred.reject(ret);
+				}
+				else if (!valid) {
+					ret.msg +='Not valid ';
+					deferred.reject(ret);
+				}
+				else {
+					ret.msg ='User updated';
+					deferred.resolve(ret);
+				}
+			});
+		}
+	},
+	function(err)
 	{
-		if(err) {
-			ret.msg +='Error: '+err;
-			deferred.reject(ret);
-		}
-		else if (!valid) {
-			ret.msg +='Not valid ';
-			deferred.reject(ret);
-		}
-		else {
-			ret.msg ='User updated';
-			deferred.resolve(ret);
-		}
+		ret.code = 1;
+		ret.msg += err;
+		deferred.reject(ret);
 	});
 
 	return deferred.promise;

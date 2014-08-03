@@ -24,6 +24,7 @@ angular.module('myApp').controller('HeaderCtrl', ['$scope', 'appNav', 'appConfig
 			var ppSend ={};
 			ppSend.loggedIn =appConfig.state.loggedIn;
 			nav =navLoginUpdate(nav, ppSend);
+			appNav.setNav(nav, {});			//save in nav service as well so other controllers, etc. can access this UPDATED / current nav
 			setNav(nav.header, {});
 		}
 	}
