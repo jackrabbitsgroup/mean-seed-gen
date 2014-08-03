@@ -213,13 +213,14 @@ function go(params) {
 	@param {Object} opts
 	*/
 	var update =function(opts) {
+		var newFirstName ='user_newname';
 		var params =
 		{
 			'authorize': true,		//Tell security module to go through checks even though this is the test DB
 			'authority_keys': testUser.authority_keys,
 			user_id: testUser._id,
 			user: {
-				first_name: 'user_newname'
+				first_name: newFirstName
 			}
 		};
 		api.expectRequest({method:'User.update'}, {data:params}, {}, {})
@@ -239,10 +240,11 @@ function go(params) {
 			api.expectRequest({method:'User.update'}, {data:params}, {}, {})
 			.then(function(res) {
 				data =res.data;
-				console.log(data);		//TESTING
+				expect(data.error.message.already_exists).toBe(true);
 			
-				read({'newFirstName':params.first_name});		//go to next function/test in sequence
+				read({'newFirstName':newFirstName});		//go to next function/test in sequence
 			});
+			
 		});
 	};
 	
