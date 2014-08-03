@@ -165,6 +165,7 @@ Facebook.prototype.me = function(db, data, params) {
 				token: data.access_token
 			}
 		};
+		
 		if(ret1.email !==undefined) {
 			vals.user.email =ret1.email;
 		}
@@ -195,9 +196,14 @@ Facebook.prototype.me = function(db, data, params) {
 				*/
 				promise.then(function(retPic) {
 					var imgUrl =retPic.data.url;
+					var imgUrlStripped =imgUrl;
+					//strip url params if they're there as this will mess up things (get an ESDIR or ENOENT error since the file extension isn't at the end)
+					if(imgUrlStripped.indexOf('?') >-1) {
+						imgUrlStripped =imgUrlStripped.slice(0, imgUrlStripped.indexOf('?'));
+					}
 					//get the file extension
-					var posExt =imgUrl.lastIndexOf('.');
-					var ext =imgUrl.slice(posExt, imgUrl.length);
+					var posExt =imgUrlStripped.lastIndexOf('.');
+					var ext =imgUrlStripped.slice(posExt, imgUrlStripped.length);
 					
 					var filename ='profile'+ext;
 					var imgSavePath =data.pic_directory +'/'+retLogin.user._id;
@@ -211,9 +217,7 @@ Facebook.prototype.me = function(db, data, params) {
 					var picStream =fs.createWriteStream(imgWritePath);
 					picStream.on('close', function() {
 						//update user with this image
-						var userUpdate ={
-							user_id: retLogin.user._id
-						};
+						var userUpdate ={};
 						if(retLogin.user.image !==undefined) {		//image key already exists
 							userUpdate['image.profile'] =dbSavePath;		//have to do it this way for mongo db syntax and to avoid over-writing any other keys (other than 'profile') that may exist
 							//update for return as well
@@ -228,7 +232,7 @@ Facebook.prototype.me = function(db, data, params) {
 								profile: dbSavePath
 							};
 						}
-						UserMod.update(db, userUpdate, {})
+						UserMod.update(db, {user_id:retLogin.user._id, user:userUpdate}, {})
 						.then(function(retUserUpdate) {
 							deferred.resolve(retLogin);
 						}, function(retErr) {

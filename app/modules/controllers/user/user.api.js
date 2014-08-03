@@ -164,8 +164,8 @@ UserApi.prototype.rpcUpdate = function(){
 	return {
 		info: 'Update a user',
 		params: {
-			user_id: { type: 'string', info: "Id for user to update. Will be converted to mongo object id if necessary. All other parameters are optional and are the fields that will be updated" }
-			// fields: { type: 'mixed', info: "The fields / data to update" }
+			user_id: { type: 'string', required: true, info: "Id for user to update. Will be converted to mongo object id if necessary." },
+			user: { type: 'object', required:true, info: "The user data (fields and values) to update" }
 		},
 		returns: {
 			user: sampleUserReturn
