@@ -308,44 +308,56 @@ User.prototype.update = function(db, data, params)
 	}
 	data.user = AuthMod.formatAlternateContact(data.user, {});
 	ret.user = data.user;
-	delete data.user._id;			//can't $set _id
+	if(data.user._id !==undefined) {
+		delete data.user._id;			//can't $set _id
+	}
 	
 	data.user =self.fixPhoneFormat(db, data.user, params);
 	
-	//check if user exists since do not want to allow duplicates of email/phone number for more than one user so can not update with an email and/or phone that is already in use. Could merge users but only AFTER email/phone verification to ensure the current user owns both the users he/she is trying to join accounts for.
-	AuthMod.userExists(db, data.user, {})
-	.then(function(ret1) {
-		if(ret1.exists === true)
+	var updateUserLocal =function(paramsUser) {
+		db.user.update({_id:MongoDBMod.makeIds({'id':_id}) }, {$set: data.user}, function(err, valid)
 		{
-			ret.already_exists = true;
-			ret.user = ret1.user;
-			deferred.reject(ret);
-		}
-		else
-		{
-			db.user.update({_id:MongoDBMod.makeIds({'id':_id}) }, {$set: data.user}, function(err, valid)
+			if(err) {
+				ret.msg +='Error: '+err;
+				deferred.reject(ret);
+			}
+			else if (!valid) {
+				ret.msg +='Not valid ';
+				deferred.reject(ret);
+			}
+			else {
+				ret.msg ='User updated';
+				deferred.resolve(ret);
+			}
+		});
+	};
+	
+	if(data.user.email !==undefined || data.user.phone_number !==undefined) {
+		//check if user exists since do not want to allow duplicates of email/phone number for more than one user so can not update with an email and/or phone that is already in use. Could merge users but only AFTER email/phone verification to ensure the current user owns both the users he/she is trying to join accounts for.
+		AuthMod.userExists(db, data.user, {})
+		.then(function(ret1) {
+			if(ret1.exists === true)
 			{
-				if(err) {
-					ret.msg +='Error: '+err;
-					deferred.reject(ret);
-				}
-				else if (!valid) {
-					ret.msg +='Not valid ';
-					deferred.reject(ret);
-				}
-				else {
-					ret.msg ='User updated';
-					deferred.resolve(ret);
-				}
-			});
-		}
-	},
-	function(err)
-	{
-		ret.code = 1;
-		ret.msg += err;
-		deferred.reject(ret);
-	});
+				ret.already_exists = true;
+				ret.user = ret1.user;
+				deferred.reject(ret);
+			}
+			else
+			{
+				updateUserLocal({});
+			}
+		},
+		function(err)
+		{
+			ret.code = 1;
+			ret.msg += err;
+			deferred.reject(ret);
+		});
+	}
+	//if no email or phone, it's safe to update
+	else {
+		updateUserLocal({});
+	}
 
 	return deferred.promise;
 };
