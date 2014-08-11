@@ -276,6 +276,17 @@
 									"socket.spec.js"
 								]
 							}
+						},
+						{
+							"name": "error-msg",
+							"files": {
+								"js": [
+									"error-msg.js"
+								],
+								"testUnit": [
+									"error-msg.spec.js"
+								]
+							}
 						}
 					]
 				},

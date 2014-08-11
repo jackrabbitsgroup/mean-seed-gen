@@ -841,8 +841,7 @@ module.exports = function(grunt) {
 						statements: testCov.angular_karma.statements,
 						lines: testCov.angular_karma.lines
 					},
-					// dir: 'coverage-angular',
-					dir: 'coverage',		//karma-coverage@0.2.5 added `subdir` and that seemed to break things so no matter what is set in karma.conf, it's always in the 'coverage' directory..
+					dir: 'coverage-angular',
 					root: publicPathRelativeRootNoSlash
 				},
 				//not really a multi task?!
