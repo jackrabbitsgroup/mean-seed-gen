@@ -242,7 +242,24 @@ function go(params) {
 				data =res.data;
 				expect(data.error.message.already_exists).toBe(true);
 			
-				read({'newFirstName':newFirstName});		//go to next function/test in sequence
+				//check to make sure CAN update user with the user's OWN email
+				params =
+				{
+					'authorize': true,		//Tell security module to go through checks even though this is the test DB
+					'authority_keys': testUser.authority_keys,
+					user_id: testUser._id,
+					user: {
+						email: testUser.email
+					}
+				};
+				api.expectRequest({method:'User.update'}, {data:params}, {}, {})
+				.then(function(res) {
+					data =res.data;
+					expect(data.result).toBeDefined();
+					expect(data.result.user.email).toBe(testUser.email);
+				
+					read({'newFirstName':newFirstName});		//go to next function/test in sequence
+				});
 			});
 			
 		});
