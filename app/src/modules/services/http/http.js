@@ -12,8 +12,8 @@ $http wrapper for making (backend) calls and handling notifications (in addition
 
 'use strict';
 
-angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieStore', 'appConfig', '$timeout', 'appStorage',
-	function($http, $q, $rootScope, $cookieStore, appConfig, $timeout, appStorage){
+angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieStore', 'appConfig', '$timeout', 'appStorage', 'appErrorMsg', 
+	function($http, $q, $rootScope, $cookieStore, appConfig, $timeout, appStorage, appErrorMsg){
 
 	var inst = {
 	
@@ -55,6 +55,16 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 			};
 			params =angular.extend(defaults, params);
 			
+			//save method url before alter it (and convert rpc method to url, if present)
+			var methodUrl;
+			if(httpOpts.url !==undefined) {
+				methodUrl =httpOpts.url;
+			}
+			else if(rpcOpts.method !==undefined) {
+				//default url part to be the lowercase version of the first part of the rpc method (i.e. 'Auth.login' means 'auth/' will be the url part)
+				methodUrl =rpcOpts.method.toLowerCase().replace('.', '/');
+			}
+			
 			var instId =Math.random().toString(36).substring(7);
 			
 			if(params.noLoadingScreen ===undefined || !params.noLoadingScreen) {
@@ -74,9 +84,19 @@ angular.module('app').factory('appHttp', ['$http', '$q', '$rootScope', '$cookieS
 					// response.error is only pressent when an error has occurred
 					if( response.hasOwnProperty('error') ) {
 						if(params.suppressErrorAlert ===undefined || !params.suppressErrorAlert) {
-							var msg =response.error.message;
+							var msg;
+							var code =response.error.code;
+							if(response.error.message !==undefined && response.error.message.code !==undefined) {
+								code =response.error.message.code;
+							}
+							msg =response.error.message;
 							if(response.error.message !==undefined && response.error.message.msg !==undefined) {
 								msg =response.error.message.msg;
+							}
+							//use frontend error messages for this route/code combination, if we have them
+							var retMsg =appErrorMsg.getMessage(methodUrl, code, {});
+							if(retMsg.found) {
+								msg =retMsg.msg;
 							}
 							$rootScope.$broadcast('evtAppalertAlert', {type:'error', msg:msg});
 						}

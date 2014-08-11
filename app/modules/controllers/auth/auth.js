@@ -96,6 +96,7 @@ Auth.prototype.create = function(db, data, params)
 	var ret ={code:0, msg:'Auth.create '};
 	
 	// if(data.password !=data.password_confirm) {		//if passwords don't match
+		ret.code =1;
 		// ret.msg ='Passwords must match';
 		// deferred.reject(ret);
 	// }
@@ -192,7 +193,7 @@ Auth.prototype.create = function(db, data, params)
 	}
 	else
 	{
-		ret.code = 1;
+		ret.code = 2;
 		ret.msg += 'Error: No Email or Phone information given ';
 		deferred.reject(ret);
 	}
@@ -217,10 +218,12 @@ Auth.prototype.login = function(db, data, params) {
 	data.email =data.email.toLowerCase();		//case insensitive
 	db.user.findOne({email:data.email}, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +="db.user.findOne Error: "+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg ="No user with email '"+data.email+"' exists";
 			deferred.reject(ret);
 		}
@@ -263,10 +266,12 @@ Auth.prototype.logout = function(db, data, params) {
 	
 	db.user.update({_id: MongoDBMod.makeIds({'id': data.user_id}) }, {$pull: {sess_id: data.sess_id}}, {multi: true}, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg +='Invalid user ';
 			deferred.reject(ret);
 		}
@@ -296,10 +301,12 @@ Auth.prototype.checkLogin = function(db, data, params) {
 	
 	db.user.findOne({_id: MongoDBMod.makeIds({'id':data.user_id}), sess_id: {$in: [data.sess_id] } }, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg ="Invalid sess_id and user_id combination";
 			deferred.reject(ret);
 		}
@@ -330,10 +337,12 @@ Auth.prototype.forgotPassword = function(db, data, params) {
 	data.email =data.email.toLowerCase();		//case insensitive
 	db.user.findOne({email: data.email}, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg ="No user exists with this email";
 			deferred.reject(ret);
 		}
@@ -342,10 +351,12 @@ Auth.prototype.forgotPassword = function(db, data, params) {
 			//use "user.email" to avoid ambiguity between whether passed in value was username (_id) or email
 			db.user.update({email: user.email}, {$set: {'password_reset_key':resetKey}}, function(err, valid) {
 				if(err) {
+					ret.code =3;
 					ret.msg +='Error: '+err;
 					deferred.reject(ret);
 				}
 				else if(!valid) {
+					ret.code =4;
 					ret.msg +='Not valid';
 					deferred.reject(ret);
 				}
@@ -369,6 +380,7 @@ Auth.prototype.forgotPassword = function(db, data, params) {
 						Emailer.send({template: 'passwordReset', templateParams: templateParams, emailParams: emailParams});
 						ret.msg ="Email sent with reset instructions!";
 					} else {
+						ret.code =5;
 						ret.msg ="WARNING: Auth module cannot send email since emailer is not configured";
 					}
 					deferred.resolve(ret);
@@ -399,10 +411,12 @@ Auth.prototype.resetPassword = function(db, data, params) {
 	data.email =data.email.toLowerCase();		//case insensitive
 	db.user.findOne({email: data.email, password_reset_key:data.reset_key}, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +="Error: "+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg ='Invalid email and reset key combination';
 			deferred.reject(ret);
 		}
@@ -413,10 +427,12 @@ Auth.prototype.resetPassword = function(db, data, params) {
 			//use "user.email" to avoid ambiguity between if params.email is username (_id) or email
 			db.user.update({email: user.email}, {$set: {'password':passFinal, 'password_reset_key':resetKey}}, function(err, valid) {
 				if(err) {
+					ret.code =3;
 					ret.msg +='Error: '+err;
 					deferred.reject(ret);
 				}
 				else if(!valid) {
+					ret.code =4;
 					ret.msg +="Not valid";
 					deferred.reject(ret);
 				}
@@ -455,10 +471,12 @@ Auth.prototype.changePassword = function(db, data, params) {
 	
 	db.user.findOne({ _id:MongoDBMod.makeIds({'id':data.user_id}) }, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
 		else if(!user) {
+			ret.code =2;
 			ret.msg +='No user - likely an invalid user_id';
 			deferred.reject(ret);
 		}
@@ -466,10 +484,12 @@ Auth.prototype.changePassword = function(db, data, params) {
 			var passFinal =createPassword(user.password_salt, data.new_password, {});
 			db.user.update({_id:user._id}, {$set: {'password':passFinal}}, function(err, valid) {
 				if(err) {
+					ret.code =3;
 					ret.msg +='Error: '+err;
 					deferred.reject(ret);
 				}
 				else if(!valid) {
+					ret.code =4;
 					ret.msg +='Not valid';
 					deferred.reject(ret);
 				}
@@ -642,7 +662,7 @@ Auth.prototype.userImport = function(db, data, params)
 		},
 		function(err)
 		{
-			ret.code = 1;
+			ret.code = 2;
 			ret.msg += err;
 			deferred.reject(ret);
 		}
@@ -772,6 +792,7 @@ Auth.prototype.userExists = function(db, user, params)
 			function(ret1)
 			{
 				//Error occurred
+				ret.code =1;
 				console.log(ret1.msg);
 				deferred.reject(ret);
 			}
@@ -824,6 +845,7 @@ Auth.prototype.userExists = function(db, user, params)
 			function(ret1)
 			{
 				//Error occurred
+				ret.code =2;
 				console.log(ret1.msg);
 				deferred.reject(ret);
 			}
@@ -851,7 +873,7 @@ Auth.prototype.userExists = function(db, user, params)
 			valid =true;
 			db.user.findOne(query, function(err, record) {
 				if(err) {
-					ret.code =1;
+					ret.code =3;
 					ret.msg +=err;
 					deferred.reject(ret);
 				}
@@ -871,6 +893,7 @@ Auth.prototype.userExists = function(db, user, params)
 	
 	if(!valid) {
 		//No data given. Impossible to check if the user exists.
+		ret.code =4;
 		console.log("Auth.userExists: Error: No _id, email, or phone given. Cannot check if user exists");
 		deferred.reject(ret);		
 	}
@@ -970,7 +993,7 @@ Auth.prototype.socialLogin = function(db, data, params)
 		},
 		function(err)
 		{
-			ret.code = 1;
+			ret.code = 3;
 			ret.msg += err;
 			deferred.reject(ret);
 		}
@@ -1021,6 +1044,7 @@ function checkEmail(db, email, params) {
 	db.user.findOne({email: email}, function(err, user) {
 		if(err)
 		{
+			ret.code =2;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
@@ -1029,6 +1053,7 @@ function checkEmail(db, email, params) {
 				deferred.resolve(ret);
 			}
 			else {
+				ret.code =3;
 				ret.msg ="Email already exists";
 				deferred.reject(ret);
 			}
@@ -1098,6 +1123,7 @@ function createActual(db, data, params) {
 	data.signup = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 	db.user.insert(data, function(err, user) {
 		if(err) {
+			ret.code =1;
 			ret.msg +='Error: '+err;
 			deferred.reject(ret);
 		}
@@ -1143,6 +1169,7 @@ function loginActual(db, data, user, params) {
 	var ret ={code:0, msg:'loginActual: ', user:false};
 	var validPass =checkPassword(data, user, params);
 	if(!validPass) {
+		ret.code =1;
 		ret.msg ="Invalid password";
 		deferred.reject(ret);
 	}
@@ -1183,16 +1210,19 @@ function updateSession(db, user, params) {
 	}
 	else {
 		valid =false;
+		ret.code =1;
 		ret.msg +='A valid user email or _id must be specified ';
 		deferred.reject(ret);
 	}
 	if(valid) {
 		db.user.update(query, {$set: {last_login:user.last_login}, $push:{sess_id: sessId } }, function(err, valid) {
 			if(err) {
+				ret.code =2;
 				ret.msg +='Error: '+err;
 				deferred.reject(ret);
 			}
 			else if(!valid) {
+				ret.code =3;
 				ret.msg +='Invalid query ';
 				deferred.reject(ret);
 			}
