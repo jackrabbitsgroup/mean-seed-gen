@@ -311,6 +311,10 @@ User.prototype.update = function(db, data, params)
 	if(data.user._id !==undefined) {
 		delete data.user._id;			//can't $set _id
 	}
+	//do NOT want to allow overwriting some fields - sess_id, password?, password_salt?, others?
+	if(data.user.sess_id !==undefined) {
+		delete data.user.sess_id;
+	}
 	
 	data.user =self.fixPhoneFormat(db, data.user, params);
 	
@@ -336,7 +340,8 @@ User.prototype.update = function(db, data, params)
 		//check if user exists since do not want to allow duplicates of email/phone number for more than one user so can not update with an email and/or phone that is already in use. Could merge users but only AFTER email/phone verification to ensure the current user owns both the users he/she is trying to join accounts for.
 		AuthMod.userExists(db, data.user, {})
 		.then(function(ret1) {
-			if(ret1.exists === true)
+			//only prevent if email/phone already exists for a DIFFERENT user (allow the user to keep his OWN email/phone!)
+			if(ret1.exists === true && ret1.user._id !==_id)
 			{
 				ret.already_exists = true;
 				ret.user = ret1.user;
