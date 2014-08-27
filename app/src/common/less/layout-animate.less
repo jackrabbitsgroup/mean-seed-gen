@@ -35,6 +35,7 @@ overflow:hidden;
 	//top:0;
 	top: @header-height-copy;
 	bottom:0;
+	//NOTE: we make this position absolute to be able to animate it in and out of the page BUT this gives it "0 height" / takes it out of the flow, causing the footer to jump up to right below the header. As long as the footer is position:fixed and bottom:0, we can't actually tell, but if we were to NOT have a position:fixed footer, this would cause a problem and we'd have to come up with a different solution to somehow keep the footer down where it needs to be!
 	position:absolute;
 }
 

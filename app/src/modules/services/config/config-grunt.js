@@ -16,6 +16,14 @@ provider('appConfig', function(){
 
 <%
 var cfgJson = grunt.config('cfgJson');
+var portString ="";
+if(cfgJson.server.port) {
+	portString =":"+cfgJson.server.port;
+}
+var socketPortString ="";
+if(cfgJson.server.socketPort) {
+	socketPortString =":"+cfgJson.server.socketPort;
+}
 %>
 	this.dirPaths ={
 	'appPath':'<% print(cfgJson.server.appPath); %>',
@@ -25,16 +33,16 @@ var cfgJson = grunt.config('cfgJson');
 	'pagesPath': 'modules/pages/',			//need to prepend staticPath for use
 	'rootPath': '/',
 	'serverUrl': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>/",
-	'serverPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.socketPort); %>/",
-	'publicPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.port); %>/",		//this will be OVERWRITTEN later by the vanity port, IF set
+	'serverPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %><% print(socketPortString); %>/",
+	'publicPath': "<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %><% print(portString); %>/",		//this will be OVERWRITTEN later by the vanity port, IF set
 	'homeDirectory': false,
 	'images':"common/img/",		//will have staticPath prepended to it
 	'uploads':"uploads/",		//will have appPath prepended to it
 	'ajaxUrlParts':{
-		'main':"<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.port); %>/"
+		'main':"<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %><% print(portString); %>/"
 	},
 	'ajaxUrl':{
-		'api':"<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %>:<% print(cfgJson.server.port); %>/api/"
+		'api':"<% print(cfgJson.server.scheme); %>://<% print(cfgJson.server.domain); %><% print(portString); %>/api/"
 	},
 	'useCorsUrls':{
 		'all': <% print(cfgJson.cors.frontendUseCors); %>
