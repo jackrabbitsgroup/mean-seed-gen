@@ -132,6 +132,19 @@ function (appHttp, UserModel, appConfig, $rootScope, appSocialAuth) {
 					if(data.email) {
 						vals.user.email =data.email;
 					}
+					if(data.rawData !==undefined) {
+						if(data.rawData.name !==undefined) {
+							if(data.rawData.name.givenName !==undefined) {
+								vals.user.first_name =data.rawData.name.givenName;
+							}
+							if(data.rawData.name.familyName !==undefined) {
+								vals.user.last_name =data.rawData.name.familyName;
+							}
+						}
+						if(data.rawData.image !==undefined && data.rawData.image.url !==undefined) {
+							vals.user._imageUrl =data.rawData.image.url;
+						}
+					}
 					var promise1 =appHttp.go({}, {url:'auth/socialLogin', data:vals}, {}, {});
 					promise1.then(function(response) {
 						var user =response.result.user;

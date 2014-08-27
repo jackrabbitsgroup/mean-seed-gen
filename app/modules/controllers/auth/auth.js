@@ -36,14 +36,27 @@ var Q = require('q');
 var lodash = require('lodash');
 var async = require('async');
 
+// var fs =require('fs');
+var fs =require('node-fs');		//want recursive directory/folder creating
+var path =require('path');
+var request = require('request');
+
 var dependency =require('../../../dependency.js');
 var pathParts =dependency.buildPaths(__dirname, {});
 
 var Emailer =require(pathParts.services+'emailer/index.js');
 var StringMod =require(pathParts.services+'string/string.js');
 var MongoDBMod =require(pathParts.services+'mongodb/mongodb.js');
+var ArrayMod =require(pathParts.services+'array/array.js');
 
 var UserMod =require(pathParts.controllers+'user/user.js');
+
+//hardcoded
+var imageInfo ={
+	basePath: 'app',
+	imgPath: 'src/common/img'
+};
+//end: hardcoded
 
 //global values that will be set by passed in objects (to avoid having to require in every file)
 // var db;
@@ -111,6 +124,10 @@ Auth.prototype.create = function(db, data, params)
 	if(data.social === undefined)
 	{
 		data.social = {};
+	}
+	if(data.signup_method === undefined)
+	{
+		data.signup_method = 'email';
 	}
 	delete data.super_admin;
 	
@@ -370,6 +387,8 @@ Auth.prototype.forgotPassword = function(db, data, params) {
 									email: user.email
 								}
 							],
+							from: 'support@'+global.cfgJson.email.domain,
+							from_name: 'Support',
 							subject: 'Forgot Password Reset'
 						};
 						var templateParams = {
@@ -907,10 +926,12 @@ Auth.prototype.userExists = function(db, user, params)
 @method socialLogin
 @param {Object} data
 	@param {Object} user A user object for BOTH matching (if any existing user) and setting/updating info. Can have one of the following defined for matching: '_id', 'email', 'phone', 'social.[type].id' BUT social.[type].id will be autofilled as a backup so this can be empty. Once the user is matched or created, these fields will be EXTENDED onto the user object for user update.
+		@param {String} [_imageUrl] A url to a 3rd party website image for download and use
 	@param {Object} socialData The social data to save, i.e.
 		@param {String} [token] The social login token to save.
 		@param {String} [id] The social platform user id for this user.
 	@param {String} type A key to save the social data under, describing the social site. Ex: "facebook", "google", etc.
+	@param {String} [pic_directory ='user'] Where to save the user image (only applicable if pass in image/imageUrl)
 @param {Object} params
 
 @return {Promise}
@@ -923,6 +944,12 @@ Auth.prototype.socialLogin = function(db, data, params)
 	var deferred =Q.defer();
 	var ret = {'code': 0, 'msg': 'Auth.socialLogin ', 'user': {}, 'already_exists': false };
 	
+	var _imageUrl =false;
+	if(data.user._imageUrl !==undefined) {
+		_imageUrl =data.user._imageUrl;
+		delete data.user._imageUrl;		//do NOT want to save this in database!
+	}
+	
 	//add social data into user.social key
 	if(data.user.social ===undefined) {
 		data.user.social ={};
@@ -930,18 +957,84 @@ Auth.prototype.socialLogin = function(db, data, params)
 	data.user.social[data.type] ={
 		id: data.socialData.id
 	};
+	data.user.signup_method = data.type;
 	
 	var import_promise = self.userImport(db, {'user': data.user}, {});
 	import_promise.then(
 		function(ret1)
 		{
 			ret.already_exists = ret1.already_exists;
-			ret.user = ret1.user;
+			ret.user =ArrayMod.copy(ret1.user);		//ensure no over-writing / funky behavior..
+			// ret.user = ret1.user;		//breaks things since data.user then is equal to ret.user somehow..
 			
 			if(ret.user.social === undefined)
 			{
 				ret.user.social = {};
 			}
+			
+			var finishLocal =function(paramsFinish) {
+				//in case of update, need to re-read user to get all info (esp. sess_id)
+				// ret.user.social[data.type] = data.socialData;
+				UserMod.read(db, {_id: ret.user._id}, {})
+				.then(function(retUser) {
+					ret.user =retUser.result;
+					//also need to update session
+					var promiseSession =updateSession(db, ret.user, {});
+					promiseSession.then(function(ret1) {
+						ret.user =ret1.user;
+						deferred.resolve(ret);
+					}, function(err) {
+						deferred.reject(err);
+					});
+				}, function(retErr) {
+					deferred.reject(retErr);
+				});
+			};
+			
+			var saveImageLocal =function(paramsImage) {
+				if(data.pic_directory ===undefined) {
+					data.pic_directory ='user';
+				}
+				
+				var imgUrl =_imageUrl;
+				var imgUrlStripped =imgUrl;
+				//strip url params if they're there as this may mess up things (get an ESDIR or ENOENT error since the file extension isn't at the end) or get a small version of the image and we want the larger / default one
+				if(imgUrlStripped.indexOf('?') >-1) {
+					imgUrlStripped =imgUrlStripped.slice(0, imgUrlStripped.indexOf('?'));
+				}
+				//get the file extension
+				var posExt =imgUrlStripped.lastIndexOf('.');
+				var ext =imgUrlStripped.slice(posExt, imgUrlStripped.length);
+				
+				var filename ='profile'+ext;
+				var imgSavePath =data.pic_directory +'/'+ret1.user._id;
+				var folderWritePath =path.normalize(__dirname +'../../../../' +imageInfo.imgPath +'/' +imgSavePath);		//hardcoded - 4 '../' to get from this directory back to 'app/'. Very important to use path.normalize so it works on both windows and linux!!
+				
+				//recursively create directories / folders in case they don't exist yet
+				fs.mkdirSync(folderWritePath, parseInt('777', 8), true);		//0777 octal in strict mode is not allowed
+				
+				var dbSavePath =imgSavePath +'/' +filename;		//what will be stored in the database
+				var imgWritePath =folderWritePath +'/' +filename;
+				var picStream =fs.createWriteStream(imgWritePath);
+				picStream.on('close', function() {
+					if(data.user.image !==undefined) {		//image key already exists
+						data.user['image.profile'] =dbSavePath;		//have to do it this way for mongo db syntax and to avoid over-writing any other keys (other than 'profile') that may exist
+					}
+					else {		//image key doesn't exist yet
+						data.user.image ={
+							profile: dbSavePath
+						};
+					}
+					//have to call the UserMod.update function to ensure the crop version of the image gets saved properly
+					UserMod.update(db, {user_id: ret1.user._id, user:data.user}, {})
+					.then(function(retUserUpdate) {
+						finishLocal({});
+					}, function(retErr) {
+						deferred.reject(retErr);
+					});
+				});
+				request(imgUrlStripped).pipe(picStream);
+			};
 			
 			var set_obj = {};
 			set_obj["social." + data.type] = data.socialData;
@@ -972,24 +1065,17 @@ Auth.prototype.socialLogin = function(db, data, params)
 				{
 					ret.code = 0;
 					ret.msg +='User updated';
-					//in case of update, need to re-read user to get all info (esp. sess_id)
-					// ret.user.social[data.type] = data.socialData;
-					UserMod.read(db, {_id: ret.user._id}, {})
-					.then(function(retUser) {
-						ret.user =retUser.result;
-						//also need to update session
-						var promiseSession =updateSession(db, ret.user, {});
-						promiseSession.then(function(ret1) {
-							ret.user =ret1.user;
-							deferred.resolve(ret);
-						}, function(err) {
-							deferred.reject(err);
-						});
-					}, function(retErr) {
-						deferred.reject(retErr);
-					});
+					
+					//get image if it exists AND do not already have an image (don't overwrite if already do)
+					if(_imageUrl && (ret.user.image ===undefined || ret.user.image.profile ===undefined)) {
+						saveImageLocal({});
+					}
+					else {
+						finishLocal({});
+					}
 				}
 			});
+			
 		},
 		function(err)
 		{

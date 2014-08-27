@@ -72,6 +72,7 @@ var inst ={
 				@param {Object} extraInfo
 					@param {String} user_id
 					@param {String} emailPrimary
+				@param {Object} [rawData] The data returned directly from Google (the user profile call)
 			*/
 			$rootScope.$on(evtGoogleLogin, function(evt, googleInfo) {
 				var vals ={
@@ -80,6 +81,9 @@ var inst ={
 				};
 				if(googleInfo.extraInfo.emailPrimary) {
 					vals.email =googleInfo.extraInfo.emailPrimary;
+				}
+				if(googleInfo.rawData !==undefined) {
+					vals.rawData =googleInfo.rawData;
 				}
 				thisObj.data.google =vals;
 				deferred.resolve(thisObj.data.google);
