@@ -8,7 +8,7 @@ module.exports = function (config) {
 
 		files: [
 			//we need jQuery for test selectors (using 'find()'). NOTE: jquery must be included BEFORE angular for it to work (otherwise angular will just use jqLite)
-			'test/lib/jquery/jquery-2.0.3.min.js',
+			'test/lib/jquery/jquery-2.1.1.min.js',
 			
 			<%
 			var filePaths = grunt.config('filePathsJsNoPrefix');

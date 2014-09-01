@@ -60,6 +60,9 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 	if(typeof(globalPhoneGap) !="undefined" && globalPhoneGap ===true) {
 		html5History =false;
 	}
+	else if(ua.indexOf("PhantomJS") >=0) {		//karma - setting a global variable in a different file isn't seeming to work / be included and with html5 mode, we get new 1.3.0-rc.0 $location:nobase error..
+		html5History =false;
+	}
 	else if( ua.indexOf("Android") >= 0 )
 	{
 		var androidversion = parseFloat(ua.slice(ua.indexOf("Android")+8));
