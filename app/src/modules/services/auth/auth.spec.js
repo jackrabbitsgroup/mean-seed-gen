@@ -225,7 +225,7 @@ describe('appAuth', function(){
 			
 			//get deferred to resolve
 			// $rootScope.$apply();
-			$rootScope.$digest();
+			// $rootScope.$digest();		//apparently angular 1.3.0-rc.0 this throws an error / is not needed anymore..
 		});
 	});
 
