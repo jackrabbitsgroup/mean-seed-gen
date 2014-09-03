@@ -8,12 +8,12 @@
   "description": "generator-mean-seed generated app",
   "keywords": [
     "mean-seed",
-		"javascript",
-		"angular",
-		"node",
-		"myproject",
-		"app",
-		"jackrabbitsgroup"
+    "javascript",
+    "angular",
+    "node",
+    "myproject",
+    "app",
+    "jackrabbitsgroup"
   ],
   "dependencies": {
     "angular": "1.3.0-rc.0",

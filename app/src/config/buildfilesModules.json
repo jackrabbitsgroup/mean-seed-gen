@@ -649,6 +649,16 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "testEnv",
+			"path": "",
+			"comment": "Special test environment versions",
+			"files": {
+				"js": [
+					"modules/services/config/config-test.js"
+				]
+			}
 		}
 	]
 }

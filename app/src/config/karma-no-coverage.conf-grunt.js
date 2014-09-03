@@ -1,6 +1,3 @@
-<%
-var cfgJson = grunt.config('cfgJson');
-%>
 
 module.exports = function (config) {
 	config.set({

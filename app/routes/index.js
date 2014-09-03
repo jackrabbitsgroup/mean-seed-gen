@@ -18,7 +18,12 @@ module.exports = function(cfg){
                 res.send(404);
             } else {
                 // route all requests to Angular app
-                res.sendfile(req.app.get('staticFilePath') + '/index.html');
+                if(global.environment !==undefined && global.environment =='test') {
+					res.sendfile(req.app.get('staticFilePath') + '/index-test.html');
+				}
+				else {
+					res.sendfile(req.app.get('staticFilePath') + '/index.html');
+				}
             }
         }
     };
