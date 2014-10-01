@@ -993,7 +993,7 @@ module.exports = function(grunt) {
 		tasks =[];
 		// tasks =['http:nodeShutdown'];		//need to run node server from jasmine test to get coverage.. BUT do this just in case (won't hurt / just in case node test server was running from dev/watch task) - UPDATE: this will be shut down by test-backend task
 		//only do selenium if NOT using sauce labs
-		if(senleniumType =='local') {
+		if(seleniumType =='local') {
 			tasks.push('http:seleniumShutdown');
 			tasksSelenium.push('http:seleniumShutdown');
 		}
@@ -1004,7 +1004,7 @@ module.exports = function(grunt) {
 		tasks =[];
 		// tasks =['shell:nodeServer'];		//need to run node server from jasmine test to get coverage..
 		//only do selenium if NOT using sauce labs
-		if(senleniumType =='local') {
+		if(seleniumType =='local') {
 			tasks.push('shell:seleniumStartup');
 			tasksSelenium.push('shell:seleniumStartup');
 		}
