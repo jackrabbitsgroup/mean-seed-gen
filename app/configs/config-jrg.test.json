@@ -111,8 +111,8 @@
 		"clientSecret": ""
 	},
 	"sauceLabs":{
-		"user": "jackrabbitsgroup",
-		"key": "777af129-5701-440e-858c-303fe3708b5b"
+		"user": "",
+		"key": ""
 	},
 	"browserstack": {
 		"user": "lukemad3",
