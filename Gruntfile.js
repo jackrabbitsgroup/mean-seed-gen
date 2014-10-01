@@ -980,7 +980,7 @@ module.exports = function(grunt) {
 		
 		
 		var seleniumType ='local';
-		if(cfgJson.sauceLabs.user && cfgJson.sauceLabs.key) {
+		if(cfgTestJson.sauceLabs.user && cfgTestJson.sauceLabs.key) {
 			seleniumType ='sauce';
 		}
 		else if(cfgTestJson.browserstack && cfgTestJson.browserstack.user && cfgTestJson.browserstack.access_key) {

@@ -20,11 +20,6 @@ exports.config = {
 	// and chromeDriver will be used directly (from the location specified in
 	// chromeDriver)
 
-	<%
-	if(cfgTestJson.browserstack && cfgTestJson.browserstack.user && cfgTestJson.browserstack.access_key) {
-	//print("/*\n");
-	}
-	%>
 	// The location of the selenium standalone server .jar file, relative
 	// to the location of this config. If no other method of starting selenium
 	// is found, this will default to
@@ -47,18 +42,13 @@ exports.config = {
 	// if you need to change the browser timeout, use
 	// seleniumArgs: ['-browserTimeout=60'],
 	seleniumArgs: [],
-	<%
-	if(cfgTestJson.browserstack && cfgTestJson.browserstack.user && cfgTestJson.browserstack.access_key) {
-	//print("*/\n");
-	}
-	%>
 
 	// If sauceUser and sauceKey are specified, seleniumServerJar will be ignored.
 	// The tests will be run remotely using SauceLabs.
 	<%
-	if(cfgJson.sauceLabs.user && cfgJson.sauceLabs.key) {
-	print("sauceUser: '"+cfgJson.sauceLabs.user+"',\n");
-	print("\tsauceKey: '"+cfgJson.sauceLabs.key+"',\n");
+	if(cfgTestJson.sauceLabs.user && cfgTestJson.sauceLabs.key) {
+	print("sauceUser: '"+cfgTestJson.sauceLabs.user+"',\n");
+	print("\tsauceKey: '"+cfgTestJson.sauceLabs.key+"',\n");
 	}
 	else {
 	print('sauceUser: null,\n');
@@ -70,7 +60,7 @@ exports.config = {
 	// connect to an already running instance of selenium. This usually looks like
 	// seleniumAddress: 'http://192.168.1.6:4444/wd/hub',
 	<%
-	if(cfgJson.sauceLabs.user && cfgJson.sauceLabs.key) {
+	if(cfgTestJson.sauceLabs.user && cfgTestJson.sauceLabs.key) {
 	print("seleniumAddress: null,\n");
 	}
 	else if(cfgTestJson.browserstack && cfgTestJson.browserstack.user && cfgTestJson.browserstack.access_key) {
