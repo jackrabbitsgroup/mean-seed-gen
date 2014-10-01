@@ -39,7 +39,7 @@
 		"grunt-contrib-uglify": "0.6.0",
 		"grunt-contrib-watch":"0.6.1",
 		"grunt-contrib-yuidoc": "0.5.2",
-		"grunt-dev-update": "0.8.0",
+		"grunt-dev-update": "0.9.0",
 		"grunt-exit": "1.0.0",
 		"grunt-focus": "0.1.1",
 		"grunt-font-awesome-vars":"1.0.1",
