@@ -475,7 +475,16 @@ module.exports = function(grunt) {
 					},
 					protractorDefault: {
 						src: publicPathRelative+"config/protractor.conf-grunt.js",
-						dest: publicPathRelative+"config/protractor/protractor.conf.js"
+						dest: publicPathRelative+"config/protractor/protractor.conf.js",
+						templateData: {
+							protractorCaps: {
+								'browser': 'Chrome',
+								'resolution': '1024x768',
+								'browser_version': '36.0',
+								'os': 'Windows',
+								'os_version': '7',
+							}
+						}
 					}
 				}
 			},

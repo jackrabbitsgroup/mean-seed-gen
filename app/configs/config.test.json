@@ -117,5 +117,9 @@
 	"sauceLabs":{
 		"user": "",
 		"key": ""
+	},
+	"browserstack": {
+		"user": "",
+		"access_key": ""
 	}
 }
