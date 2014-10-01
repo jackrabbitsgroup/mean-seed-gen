@@ -227,7 +227,7 @@ if(cfgJson.server.socketPort) {
 				{
 					if(array1[aa] && (typeof(array1[aa]) =="object")) {
 						// newArray[aa] =printArray(array1[aa], params);		//recursive call
-						html +=printArray(array1[aa], html, params);
+						html =printArray(array1[aa], html, params);
 					}
 					else {
 						// newArray[aa] =array1[aa];

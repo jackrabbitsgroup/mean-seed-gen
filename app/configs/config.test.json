@@ -14,6 +14,8 @@
 	"platform":"",
 	"server": {
 		"domain": "localhost",
+		"_domain": "127.0.0.1",
+		"_domainComment": "Must use ip address for twitter (login, e2e testing)",
 		"scheme": "http",
 		"port": 3005,
 		"_vanityPortStringComment": "E.g. ':3000' or blank '' for no port - set an optional 'vanityPortString' key for port 80 redirects for production sites to hide port for social logins, user communication, etc.",
@@ -104,7 +106,7 @@
 		"consumerKey": "4wTFTzPvchVYAECdulQBCVcpk",
 		"consumerSecret": "Sq1UeJbL4PSf5WyP6TUkAt8uFIxTFvzf2D8IBkvkZriu0WV0vr",
 		"consumerComment":"Make sure to CHANGE the key and secret!",
-		"callback_url": "http://127.0.0.1:3000/callback-twitter-auth",
+		"callback_url": "http://127.0.0.1:3005/callback-twitter-auth",
 		"handle": ""
 	},
 	"google":{
