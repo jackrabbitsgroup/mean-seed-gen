@@ -64,7 +64,6 @@ describe("E2E: Testing Routes", function() {
 		expect(btnLogin.getText()).toContain('Login');
 	});
 	
-	if(0) {		//@todo - fix
 	it('should have a working /signup route and allow creating a new user', function() {
 		browser.get('/signup');
 		expect(browser.getCurrentUrl()).toContain("/signup");
@@ -117,6 +116,5 @@ describe("E2E: Testing Routes", function() {
 		expect(browser.getCurrentUrl()).toContain("/login");		//should go to login after logout is complete
 	});
 	*/
-	}
 
 });
