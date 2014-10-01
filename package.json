@@ -44,7 +44,7 @@
 		"grunt-focus": "0.1.1",
 		"grunt-font-awesome-vars":"1.0.1",
 		"grunt-forever-multi":"0.5.0",
-		"grunt-http":"1.4.0",
+		"grunt-http":"1.4.1",
 		"grunt-istanbul-coverage":"0.1.0",
 		"grunt-jasmine-node-coverage-validation": "0.0.4",
 		"grunt-karma": "0.9.0",
