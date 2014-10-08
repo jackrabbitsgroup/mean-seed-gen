@@ -877,11 +877,8 @@ module.exports = function(grunt) {
 			ngtemplates: {
 				main: {
 					options: {
-						// base: 'app',
-						// prepend: '/',
-						base: publicPathRelativeRootNoSlash,
-						prepend: staticPath,
-						// module: 'templates-main'
+						//for templates to exist in grunt task need a separate prefix? so this removes it for what is needed for the actual templateCache to find the partial correctly
+						url: function(url) { return url.replace(publicPathRelativeDot, staticPath); },
 						module: 'myApp'
 					},
 					// will be filled via buildfiles task
