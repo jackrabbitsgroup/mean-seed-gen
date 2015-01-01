@@ -25,7 +25,7 @@ Generates a random string
 */
 StringMod.prototype.random =function(len, pp) {
 	var defaults ={'type':'full'};
-	lodash.extend(pp, defaults);
+	pp =lodash.merge({}, defaults, pp);
 	var chars;
 	if(pp.type =='full') {
 		chars ="abcdefghijkmnopqrstuvwxyz023456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";

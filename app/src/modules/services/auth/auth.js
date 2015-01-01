@@ -280,7 +280,19 @@ var inst ={
 			else {
 			// else if(ppNew.loggedIn ===true) {
 				$rootScope.$broadcast('loginEvt', {'loggedIn':true, 'noRedirect':true, 'user_id':user._id, 'sess_id':user.sess_id});
-				if(ppNew.checkRedirectUrl !==undefined && ppNew.checkRedirectUrl && thisObj.data.redirectUrl) {
+				
+				//we do NOT update redirect url for certain pages but for non-login pages this will prevent us from ever getting to that page if load it from the url/page refresh (i.e. clear javascript) so need a way to still go to those pages at least once
+				var skipRedirect =false;
+				var ii;
+				var skipRedirectPages =['user-delete'];
+				for(ii =0; ii<skipRedirectPages.length; ii++) {
+					if(thisObj.data.urlInfo.page ==skipRedirectPages[ii]) {
+						skipRedirect =true;
+						break;
+					}
+				}
+				
+				if(ppNew.checkRedirectUrl !==undefined && ppNew.checkRedirectUrl && thisObj.data.redirectUrl && !skipRedirect) {
 					$location.url(appConfig.dirPaths.appPathLocation+thisObj.data.redirectUrl);
 					var redirectUrlSave =thisObj.data.redirectUrl;
 					thisObj.data.redirectUrl =false;		//reset for next time

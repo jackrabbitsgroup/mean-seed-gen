@@ -36,27 +36,27 @@ describe('appConfig', function(){
 	});
 	
 	it('should get timezone properly', function() {
-		spyOn(Date.prototype, 'getTimezoneOffset').andReturn(420);
+		spyOn(Date.prototype, 'getTimezoneOffset').and.returnValue(420);
 		init({});
 	});
 	
 	it('should get timezone properly', function() {
-		spyOn(Date.prototype, 'getTimezoneOffset').andReturn(-420);
+		spyOn(Date.prototype, 'getTimezoneOffset').and.returnValue(-420);
 		init({});
 	});
 	
 	it('should get timezone properly', function() {
-		spyOn(Date.prototype, 'getTimezoneOffset').andReturn(0);
+		spyOn(Date.prototype, 'getTimezoneOffset').and.returnValue(0);
 		init({});
 	});
 	
 	it('should get timezone properly', function() {
-		spyOn(Date.prototype, 'getTimezoneOffset').andReturn(30);
+		spyOn(Date.prototype, 'getTimezoneOffset').and.returnValue(30);
 		init({});
 	});
 	
 	it('should get timezone properly', function() {
-		spyOn(Date.prototype, 'getTimezoneOffset').andReturn(-660);
+		spyOn(Date.prototype, 'getTimezoneOffset').and.returnValue(-660);
 		init({});
 	});
 });

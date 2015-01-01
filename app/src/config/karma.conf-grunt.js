@@ -18,7 +18,7 @@ module.exports = function (config) {
 			%>
 		
 			// 'lib/angular/angular-*.js',
-			'test/lib/angular/angular-mocks.js',
+			'bower_components/angular-mocks/angular-mocks.js',
 
 			// 'test/unit/**/*.js',
 			
