@@ -71,7 +71,7 @@ function sendRequest(urlPart, reqParams, params) {
 		'url':fullUrl,
 		// 'method':method,
 	};
-	reqObj =lodash.merge(reqObj, reqParams);
+	reqObj =lodash.merge({}, reqParams, reqObj);
 	request(reqObj, function(error, response, data)
 	{
 		console.log('reqObj return:');
