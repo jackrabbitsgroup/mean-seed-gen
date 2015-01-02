@@ -38,6 +38,7 @@ var UserApi = require(pathPart+'user/user.api.js');
 var FollowApi = require(pathPart+'follow/follow.api.js');
 var TwitterApi = require(pathPart+'twitter/twitter.api.js');
 var FacebookApi =require(pathPart+'facebook/facebook.api.js');
+var GoogleApi =require(pathPart+'google/google.api.js');
 var DbUpdateApi =require(pathPart+'dbUpdate/dbUpdate.api.js');
 //site-specific - require other api files here
 //yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
@@ -71,6 +72,9 @@ module.exports = function(cfg, server, db){
 		db: db
 	});
 	var facebookApi = new FacebookApi({
+		db: db
+	});
+	var googleApi = new GoogleApi({
 		db: db
 	});
 	var dbUpdateApi = new DbUpdateApi({
@@ -125,6 +129,12 @@ module.exports = function(cfg, server, db){
 		facebook: {
 			modules: {
 				facebook: facebookApi
+			},
+			middleware: []
+		},
+		google: {
+			modules: {
+				google: googleApi
 			},
 			middleware: []
 		},

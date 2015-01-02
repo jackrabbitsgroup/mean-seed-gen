@@ -22,8 +22,6 @@ angular.module('jrg', [
 		//services
 		'jackrabbitsgroup.angular-string',
 		'jackrabbitsgroup.angular-array',
-		// 'jackrabbitsgroup.angular-facebook-auth',
-		'jackrabbitsgroup.angular-google-auth',
 		//directives
 		'jackrabbitsgroup.angular-forminput'
 	]
@@ -136,6 +134,13 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 		}
 	});
 	$routeProvider.when(appPathRoute+'callback-facebook-auth', {templateUrl: pagesPath+'callback/callback-facebook-auth/callback-facebook-auth.html',
+		resolve: {
+			auth: function(appAuth) {
+				return appAuth.checkSess({});
+			}
+		}
+	});
+	$routeProvider.when(appPathRoute+'callback-google-auth', {templateUrl: pagesPath+'callback/callback-google-auth/callback-google-auth.html',
 		resolve: {
 			auth: function(appAuth) {
 				return appAuth.checkSess({});
