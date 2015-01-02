@@ -108,7 +108,8 @@
 	"google":{
 		"clientId": "749916652138-6ka6r0rkrhr457cv7qattg2jb6haoq0c.apps.googleusercontent.com",
 		"clientIdComment":"Make sure to CHANGE this!",
-		"clientSecret": ""
+		"clientSecret": "4hEOCD_w_KQ4sUSoDYnD2gni",
+		"callback_url": "http://198.199.118.44:3000/callback-google-auth"
 	},
 	"sauceLabs": {
 		"_user": "jackrabbitsgroup",
