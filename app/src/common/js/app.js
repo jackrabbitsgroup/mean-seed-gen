@@ -179,6 +179,13 @@ config(['$routeProvider', '$locationProvider', 'appConfigProvider', '$compilePro
 			}
 		}
 	});
+	$routeProvider.when(appPathRoute+'dev-test/e2e', {templateUrl: pagesPath+'dev-test/e2e/e2e.html',
+		resolve: {
+			auth: function(appAuth) {
+				return appAuth.checkSess({});
+			}
+		}
+	});
 
 	
 	/**
