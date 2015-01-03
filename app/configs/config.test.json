@@ -116,7 +116,7 @@
 		"clientId": "486630891328.apps.googleusercontent.com",
 		"clientIdComment":"Make sure to CHANGE this!",
 		"clientSecret": "uKWzHKd9hbF4dxCmxefrpkYh",
-		"callback_url": "http://localhost:3000/callback-google-auth"
+		"callback_url": "http://localhost:3005/callback-google-auth"
 	},
 	"sauceLabs": {
 		"user": "",

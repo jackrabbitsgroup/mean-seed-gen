@@ -155,6 +155,8 @@ Google.prototype.auth = function(db, data, params) {
 						}
 					};
 					
+					vals.pic_directory =data.pic_directory;		//pass through
+					
 					AuthMod.socialLogin(db, vals, {})
 					.then(function(retLogin) {
 						deferred.resolve(retLogin);
