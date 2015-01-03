@@ -37,6 +37,7 @@ var TwitterTests = require(pathParts.modules+'/controllers/twitter/twitter.test.
 var FacebookTests =require(pathParts.modules+'/controllers/facebook/facebook.test.js');
 var GoogleTests =require(pathParts.modules+'/controllers/google/google.test.js');
 var DbUpdateTests =require(pathParts.modules+'/controllers/dbUpdate/dbUpdate.test.js');
+var E2eMocksTests =require(pathParts.modules+'/controllers/e2eMocks/e2eMocks.test.js');
 //site-specific
 //yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 //end: yeoman generated REQUIRE here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
@@ -143,6 +144,7 @@ describe('all tests', function() {
 			FacebookTests = new FacebookTests({db: db, api:api});
 			GoogleTests = new GoogleTests({db: db, api:api});
 			DbUpdateTests = new DbUpdateTests({db: db, api:api});
+			E2eMocksTests = new E2eMocksTests({db: db, api:api});
 			//site-specific
 			//yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 			//end: yeoman generated INIT MODULES here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
@@ -173,6 +175,7 @@ describe('all tests', function() {
 					.then(FacebookTests.run({}))
 					.then(GoogleTests.run({}))
 					.then(DbUpdateTests.run({}))
+					.then(E2eMocksTests.run({}))
 					//site-specific
 					//yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
 					//end: yeoman generated RUN TESTS here - DO NOT DELETE THIS COMMENT AS IT IS USED BY YEOMAN TO GENERATE A NEW ROUTE!
