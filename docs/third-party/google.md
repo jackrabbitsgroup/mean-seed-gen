@@ -9,3 +9,5 @@ Using Google
 Even though the server side flow is "not recommended", we use that because the frontend flow for some reason uses iFrames and FIVE separate HTTP requests and adds over HALF A SECOND of (page) load time! So we chose the server side (redirect) flow, which is just like we did it with Facebook. This requires ZERO extra scripts to be loaded on the frontend - it's just an <href> redirect to Google.
 
 This post describes some of this: https://plus.google.com/117961615064129175665/posts/U7KEUUm24sj
+
+NOTE: make sure to add the callback_url as a redirect URI in the Google Developers Console: https://console.developers.google.com
