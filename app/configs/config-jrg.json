@@ -7,6 +7,9 @@
 	"operatingSystem":"linux",
 	"operatingSystemComment":"One of: 'windows', 'mac', 'linux'",
 	"forever": 1,
+	"foreverOptions": {
+		"logfile": "forever.log"
+	},
 	"app": {
 		"name": "mean-seed-gen",
 		"title": "Mean Seed (Generated)"
@@ -48,7 +51,8 @@
 	"ssl": {
 		"enabled": false,
 		"key": "/ssl/ssl.key",
-		"cert": "/ssl/ssl.crt"	
+		"cert": "/ssl/ssl.crt",
+		"ca": []	
 	},
 	"rpc": {
 		"autoDoc": true,
