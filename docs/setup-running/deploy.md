@@ -76,7 +76,7 @@ GIT_BRANCH master					//this is what branch concrete will use to pull in updates
 		1. create (if not already present) `.git/hooks/build-failed` and add `node ci.js build=failed` to it, i.e. using `echo 'node ci.js build=failed' > APP_PATH/.git/hooks/build-failed`
 		2. create (if not already present) `.git/hooks/build-worked` and add `node ci.js build=worked` to it, i.e. using `echo 'node ci.js build=worked' > APP_PATH/.git/hooks/build-worked`
 		3. set permissions so the hooks can be run - `sudo chmod -R +x APP_PATH/.git/hooks`
-5. [on new server] run concrete server with forever: `cd APP_PATH && forever start CONCRETE_PATH/bin/concrete -p CONCRETE_PORT .`
+5. [on new server] run concrete server with forever: `cd APP_PATH && forever start CONCRETE_PATH/bin/concrete -p CONCRETE_PORT APP_PATH`
 	1. Open a browser to `http://APP_DOMAIN:CONCRETE_PORT` to see your continuous integration server!
 6. On github.com add a webhook to the concrete server so it will run on each git push!
 	1. In your repo on github.com, click on `Settings` then `Service Hooks` then `WebHook URLs` and add a URL: `http://APP_DOMAIN:CONCRETE_PORT/webhook`
