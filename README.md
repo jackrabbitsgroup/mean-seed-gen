@@ -2,14 +2,14 @@
 
 ## Demo
 NOTE: replace all 'http' with 'https' if using 'https' (set in `config.json`)
-- [Website](http://198.199.118.44:3000/)
-- [Continuous Integration](http://198.199.118.44:3010/)
+- [Website](http://162.243.148.119:3000/)
+- [Continuous Integration](http://162.243.148.119:3010/)
 	- This automatically deploys and tests the yeoman generated mean-seed website on each Github push (from local development)
 - Test Coverage Reports (currently ~90% frontend coverage, ~60% backend coverage)
-	- [Node API/Integration Test Coverage](http://198.199.118.44:3000/src/coverage-node/lcov-report/)
-	- [Angular Karma Unit Test Coverage](http://198.199.118.44:3000/src/coverage-angular/PhantomJS%201.9.7%20%28Linux%29/)
-- [Backend API Interactive Docs](http://198.199.118.44:3000/api/help)
-	- i.e. [Auth API](http://198.199.118.44:3000/api/auth/help)
+	- [Node API/Integration Test Coverage](http://162.243.148.119:3000/src/coverage-node/lcov-report/)
+	- [Angular Karma Unit Test Coverage](http://162.243.148.119:3000/src/coverage-angular/PhantomJS%201.9.8%20%28Linux%29/)
+- [Backend API Interactive Docs](http://162.243.148.119:3000/api/help)
+	- i.e. [Auth API](http://162.243.148.119:3000/api/auth/help)
 - [Github Repo with Generated Code](https://github.com/jackrabbitsgroup/mean-seed-gen)
 
 ## Quick Start
