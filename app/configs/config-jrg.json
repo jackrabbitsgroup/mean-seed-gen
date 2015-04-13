@@ -148,6 +148,7 @@
 				}
 			]
 		},
+		"run_type": "none",
 		"_run_type_comment": "One of: 'none' for NO e2e tests in default test/grunt task, 'single' (or undefined) for the default single (chrome) platform test, 'parallel' for running multiple tests"
 	}
 }
