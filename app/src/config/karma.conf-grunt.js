@@ -84,7 +84,6 @@ module.exports = function (config) {
 		// browserDisconnectTimeout : 10000, // default 2000
 		// browserDisconnectTolerance : 1, // default 0
 		browserNoActivityTimeout : 25000, //default 10000
-
 		
 	});
 };
