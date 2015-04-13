@@ -478,9 +478,9 @@ module.exports = function(grunt) {
 						dest: publicPathRelative+"config/protractor/protractor.conf.js",
 						templateData: {
 							protractorCaps: {
-								'browser': 'Chrome',
+								'browserName': 'chrome',
 								'resolution': '1024x768',
-								'browser_version': '36.0',
+								'version': '36.0',
 								'os': 'Windows',
 								'os_version': '7',
 							}
