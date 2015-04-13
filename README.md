@@ -18,7 +18,7 @@ NOTE: replace all 'http' with 'https' if using 'https' (set in `config.json`)
 
 1. machine (global / program) installs (if you don't have them already)
 	1. install git, nodejs, mongodb, phantomjs
-	2. `sudo npm install -g grunt-cli yo bower generator-mean-seed karma yuidocjs forever less`
+	2. `sudo npm install -g grunt-cli yo bower generator-mean-seed yuidocjs forever less`
 2. `yo mean-seed` (from the NEW directory you want to create the app in)
 	1. `npm install && bower install` (if not already run successfully by Yeoman or any time `package.json` or `bower.json` change)
 		1. If any bower issues (sometimes 1 or more packages will timeout), just re-run `bower update && bower install`
