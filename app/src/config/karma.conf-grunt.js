@@ -76,6 +76,14 @@ module.exports = function (config) {
 				}
 			]
 		}
+
+		//https://github.com/karma-runner/karma/issues/598
+		// If browser does not capture in given timeout [ms], kill it
+		captureTimeout: 60000,
+		// to avoid DISCONNECTED messages
+		// browserDisconnectTimeout : 10000, // default 2000
+		// browserDisconnectTolerance : 1, // default 0
+		browserNoActivityTimeout : 25000, //default 10000
 		
 	});
 };
