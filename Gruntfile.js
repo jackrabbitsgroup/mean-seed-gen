@@ -1021,9 +1021,19 @@ module.exports = function(grunt) {
 		
 		//need to exit otherwise coverage report doesn't display on the console..
 		grunt.registerTask('node-cov', ['test-backend', 'exit']);
+
+		var tasksE2eIso =['shell:protractor'];		//default
+		if(cfgTestJson.e2e !==undefined && cfgTestJson.e2e.run_type !==undefined) {
+			if(cfgTestJson.e2e.run_type =='none') {
+				tasksE2eIso =[];
+			}
+			else if(cfgTestJson.e2e.run_type =='parallel') {
+				tasksE2eIso =['parallel:protractor'];
+			}
+		}
 		
 		//shorthand for 'shell:protractor' (this assumes node & selenium servers are already running so will NOT work by itself)
-		grunt.registerTask('e2e-iso', ['shell:protractor']);
+		grunt.registerTask('e2e-iso', tasksE2eIso);
 		
 		//standalone task - starts & stops selenium AND node servers before/after
 		grunt.registerTask('e2e', ['test-cleanup', 'node-test-server', 'test-setup', 'shell:protractor', 'test-cleanup', 'http:nodeShutdown']);
