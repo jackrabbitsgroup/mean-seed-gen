@@ -12,6 +12,11 @@ NOTE: replace all 'http' with 'https' if using 'https' (set in `config.json`)
 	- i.e. [Auth API](http://162.243.148.119:3000/api/auth/help)
 - [Github Repo with Generated Code](https://github.com/jackrabbitsgroup/mean-seed-gen)
 
+
+## Learn to Code with MEAN Stack
+[Walkthrough course to use this Generator and MEAN stack in general](https://www.packtpub.com/web-development/mastering-mean-web-development-video)
+
+
 ## Quick Start
 
 **NOTE: If you want to CLONE this EXISTING repository, see [cloning.md](docs/setup-running/cloning.md) instead.** Otherwise, if you want to build a NEW mean-seed from scratch using the Yeoman Generator, follow these steps below.
