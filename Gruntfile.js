@@ -649,14 +649,6 @@ module.exports = function(grunt) {
 					},
 					command: protractorPath+' '+publicPathRelativeRoot+'config/protractor/protractor.conf.js'
 				},
-				/*
-				forever: {
-					options: {
-						stdout: true
-					},
-					command: "forever restart run.js -m '"+cfgJson.app.name+" port "+cfgJson.server.port+"'"
-				}
-				*/
 				nodeServer: {
 					options: {
 						stdout: true,
@@ -801,7 +793,7 @@ module.exports = function(grunt) {
 				appServer: {
 					action: 'restart',
 					file: 'run.js',
-					options: ["-m '"+cfgJson.app.name+" port "+cfgJson.server.port+"' -l "+cfgJson.foreverOptions.logfile+" "]
+					options: ["--uid '"+cfgJson.app.name+" port "+cfgJson.server.port+"'", "-l "+cfgJson.foreverOptions.logfile, "-a ", "--spinSleepTime 5000 ", "--minUptime 100 "]
 				},
 				/*
 				//do no need this anymore since backend tests automatically run the test server!
