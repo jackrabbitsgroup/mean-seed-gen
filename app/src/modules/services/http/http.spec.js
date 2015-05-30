@@ -120,8 +120,10 @@ describe('appHttp', function(){
 	
 	it('should handle GET requests', function() {
 		var promise1;
-		// var getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%22authority_keys%22:%7B%22user_id%22:%22id%22%7D%7D%7D';		//hardcoded!!
-		var getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%7D%7D';		//hardcoded!!
+		var getString;
+		// getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%22authority_keys%22:%7B%22user_id%22:%22id%22%7D%7D%7D';		//hardcoded!!
+		// getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%7D%7D';		//hardcoded!!
+		getString ='/api/dummy?rpc=%7B%22jsonrpc%22:%222.0%22,%22id%22:1,%22params%22:%7B%22authority_keys%22:%7B%22user_id%22:%22userId%22,%22sess_id%22:%22sessId%22%7D%7D%7D';		//hardcoded!!
 		$httpBackend.expectGET(getString).respond({result: true});
 		// $httpBackend.when('GET', '/api/dummy').respond({result: true});
 		promise1 =appHttp.go({}, {method:'GET', url:'dummy', params:{}}, {});
